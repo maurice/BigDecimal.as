@@ -22,6 +22,10 @@
 				<artifactId>flexmojos-maven-plugin</artifactId>
 				<version>4.0-RC2</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <debug>true</debug>
+                    <storepass/>
+                </configuration>
 			</plugin>
 		</plugins>
 	</build>

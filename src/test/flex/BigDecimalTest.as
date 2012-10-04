@@ -1,9 +1,5 @@
 package
 {
-import avmplus.factoryXml;
-
-import flashx.textLayout.debug.assert;
-
 import org.flexunit.asserts.assertEquals;
 import org.flexunit.asserts.assertFalse;
 import org.flexunit.asserts.assertTrue;
@@ -97,13 +93,12 @@ public class BigDecimalTest
     [Test]
     public function divide():void
     {
-        var a:BigDecimal = new BigDecimal(555.50);
+        var a:BigDecimal = new BigDecimal(555.50).setScale(10);
         var b:BigDecimal = new BigDecimal("45.55");
 
         var total:BigDecimal = a.divide(b);
 
-        var string:String = total.toString();
-        assertTrue(string == "12.1953896817");
+        assertEquals("12.1953896817", total.toString());
 
         var c:BigDecimal = new BigDecimal("0.15015");
         c = c.setScale(31);
@@ -111,9 +106,8 @@ public class BigDecimalTest
         var e:BigDecimal = new BigDecimal("0.26897");
 
         total = c.divide(d).divide(e);
-        string = total.toString();
 
-        assertEquals(string, "1.6149526889472623986174998258858");
+        assertEquals("1.6149526889472623986174998258858", total.toString());
     }
     
     [Test]
@@ -186,12 +180,11 @@ public class BigDecimalTest
     public function pow():void
     {
         var a:BigDecimal = new BigDecimal("-55.50");
-        var b:BigDecimal = new BigDecimal("3");
 
-        var total:BigDecimal = a.pow(b);
+        var total:BigDecimal = a.pow(3);
+//        var total:BigDecimal = a.pow(new BigDecimal("3"));
 
-        var string:String = total.toString();
-        assertTrue(string == "-170953.875000");
+        assertEquals("-170953.875000", total.toString());
 
     }
 

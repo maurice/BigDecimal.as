@@ -284,7 +284,7 @@ package
         // because when we divide 2 ints in AS3 to put it in an array
         // it will be a float. so lets use this to make sure its 100% perfect.
         private static function div(a:int, b:int):int {
-            return (a-(a%b))/b as int;
+            return int((a-(a%b))/b);
         }
         
         // ActionScript 3 Port
@@ -351,12 +351,12 @@ package
 
         // ActionScript 3 Port
         // Used to Mutate this in a particular scenario
-        private function assignMyself(other:BigDecimal):void {
-            this.ind = other.ind;
-            this.form = other.form;
-            this.exp = other.exp;
-            this.mant = other.mant;
-        }
+//        private function assignMyself(other:BigDecimal):void {
+//            this.ind = other.ind;
+//            this.form = other.form;
+//            this.exp = other.exp;
+//            this.mant = other.mant;
+//        }
 
         /* ----- Constants ----- */
         /* properties constant public */ // useful to others
@@ -571,6 +571,17 @@ package
         exp=(int)-scale; // exponent is -scale
         return;}
         */
+        public static function createFromUnscaledInteger(unscaledValue:String, scale:int = 0, mc:MathContext = null):BigDecimal
+        {
+            const d:BigDecimal = new BigDecimal(unscaledValue);
+            if (d.exp != 0 && scale)
+            {
+                throw new ArgumentError("The unscaledValue '" + unscaledValue + "' already has a scale!");
+            }
+            d.exp = -scale;
+            // todo round also
+            return d;
+        }
 
         /**
         * Constructs a <code>BigDecimal</code> object from an array of characters.
@@ -638,7 +649,7 @@ package
             var mag:int = 0;
             var inchars:String = null;
             //ActionScript 3 to patch the scale
-            var createdFromNumber:Boolean = false;
+//            var createdFromNumber:Boolean = false;
             
             //ActionScript 3 :
             //This is only for the createStatic
@@ -652,8 +663,12 @@ package
                 createFromInt(inobject as int);
                 return;             
             } else if(inobject is Number) {
+                if (isNaN(Number(inobject)) || !isFinite(Number(inobject)))
+                {
+                    throw new ArgumentError("Infinite or NaN");
+                }
                 inchars = (inobject as Number).toString();
-                createdFromNumber = true;
+//                createdFromNumber = true;
             } else if(!(inobject is String)) {
                 badarg("bad parameter", 0, inchars);
             } else {
@@ -911,12 +926,12 @@ package
                 }
             }
             // say 'BD(c[]): mant[0] mantlen exp ind form:' mant[0] mant.length exp ind form
-            //ActionScript 3
-            //IF we create from Number, set the Default Scale to 10
-            if(createdFromNumber) {
-                var newScale:int = ((-exp) < 10) ? 10 : (-exp); 
-                assignMyself(setScale(newScale));
-            }
+//            //ActionScript 3
+//            //IF we create from Number, set the Default Scale to 10
+//            if(createdFromNumber) {
+//                var newScale:int = ((-exp) < 10) ? 10 : (-exp);
+//                assignMyself(setScale(newScale));
+//            }
         }
 
         /**
@@ -1630,7 +1645,7 @@ package
         * the division.
         * @return A plain <code>BigDecimal</code> whose value is
         * <code>this/rhs</code>, using fixed point arithmetic.
-        * @throws ArithmeticException if <code>rhs</code> is zero.
+        * @throws ArithmeticError if <code>rhs</code> is zero.
         * @stable ICU 2.0
         */
 
@@ -1663,8 +1678,8 @@ package
         * and the specified rounding mode.
         * @throws IllegalArgumentException if <code>round</code> is not a
         * valid rounding mode.
-        * @throws ArithmeticException if <code>rhs</code> is zero.
-        * @throws ArithmeticException if <code>round</code> is {@link
+        * @throws ArithmeticError if <code>rhs</code> is zero.
+        * @throws ArithmeticError if <code>round</code> is {@link
         * MathContext#ROUND_UNNECESSARY} and
         * <code>this.scale()</code> is insufficient to
         * represent the result exactly.
@@ -1703,9 +1718,9 @@ package
         * and the specified rounding mode.
         * @throws IllegalArgumentException if <code>round</code> is not a
         * valid rounding mode.
-        * @throws ArithmeticException if <code>rhs</code> is zero.
-        * @throws ArithmeticException if <code>scale</code> is negative.
-        * @throws ArithmeticException if <code>round</code> is {@link
+        * @throws ArithmeticError if <code>rhs</code> is zero.
+        * @throws ArithmeticError if <code>scale</code> is negative.
+        * @throws ArithmeticError if <code>round</code> is {@link
         * MathContext#ROUND_UNNECESSARY} and <code>scale</code>
         * is insufficient to represent the result exactly.
         * @stable ICU 2.0
@@ -1714,7 +1729,7 @@ package
         public function divideScaleRound(rhs:BigDecimal,scale:int,round:int):BigDecimal {
             var context:MathContext;
             if (scale<0) {
-                throw new Error("Negative scale:"+" "+scale);
+                throw new ArithmeticError("Negative scale:"+" "+scale);
             }
             context=new MathContext(0,MathContext.NOTATION_PLAIN,false,round); // [checks round]
             return this.dodivide('D',rhs,context,scale);
@@ -1733,7 +1748,7 @@ package
         * @param context The <code>MathContext</code> arithmetic settings.
         * @return A <code>BigDecimal</code> whose value is
         * <code>this/rhs</code>.
-        * @throws ArithmeticException if <code>rhs</code> is zero.
+        * @throws ArithmeticError if <code>rhs</code> is zero.
         * @stable ICU 2.0
         */
 
@@ -1758,7 +1773,7 @@ package
         * the integer division.
         * @return A <code>BigDecimal</code> whose value is the integer
         * part of <code>this/rhs</code>.
-        * @throws ArithmeticException if <code>rhs</code> is zero.
+        * @throws ArithmeticError if <code>rhs</code> is zero.
         * @stable ICU 2.0
         */
 
@@ -1783,8 +1798,8 @@ package
         * @param context The <code>MathContext</code> arithmetic settings.
         * @return A <code>BigDecimal</code> whose value is the integer
         * part of <code>this/rhs</code>.
-        * @throws ArithmeticException if <code>rhs</code> is zero.
-        * @throws ArithmeticException if the result will not fit in the
+        * @throws ArithmeticError if <code>rhs</code> is zero.
+        * @throws ArithmeticError if the result will not fit in the
         * number of digits specified for the context.
         * @stable ICU 2.0
         */
@@ -2042,15 +2057,17 @@ package
             }/*n*/
 
             res.ind=(lhs.ind*rhs.ind); // final sign
-            res.exp=(lhs.exp+rhs.exp)-padding; // final exponent
-            // [overflow is checked by finish]
-
-            /* add trailing zeros to the result, if necessary */
-            if (padding==0) {
-                res.mant=acc;
-            } else {
-                res.mant=extend(acc,acc.length+padding); // add trailing 0s
-            }
+            res.exp=(lhs.exp+rhs.exp); // final exponent
+            res.mant = acc;
+//            res.exp=(lhs.exp+rhs.exp)-padding; // final exponent
+//            // [overflow is checked by finish]
+//
+//            /* add trailing zeros to the result, if necessary */
+//            if (padding==0) {
+//                res.mant=acc;
+//            } else {
+//                res.mant=extend(acc,acc.length+padding); // add trailing 0s
+//            }
 
             return res.finish(context,false);
         }
@@ -2197,7 +2214,7 @@ package
         * the operation (the power).
         * @return A <code>BigDecimal</code> whose value is
         * <code>this**rhs</code>, using fixed point arithmetic.
-        * @throws ArithmeticException if <code>rhs</code> is out of range or
+        * @throws ArithmeticError if <code>rhs</code> is out of range or
         * is not a whole number.
         * @stable ICU 2.0
         */
@@ -2232,13 +2249,19 @@ package
         * @param set The <code>MathContext</code> arithmetic settings.
         * @return A <code>BigDecimal</code> whose value is
         * <code>this**rhs</code>.
-        * @throws ArithmeticException if <code>rhs</code> is out of range or
+        * @throws ArithmeticError if <code>rhs</code> is out of range or
         * is not a whole number.
         * @stable ICU 2.0
         */
+        public function pow(n:int, context:MathContext = null):BigDecimal
+        {
+            if (n == 0) {
+                return ONE;
+            }
+            if ((n < 0) || (n > 999999999)) {
+                throw new ArithmeticError("Invalid Operation");
+            }
 
-        public function pow(rhs:BigDecimal,context:MathContext = null):BigDecimal {
-            var n:int;
             var lhs:BigDecimal;
             var reqdig:int;
             var workdigits:int = 0;
@@ -2252,11 +2275,11 @@ package
                 context = MathContext.PLAIN;
             }
 
+            var rhs:BigDecimal = new BigDecimal(String(n)); // todo complete the transition from rhs:BigDecimal to n:int parameter
             if (context.lostDigits) {
                 checkdigits(rhs,context.digits);
             }
-            
-            n=rhs.intcheck(MinArg,MaxArg); // check RHS by the rules
+
             lhs=this; // clarified name
 
             reqdig=context.digits; // local copy (heavily used)
@@ -2333,7 +2356,7 @@ package
         * the remainder operation.
         * @return A <code>BigDecimal</code> whose value is the remainder
         * of <code>this/rhs</code>, using fixed point arithmetic.
-        * @throws ArithmeticException if <code>rhs</code> is zero.
+        * @throws ArithmeticError if <code>rhs</code> is zero.
         * @stable ICU 2.0
         */
 /*      ActionScript 3 : Flex override is with default parameters
@@ -2358,8 +2381,8 @@ package
         * @param set The <code>MathContext</code> arithmetic settings.
         * @return A <code>BigDecimal</code> whose value is the remainder
         * of <code>this+rhs</code>.
-        * @throws ArithmeticException if <code>rhs</code> is zero.
-        * @throws ArithmeticException if the integer part of the result will
+        * @throws ArithmeticError if <code>rhs</code> is zero.
+        * @throws ArithmeticError if the integer part of the result will
         * not fit in the number of digits specified for the
         * context.
         * @stable ICU 2.0
@@ -2444,7 +2467,7 @@ package
         * integer) result then an <code>ArithmeticException</code> is thrown.
         *
         * @return A <code>byte</code> equal in value to <code>this</code>.
-        * @throws ArithmeticException if <code>this</code> has a non-zero
+        * @throws ArithmeticError if <code>this</code> has a non-zero
         * decimal part, or will not fit in a <code>byte</code>.
         * @stable ICU 2.0
         */
@@ -2508,7 +2531,7 @@ package
         public function numberValue():Number {
             // We go via a String [as does BigDecimal in JDK 1.2]
             // Next line could possibly raise NumberFormatException
-            return new Number(this.toString());
+            return Number(this.toString());
         }
 
         /**
@@ -2644,7 +2667,7 @@ package
         * @return A <code>String</code> representing this
         * <code>BigDecimal</code>, laid out according to the
         * specified parameters
-        * @throws ArithmeticException if the number cannot be laid out as
+        * @throws ArithmeticError if the number cannot be laid out as
         * requested.
         * @throws IllegalArgumentException if a parameter is out of range.
         * @stable ICU 2.0
@@ -2758,7 +2781,7 @@ package
         * @return A <code>String</code> representing this
         * <code>BigDecimal</code>, laid out according to the
         * specified parameters
-        * @throws ArithmeticException if the number cannot be laid out as
+        * @throws ArithmeticError if the number cannot be laid out as
         * requested.
         * @throws IllegalArgumentException if a parameter is out of range.
         * @see #toString
@@ -3057,7 +3080,7 @@ package
         * integer) result then an <code>ArithmeticException</code> is thrown.
         *
         * @return An <code>int</code> equal in value to <code>this</code>.
-        * @throws ArithmeticException if <code>this</code> has a non-zero
+        * @throws ArithmeticError if <code>this</code> has a non-zero
         * decimal part, or will not fit in an
         * <code>int</code>.
         * @stable ICU 2.0
@@ -3302,22 +3325,15 @@ package
         }
 
         /**
-        * Returns the scale of this <code>BigDecimal</code>.
-        * Returns a non-negative <code>int</code> which is the scale of the
-        * number. The scale is the number of digits in the decimal part of
-        * the number if the number were formatted without exponential
-        * notation.
-        *
-        * @return An <code>int</code> whose value is the scale of this
-        * <code>BigDecimal</code>.
-        * @stable ICU 2.0
-        */
-
-        public function scale():int {
-            if (exp>=0) {
-                return 0; // scale can never be negative
-            }
-
+         * Returns the scale of this {@code BigDecimal}. The scale is the number of
+         * digits behind the decimal point. The value of this {@code BigDecimal} is
+         * the unsignedValue * 10^(-scale). If the scale is negative, then this
+         * {@code BigDecimal} represents a big integer.
+         *
+         * @return the scale of this {@code BigDecimal}.
+         */
+        public function scale():int
+        {
             return -exp;
         }
 
@@ -3342,8 +3358,8 @@ package
         * @param scale The <code>int</code> specifying the scale of the
         * resulting <code>BigDecimal</code>.
         * @return A plain <code>BigDecimal</code> with the given scale.
-        * @throws ArithmeticException if <code>scale</code> is negative.
-        * @throws ArithmeticException if reducing scale would discard
+        * @throws ArithmeticError if <code>scale</code> is negative.
+        * @throws ArithmeticError if reducing scale would discard
         * non-zero digits.
         * @stable ICU 2.0
         */
@@ -3381,8 +3397,8 @@ package
         * @return A plain <code>BigDecimal</code> with the given scale.
         * @throws IllegalArgumentException if <code>round</code> is not a
         * valid rounding mode.
-        * @throws ArithmeticException if <code>scale</code> is negative.
-        * @throws ArithmeticException if <code>round</code> is
+        * @throws ArithmeticError if <code>scale</code> is negative.
+        * @throws ArithmeticError if <code>round</code> is
         * <code>MathContext.ROUND_UNNECESSARY</code>, and
         * reducing scale would discard non-zero digits.
         * @stable ICU 2.0
@@ -3445,7 +3461,7 @@ package
         * integer) result then an <code>ArithmeticException</code> is thrown.
         *
         * @return A <code>short</code> equal in value to <code>this</code>.
-        * @throws ArithmeticException if <code>this</code> has a non-zero
+        * @throws ArithmeticError if <code>this</code> has a non-zero
         * decimal part, or will not fit in a
         * <code>short</code>.
         * @stable ICU 2.0
@@ -3913,16 +3929,16 @@ package
             return rec;
         }
 
-        private function intcheck(min:int,max:int):int {
-            var i:int;
-            i=this.intValueExact(); // [checks for non-0 decimal part]
-            // Use same message as though intValueExact failed due to size
-            if ((i<min)||(i>max)) {
-                throw new Error("Conversion overflow:"+" "+i);
-            }
-
-            return i;
-        }
+//        private function intcheck(min:int,max:int):int {
+//            var i:int;
+//            i=this.intValueExact(); // [checks for non-0 decimal part]
+//            // Use same message as though intValueExact failed due to size
+//            if ((i<min)||(i>max)) {
+//                throw new Error("Conversion overflow:"+" "+i);
+//            }
+//
+//            return i;
+//        }
 
         /* <sgml> Carry out division operations. </sgml> */
         /*
@@ -4006,7 +4022,7 @@ package
 
             // [note we must have checked lostDigits before the following checks]
             if (rhs.ind==0) {
-                throw new Error("Divide by 0"); // includes 0/0
+                throw new ArithmeticError("Division by zero"); // includes 0/0
             }
 
             if (lhs.ind==0) { // 0/x => 0 [possibly with .0s]
@@ -4314,7 +4330,7 @@ package
         /* <sgml> Report a conversion exception. </sgml> */
 
         private function bad(s:String):void {
-            throw new Error("Not a number:"+" "+s);
+            throw new ArgumentError("Not a number:"+" "+s);
         }
 
         /* <sgml> Report a bad argument to a method. </sgml>
@@ -4634,7 +4650,7 @@ package
                     } else if (mode==MathContext.ROUND_UNNECESSARY) { // default for setScale()
                         // discarding any non-zero digits is an error
                         if ((!(allzero(oldmant,len)))) {
-                            throw new Error("Rounding necessary");
+                            throw new ArithmeticError("Rounding necessary");
                         }
                     } else if (mode==MathContext.ROUND_HALF_DOWN) { // 0.5000 goes down
                         if (first>5) {
@@ -4840,7 +4856,7 @@ package
                                             }
                                         }
                                     }
-                                    throw new Error("Exponent Overflow:"+" "+mag);
+                                    throw new ArithmeticError("Underflow");
 
                                 } while(false);
                             }/*overflow*/

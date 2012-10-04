@@ -219,8 +219,17 @@ package
          * @stable ICU 2.0
          */
         public static const ROUND_UP:int = 0;
-        
-        
+
+        /**
+         * Get a new MathContext whose rounding mode is ROUND_UNNECESSARY and
+         * defaults for other properties
+         * @return a new MathContext
+         */
+        public static function roundUnnecessary():MathContext
+        {
+            return new MathContext(DEFAULT_DIGITS, DEFAULT_FORM, DEFAULT_LOSTDIGITS, ROUND_UNNECESSARY);
+        }
+
         /* properties shared */
         /**
          * The number of digits (precision) to be used for an operation.
@@ -236,7 +245,21 @@ package
          *
          * @serial
          */
-        internal var digits:int;
+        private var _digits:int;
+
+        public function get digits():int {
+            return _digits;
+        }
+
+        private function setDigits(value:int):void {
+            if (value < MIN_DIGITS) {
+                throw new Error("Digits too small:"+" "+value);
+            }
+            if (value > MAX_DIGITS) {
+                throw new Error("Digits too large:"+" "+value);
+            }
+            _digits = value;
+        }
         
         /**
          * The form of results from an operation.
@@ -250,7 +273,23 @@ package
          * @see #SCIENTIFIC
          * @serial
          */
-        internal var form:int; // values for this must fit in a byte
+        private var _form:int; // values for this must fit in a byte
+
+        public function get form():int {
+            return _form;
+        }
+
+        private function setForm(value:int):void
+        {
+            if (value == NOTATION_SCIENTIFIC) {
+                // [most common]
+            } else if (value == NOTATION_ENGINEERING) {
+            } else if (value == NOTATION_PLAIN) {
+            } else {
+                throw new Error("Bad form value:"+" "+value);
+            }
+            _form = value;
+        }
         
         /**
          * Controls whether lost digits checking is enabled for an
@@ -266,7 +305,11 @@ package
          *
          * @serial
          */
-        internal var lostDigits:Boolean;
+        private var _lostDigits:Boolean;
+
+        public function get lostDigits():Boolean {
+            return _lostDigits;
+        }
         
         /**
          * The rounding algorithm to be used for an operation.
@@ -287,7 +330,20 @@ package
          * @see #ROUND_UP
          * @serial
          */
-        internal var roundingMode:int;
+        private var _roundingMode:int;
+
+        public function get roundingMode():int {
+            return _roundingMode;
+        }
+
+        public function setRoundingMode(value:int):void
+        {
+            if (!(isValidRound(value))) {
+                throw new Error("Bad roundingMode value:"+" "+value);
+            }
+
+            _roundingMode = value;
+        }
         
         /* properties private constant */
         // default settings
@@ -330,52 +386,29 @@ package
          * precision, form, lostDigits, and roundingMode setting.
          *
          * An <code>IllegalArgumentException</code> is thrown if the
-         * <code>setdigits</code> parameter is out of range
+         * <code>digits</code> parameter is out of range
          * (&lt;0 or &gt;999999999), or if the value given for the
-         * <code>setform</code> or <code>setroundingmode</code> parameters is
+         * <code>form</code> or <code>roundingMode</code> parameters is
          * not one of the appropriate constants.
          *
-         * @param setdigits The <code>int</code> digits setting
+         * @param digits The <code>int</code> digits setting
          * for this <code>MathContext</code>.
-         * @param setform The <code>int</code> form setting
+         * @param form The <code>int</code> form setting
          * for this <code>MathContext</code>.
-         * @param setlostdigits The <code>boolean</code> lostDigits
+         * @param lostDigits The <code>boolean</code> lostDigits
          * setting for this <code>MathContext</code>.
-         * @param setroundingmode The <code>int</code> roundingMode setting
+         * @param roundingMode The <code>int</code> roundingMode setting
          * for this <code>MathContext</code>.
          * @throws IllegalArgumentException parameter out of range.
          * @stable ICU 2.0
          */
         
-        public function MathContext(setdigits:int, setform:int = DEFAULT_FORM, setlostdigits:Boolean = DEFAULT_LOSTDIGITS, setroundingmode:int = DEFAULT_ROUNDINGMODE) {
+        public function MathContext(digits:int, form:int = DEFAULT_FORM, lostDigits:Boolean = DEFAULT_LOSTDIGITS, roundingMode:int = DEFAULT_ROUNDINGMODE) {
             // set values, after checking
-            if (setdigits!=DEFAULT_DIGITS) {
-                if (setdigits<MIN_DIGITS) {
-                    throw new Error("Digits too small:"+" "+setdigits);
-                }
-                if (setdigits>MAX_DIGITS) {
-                    throw new Error("Digits too large:"+" "+setdigits);
-                }
-            }
-
-            {/*select*/
-                if (setform==NOTATION_SCIENTIFIC) {
-                    // [most common]
-                } else if (setform==NOTATION_ENGINEERING) {
-                } else if (setform==NOTATION_PLAIN) {
-                } else {
-                    throw new Error("Bad form value:"+" "+setform);
-                }
-            }
-            
-            if ((!(isValidRound(setroundingmode)))) {
-                throw new Error("Bad roundingMode value:"+" "+setroundingmode);
-            }
-            
-            digits=setdigits;
-            form=setform;
-            lostDigits=setlostdigits; // [no bad value possible]
-            roundingMode=setroundingmode;
+            setDigits(digits);
+            setForm(form);
+            setRoundingMode(roundingMode);
+            _lostDigits = lostDigits; // [no bad value possible]
         }
 
         /**

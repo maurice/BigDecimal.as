@@ -318,46 +318,11 @@ package
         
         // ActionScript 3 Port
         // Utility functions that does not exist in AS3
-        private static function isDigit(string:String):Boolean {
-            return    string.charCodeAt(0) >= BigDecimal.VALUE_ZERO && 
-                      string.charCodeAt(0) <= BigDecimal.VALUE_NINE;
-        }
-
-        // ActionScript 3 Port
-        // Utility functions that does not exist in AS3
         private static function isDigitInt(value:int):Boolean {
             return    value >= BigDecimal.VALUE_ZERO && 
                       value <= BigDecimal.VALUE_NINE;
         }
         
-        // ActionScript 3 Port
-        // Utility functions that does not exist in AS3
-        // This was in the BigDecimal version of ibm Utility.getChars...
-        // Not sure if we will use it.
-        /* <sgml> Checks a BigDecimal argument to ensure it's a true integer
-        in a given range.
-        <p>If OK, returns it as an int. </sgml> */
-        // [currently only used by pow]
-        public static function getChars(src:String, srcBegin:int, srcEnd:int, dst:Array, dstBegin:int):void {
-
-            if (srcBegin == srcEnd) {
-                return;
-            }
-
-            for(srcBegin; srcBegin < srcEnd; ++srcBegin) {
-                dst[dstBegin++] = src.charAt(srcBegin);
-            }
-        }
-
-        // ActionScript 3 Port
-        // Used to Mutate this in a particular scenario
-//        private function assignMyself(other:BigDecimal):void {
-//            this.ind = other.ind;
-//            this.form = other.form;
-//            this.exp = other.exp;
-//            this.mant = other.mant;
-//        }
-
         /* ----- Constants ----- */
         /* properties constant public */ // useful to others
         /**
@@ -3928,17 +3893,6 @@ package
 
             return rec;
         }
-
-//        private function intcheck(min:int,max:int):int {
-//            var i:int;
-//            i=this.intValueExact(); // [checks for non-0 decimal part]
-//            // Use same message as though intValueExact failed due to size
-//            if ((i<min)||(i>max)) {
-//                throw new Error("Conversion overflow:"+" "+i);
-//            }
-//
-//            return i;
-//        }
 
         /* <sgml> Carry out division operations. </sgml> */
         /*

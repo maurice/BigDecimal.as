@@ -316,13 +316,6 @@ package
             return retVal;
         }
         
-        // ActionScript 3 Port
-        // Utility functions that does not exist in AS3
-        private static function isDigitInt(value:int):Boolean {
-            return    value >= BigDecimal.VALUE_ZERO && 
-                      value <= BigDecimal.VALUE_NINE;
-        }
-        
         /* ----- Constants ----- */
         /* properties constant public */ // useful to others
         /**
@@ -369,11 +362,11 @@ package
         // In AS3 there is no char, byte or native arrays
         // So lets create the int value of each char we need in the
         // algorythms
-        private static const VALUE_ZERO:int = (new String("0")).charCodeAt(0); // use long as we want the int constructor
-        private static const VALUE_NINE:int = (new String("9")).charCodeAt(0); // use long as we want the int constructor
-        private static const VALUE_EUPPER:int = (new String("e")).charCodeAt(0); // use long as we want the int constructor
-        private static const VALUE_ELOWER:int = (new String("E")).charCodeAt(0); // use long as we want the int constructor
-        private static const VALUE_DOT:int = (new String(".")).charCodeAt(0); // use long as we want the int constructor
+        private static const VALUE_ZERO:int = "0".charCodeAt(0); // use long as we want the int constructor
+        private static const VALUE_NINE:int = "9".charCodeAt(0); // use long as we want the int constructor
+        private static const VALUE_EUPPER:int = "e".charCodeAt(0); // use long as we want the int constructor
+        private static const VALUE_ELOWER:int = "E".charCodeAt(0); // use long as we want the int constructor
+        private static const VALUE_DOT:int = ".".charCodeAt(0); // use long as we want the int constructor
 
         /* properties static private */
         // Precalculated constant arrays (used by byteaddsub)
@@ -707,7 +700,8 @@ package
 
                     if (si!=BigDecimal.VALUE_ELOWER) {
                         if (si!=BigDecimal.VALUE_EUPPER) { // expect an extra digit
-                            if ((!(isDigitInt(si)))) {
+                            if (si < BigDecimal.VALUE_ZERO || si > BigDecimal.VALUE_NINE)
+                            {
                                 bad(inchars); // not a number
                             }
                             // defer the base 10 check until later to avoid extra method call
@@ -2772,16 +2766,16 @@ package
 
             /* Check arguments */
             if ((before<(-1))||(before==0)) {
-                badarg("format",1,new String(before));
+                badarg("format", 1, String(before));
             }
             if (after<(-1)) {
-                badarg("format",2,new String(after));
+                badarg("format", 2, String(after));
             }
             if ((explaces<(-1))||(explaces==0)) {
-                badarg("format",3,new String(explaces));
+                badarg("format", 3, String(explaces));
             }
             if (exdigits<(-1)) {
-                badarg("format",4,new String(explaces));
+                badarg("format", 4, String(explaces));
             }
 
             {/*select*/
@@ -2790,7 +2784,7 @@ package
                 } else if (exformint==(-1)) {
                     exformint=MathContext.NOTATION_SCIENTIFIC;
                 } else{ // note PLAIN isn't allowed
-                    badarg("format",5,new String(exformint));
+                    badarg("format", 5, String(exformint));
                 }
             }
 
@@ -2804,7 +2798,7 @@ package
                         new MathContext(9,MathContext.NOTATION_SCIENTIFIC,false,exround);
                     }
                 } catch ($10:Error) {
-                    badarg("format",6,new String(exround));
+                    badarg("format", 6, String(exround));
                 }
             }
 
@@ -2930,7 +2924,7 @@ package
                 // p is now offset of '.', 'E', or character after end of array
                 // that is, the current length of before part
                 if (p>before) {
-                    badarg("format",1,new String(before)); // won't fit
+                    badarg("format", 1, String(before)); // won't fit
                 }
                 if (p<before) { // need leading blanks
                     newa=new Array((a.length+before)-p);
@@ -2975,7 +2969,7 @@ package
                 } else {/* found E */ // may need to insert zeros
                     places=(a.length-p)-2; // number so far
                     if (places>explaces) {
-                        badarg("format",3,new String(explaces));
+                        badarg("format", 3, String(explaces));
                     }
                     if (places<explaces) { // need to insert zeros
                         newa=new Array((a.length+explaces)-places);

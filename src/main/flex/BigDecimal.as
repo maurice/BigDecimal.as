@@ -863,15 +863,6 @@ package
             // [form is already PLAIN]
             if (mant[0]==0) {
                 ind=iszero; // force to show zero
-                // negative exponent is significant (e.g., -3 for 0.000) if plain
-                if (exp>0) {
-                    exp=0; // positive exponent can be ignored
-                }
-
-                if (hadexp) { // zero becomes single digit from add
-                    mant=ZERO.mant;
-                    exp=0;
-                }
             } else { // non-zero
                 // [ind was set earlier]
                 // now determine form
@@ -884,13 +875,6 @@ package
                     }
                 }
             }
-            // say 'BD(c[]): mant[0] mantlen exp ind form:' mant[0] mant.length exp ind form
-//            //ActionScript 3
-//            //IF we create from Number, set the Default Scale to 10
-//            if(createdFromNumber) {
-//                var newScale:int = ((-exp) < 10) ? 10 : (-exp);
-//                assignMyself(setScale(newScale));
-//            }
         }
 
         /**
@@ -2573,425 +2557,6 @@ package
         }
 
         /**
-        * Returns the <code>String</code> representation of this
-        * <code>BigDecimal</code>, modified by layout parameters.
-        * <p>
-        * <i>This method is provided as a primitive for use by more
-        * sophisticated classes, such as <code>DecimalFormat</code>, that
-        * can apply locale-sensitive editing of the result. The level of
-        * formatting that it provides is a necessary part of the BigDecimal
-        * class as it is sensitive to and must follow the calculation and
-        * rounding rules for BigDecimal arithmetic.
-        * However, if the function is provided elsewhere, it may be removed
-        * from this class. </i>
-        * <p>
-        * The parameters, for both forms of the <code>format</code> method
-        * are all of type <code>int</code>.
-        * A value of -1 for any parameter indicates that the default action
-        * or value for that parameter should be used.
-        * <p>
-        * The parameters, <code>before</code> and <code>after</code>,
-        * specify the number of characters to be used for the integer part
-        * and decimal part of the result respectively. Exponential notation
-        * is not used. If either parameter is -1 (which indicates the default
-        * action), the number of characters used will be exactly as many as
-        * are needed for that part.
-        * <p>
-        * <code>before</code> must be a positive number; if it is larger than
-        * is needed to contain the integer part, that part is padded on the
-        * left with blanks to the requested length. If <code>before</code> is
-        * not large enough to contain the integer part of the number
-        * (including the sign, for negative numbers) an exception is thrown.
-        * <p>
-        * <code>after</code> must be a non-negative number; if it is not the
-        * same size as the decimal part of the number, the number will be
-        * rounded (or extended with zeros) to fit. Specifying 0 for
-        * <code>after</code> will cause the number to be rounded to an
-        * integer (that is, it will have no decimal part or decimal point).
-        * The rounding method will be the default,
-        * <code>MathContext.ROUND_HALF_UP</code>.
-        * <p>
-        * Other rounding methods, and the use of exponential notation, can
-        * be selected by using {@link #format(int,int,int,int,int,int)}.
-        * Using the two-parameter form of the method has exactly the same
-        * effect as using the six-parameter form with the final four
-        * parameters all being -1.
-        *
-        * @param before The <code>int</code> specifying the number of places
-        * before the decimal point. Use -1 for 'as many as
-        * are needed'.
-        * @param after The <code>int</code> specifying the number of places
-        * after the decimal point. Use -1 for 'as many as are
-        * needed'.
-        * @return A <code>String</code> representing this
-        * <code>BigDecimal</code>, laid out according to the
-        * specified parameters
-        * @throws ArithmeticError if the number cannot be laid out as
-        * requested.
-        * @throws IllegalArgumentException if a parameter is out of range.
-        * @stable ICU 2.0
-        * @see #toString
-        * @see #toCharArray
-        */
-        /* ActionScript 3 : Duplicate
-        public function format(before:int,after:int):String  {
-            return format(before,after,-1,-1,MathContext.SCIENTIFIC,ROUND_HALF_UP);
-        }
-        */
-        /**
-        * Returns the <code>String</code> representation of this
-        * <code>BigDecimal</code>, modified by layout parameters and allowing
-        * exponential notation.
-        * <p>
-        * <i>This method is provided as a primitive for use by more
-        * sophisticated classes, such as <code>DecimalFormat</code>, that
-        * can apply locale-sensitive editing of the result. The level of
-        * formatting that it provides is a necessary part of the BigDecimal
-        * class as it is sensitive to and must follow the calculation and
-        * rounding rules for BigDecimal arithmetic.
-        * However, if the function is provided elsewhere, it may be removed
-        * from this class. </i>
-        * <p>
-        * The parameters are all of type <code>int</code>.
-        * A value of -1 for any parameter indicates that the default action
-        * or value for that parameter should be used.
-        * <p>
-        * The first two parameters (<code>before</code> and
-        * <code>after</code>) specify the number of characters to be used for
-        * the integer part and decimal part of the result respectively, as
-        * defined for {@link #format(int,int)}.
-        * If either of these is -1 (which indicates the default action), the
-        * number of characters used will be exactly as many as are needed for
-        * that part.
-        * <p>
-        * The remaining parameters control the use of exponential notation
-        * and rounding. Three (<code>explaces</code>, <code>exdigits</code>,
-        * and <code>exform</code>) control the exponent part of the result.
-        * As before, the default action for any of these parameters may be
-        * selected by using the value -1.
-        * <p>
-        * <code>explaces</code> must be a positive number; it sets the number
-        * of places (digits after the sign of the exponent) to be used for
-        * any exponent part, the default (when <code>explaces</code> is -1)
-        * being to use as many as are needed.
-        * If <code>explaces</code> is not -1, space is always reserved for
-        * an exponent; if one is not needed (for example, if the exponent
-        * will be 0) then <code>explaces</code>+2 blanks are appended to the
-        * result.
-        * <!-- (This preserves vertical alignment of similarly formatted
-        * numbers in a monospace font.) -->
-        * If <code>explaces</code> is not -1 and is not large enough to
-        * contain the exponent, an exception is thrown.
-        * <p>
-        * <code>exdigits</code> sets the trigger point for use of exponential
-        * notation. If, before any rounding, the number of places needed
-        * before the decimal point exceeds <code>exdigits</code>, or if the
-        * absolute value of the result is less than <code>0.000001</code>,
-        * then exponential form will be used, provided that
-        * <code>exdigits</code> was specified.
-        * When <code>exdigits</code> is -1, exponential notation will never
-        * be used. If 0 is specified for <code>exdigits</code>, exponential
-        * notation is always used unless the exponent would be 0.
-        * <p>
-        * <code>exform</code> sets the form for exponential notation (if
-        * needed).
-        * It may be either {@link MathContext#SCIENTIFIC} or
-        * {@link MathContext#ENGINEERING}.
-        * If the latter, engineering, form is requested, up to three digits
-        * (plus sign, if negative) may be needed for the integer part of the
-        * result (<code>before</code>). Otherwise, only one digit (plus
-        * sign, if negative) is needed.
-        * <p>
-        * Finally, the sixth argument, <code>exround</code>, selects the
-        * rounding algorithm to be used, and must be one of the values
-        * indicated by a public constant in the {@link MathContext} class
-        * whose name starts with <code>ROUND_</code>.
-        * The default (<code>ROUND_HALF_UP</code>) may also be selected by
-        * using the value -1, as before.
-        * <p>
-        * The special value <code>MathContext.ROUND_UNNECESSARY</code> may be
-        * used to detect whether non-zero digits are discarded -- if
-        * <code>exround</code> has this value than if non-zero digits would
-        * be discarded (rounded) during formatting then an
-        * <code>ArithmeticException</code> is thrown.
-        *
-        * @param before The <code>int</code> specifying the number of places
-        * before the decimal point.
-        * Use -1 for 'as many as are needed'.
-        * @param after The <code>int</code> specifying the number of places
-        * after the decimal point.
-        * Use -1 for 'as many as are needed'.
-        * @param explaces The <code>int</code> specifying the number of places
-        * to be used for any exponent.
-        * Use -1 for 'as many as are needed'.
-        * @param exdigits The <code>int</code> specifying the trigger
-        * (digits before the decimal point) which if
-        * exceeded causes exponential notation to be used.
-        * Use 0 to force exponential notation.
-        * Use -1 to force plain notation (no exponential
-        * notation).
-        * @param exformint The <code>int</code> specifying the form of
-        * exponential notation to be used
-        * ({@link MathContext#SCIENTIFIC} or
-        * {@link MathContext#ENGINEERING}).
-        * @param exround The <code>int</code> specifying the rounding mode
-        * to use.
-        * Use -1 for the default, {@link MathContext#ROUND_HALF_UP}.
-        * @return A <code>String</code> representing this
-        * <code>BigDecimal</code>, laid out according to the
-        * specified parameters
-        * @throws ArithmeticError if the number cannot be laid out as
-        * requested.
-        * @throws IllegalArgumentException if a parameter is out of range.
-        * @see #toString
-        * @see #toCharArray
-        * @stable ICU 2.0
-        */
-
-        public function format(before:int,after:int,explaces:int = -1,exdigits:int = -1,exformint:int = 1 /*MathContext.SCIENTIFIC*/,exround:int = 4 /*ROUND_HALF_UP*/):String {
-            var num:BigDecimal;
-            var mag:int = 0;
-            var thisafter:int = 0;
-            var lead:int = 0;
-            var newmant:Array=null;
-            var chop:int = 0;
-            var need:int = 0;
-            var oldexp:int = 0;
-            var a:Array;
-            var p:int = 0;
-            var newa:Array=null;
-            var i:int = 0;
-            var places:int = 0;
-
-
-            /* Check arguments */
-            if ((before<(-1))||(before==0)) {
-                badarg("format", 1, String(before));
-            }
-            if (after<(-1)) {
-                badarg("format", 2, String(after));
-            }
-            if ((explaces<(-1))||(explaces==0)) {
-                badarg("format", 3, String(explaces));
-            }
-            if (exdigits<(-1)) {
-                badarg("format", 4, String(explaces));
-            }
-
-            {/*select*/
-                if (exformint==MathContext.NOTATION_SCIENTIFIC) {
-                } else if (exformint==MathContext.NOTATION_ENGINEERING) {
-                } else if (exformint==(-1)) {
-                    exformint=MathContext.NOTATION_SCIENTIFIC;
-                } else{ // note PLAIN isn't allowed
-                    badarg("format", 5, String(exformint));
-                }
-            }
-
-            // checking the rounding mode is done by trying to construct a
-            // MathContext object with that mode; it will fail if bad
-            if (exround!=MathContext.ROUND_HALF_UP) {
-                try { // if non-default...
-                    if (exround==(-1)) {
-                        exround=MathContext.ROUND_HALF_UP;
-                    } else {
-                        new MathContext(9,MathContext.NOTATION_SCIENTIFIC,false,exround);
-                    }
-                } catch ($10:Error) {
-                    badarg("format", 6, String(exround));
-                }
-            }
-
-            num=clone(this); // make private copy
-
-            /* Here:
-            num is BigDecimal to format
-            before is places before point [>0]
-            after is places after point [>=0]
-            explaces is exponent places [>0]
-            exdigits is exponent digits [>=0]
-            exformint is exponent form [one of two]
-            exround is rounding mode [one of eight]
-            'before' through 'exdigits' are -1 if not specified
-            */
-
-            /* determine form */
-            {
-                setform:do {/*select*/
-                    if (exdigits==(-1)) {
-                        num.form=MathContext.NOTATION_PLAIN;
-                    } else if (num.ind==iszero) {
-                        num.form=MathContext.NOTATION_PLAIN;
-                    } else {
-                        // determine whether triggers
-                        mag=num.exp+num.mant.length;
-                        if (mag>exdigits) {
-                            num.form=exformint;
-                        } else if (mag<(-5)) {
-                            num.form=exformint;
-                        } else {
-                            num.form=MathContext.NOTATION_PLAIN;
-                        }
-                    }
-                } while(false);
-            }/*setform*/
-
-            /* If 'after' was specified then we may need to adjust the
-            mantissa. This is a little tricky, as we must conform to the
-            rules of exponential layout if necessary (e.g., we cannot end up
-            with 10.0 if scientific). */
-            if (after>=0) {
-                setafter:for(;;) {
-                    // calculate the current after-length
-                    {/*select*/
-                        if (num.form==MathContext.NOTATION_PLAIN) {
-                            thisafter=-num.exp; // has decimal part
-                        } else if (num.form==MathContext.NOTATION_SCIENTIFIC) {
-                            thisafter=num.mant.length-1;
-                        } else { // engineering
-                            lead=(((num.exp+num.mant.length)-1))%3; // exponent to use
-                            if (lead<0) {
-                                lead=3+lead; // negative exponent case
-                            }
-                            lead++; // number of leading digits
-                            if (lead>=num.mant.length) {
-                                thisafter=0;
-                            } else {
-                                thisafter=num.mant.length-lead;
-                            }
-                        }
-                    }
-
-                    if (thisafter==after) {
-                        break setafter; // we're in luck
-                    }
-                    if (thisafter<after) { // need added trailing zeros
-                        // [thisafter can be negative]
-                        newmant=extend(num.mant,(num.mant.length+after)-thisafter);
-                        num.mant=newmant;
-                        num.exp=num.exp-((after-thisafter)); // adjust exponent
-                        if (num.exp<MinExp) {
-                            throw new Error("Exponent Overflow:"+" "+num.exp);
-                        }
-                        break setafter;
-                    }
-
-                    // We have too many digits after the decimal point; this could
-                    // cause a carry, which could change the mantissa...
-                    // Watch out for implied leading zeros in PLAIN case
-                    chop=thisafter-after; // digits to lop [is >0]
-                    if (chop>num.mant.length) { // all digits go, no chance of carry
-                        // carry on with zero
-                        num.mant=ZERO.mant;
-                        num.ind=iszero;
-                        num.exp=0;
-                        continue setafter; // recheck: we may need trailing zeros
-                    }
-
-                    // we have a digit to inspect from existing mantissa
-                    // round the number as required
-                    need=num.mant.length-chop; // digits to end up with [may be 0]
-                    oldexp=num.exp; // save old exponent
-                    num.round(need,exround);
-                    // if the exponent grew by more than the digits we chopped, then
-                    // we must have had a carry, so will need to recheck the layout
-                    if ((num.exp-oldexp)==chop) {
-                        break setafter; // number did not have carry
-                    }
-                    // mantissa got extended .. so go around and check again
-                }
-            }/*setafter*/
-
-            a=num.layout(); // lay out, with exponent if required, etc.
-
-            /* Here we have laid-out number in 'a' */
-            // now apply 'before' and 'explaces' as needed
-            if (before>0) {
-                // look for '.' or 'E'
-                {
-                    var $11:int = a.length;
-                    p=0;
-                    _p:for(; $11 > 0; $11--,p++) {
-                        if (a[p]==VALUE_DOT) {
-                            break _p;
-                        }
-                        if (a[p]==VALUE_EUPPER) {
-                            break _p;
-                        }
-                    }
-                }/*p*/
-
-                // p is now offset of '.', 'E', or character after end of array
-                // that is, the current length of before part
-                if (p>before) {
-                    badarg("format", 1, String(before)); // won't fit
-                }
-                if (p<before) { // need leading blanks
-                    newa=new Array((a.length+before)-p);
-                    {
-                        var $12:int = before-p;
-                        i = 0;
-                        _i:for(; $12 > 0; $12--,i++) {
-                            newa[i]=' ';
-                        }
-                    }/*i*/
-
-                    arraycopy(a,0,newa,i,a.length);
-                    a=newa;
-                }
-                // [if p=before then it's just the right length]
-            }
-
-            if (explaces>0) {
-                // look for 'E' [cannot be at offset 0]
-                {
-                    var $13:int = a.length-1;
-                    p=a.length-1;
-                    _p2:for(; $13 > 0; $13--,p--) {
-                        if (a[p]==VALUE_EUPPER) {
-                            break _p2;
-                        }
-                    }
-                }/*p*/
-
-                // p is now offset of 'E', or 0
-                if (p==0) { // no E part; add trailing blanks
-                    newa=new Array((a.length+explaces)+2);
-                    arraycopy(a,0,newa,0,a.length);
-                    {
-                        var $14:int = explaces+2;
-                        i=a.length;
-                        _i2:for(; $14 > 0; $14--,i++) {
-                            newa[i]=' ';
-                        }
-                    }/*i*/
-                    a=newa;
-                } else {/* found E */ // may need to insert zeros
-                    places=(a.length-p)-2; // number so far
-                    if (places>explaces) {
-                        badarg("format", 3, String(explaces));
-                    }
-                    if (places<explaces) { // need to insert zeros
-                        newa=new Array((a.length+explaces)-places);
-                        arraycopy(a,0,newa,0,p+2); // through E and sign
-                        {
-                            var $15:int = explaces-places;
-                            i=p+2;
-                            _i3:for(; $15 > 0; $15--,i++) {
-                                newa[i]='0';
-                            }
-                        }/*i*/
-                        arraycopy(a,p+2,newa,i,places); // remainder of exponent
-                        a=newa;
-                    }
-                    // [if places=explaces then it's just the right length]
-                }
-            }
-
-            return new String(a);
-        }
-
-        /**
         * Returns the hashcode for this <code>BigDecimal</code>.
         * This hashcode is suitable for use by the
         * <code>java.util.Hashtable</code> class.
@@ -3244,13 +2809,9 @@ package
         * @stable ICU 2.0
         */
 
-        public function movePointLeft(n:int):BigDecimal {
-            var res:BigDecimal;
-            // very little point in optimizing for shift of 0
-            res=clone(this);
-            res.exp=res.exp-n;
-
-            return res.finish(MathContext.PLAIN,false); // finish sets form and checks exponent
+        public function movePointLeft(n:int):BigDecimal
+        {
+            return movePoint(-n);
         }
 
         /**
@@ -3275,12 +2836,17 @@ package
         * @stable ICU 2.0
         */
 
-        public function movePointRight(n:int):BigDecimal {
-            var res:BigDecimal;
-            res=clone(this);
-            res.exp=res.exp+n;
+        public function movePointRight(n:int):BigDecimal
+        {
+            return movePoint(n);
+        }
 
-            return res.finish(MathContext.PLAIN,false);
+        private function movePoint(n:int):BigDecimal
+        {
+            var res:BigDecimal = clone(this);
+            res.exp = res.exp + n;
+            res = res.finish(MathContext.PLAIN, false);
+            return res.exp < 0 ? res : res.setScale(0, MathContext.ROUND_UNNECESSARY);
         }
 
         /**
@@ -3553,48 +3119,203 @@ package
         return toBigInteger();
         }
 
-        /**
-        * Returns the <code>BigDecimal</code> as a character array.
-        * The result of this method is the same as using the
-        * sequence <code>toString().toCharArray()</code>, but avoids creating
-        * the intermediate <code>String</code> and <code>char[]</code>
-        * objects.
-        *
-        * @return The <code>char[]</code> array corresponding to this
-        * <code>BigDecimal</code>.
-        * @stable ICU 2.0
-        */
+    /**
+     * Returns a canonical string representation of this {@code BigDecimal}. If
+     * necessary, scientific notation is used. This representation always prints
+     * all significant digits of this value.
+     * <p>
+     * If the scale is negative or if {@code scale - precision >= 6} then
+     * scientific notation is used.
+     *
+     * @return a string representation of {@code this} in scientific notation if
+     *         necessary.
+     */
+    public function toString():String
+        {
+            const result:Vector.<String> = Vector.<String>(mant);
+            if (ind < 0)
+            {
+                result.splice(0, 0, "-");
+            }
+            if (scale() == 0)
+            {
+                return result.join("");
+            }
 
-        public function toCharArray():Array {
-            return layout();
+            const begin:int = (ind < 0) ? 2 : 1;
+            var end:int = result.length;
+            const exponent:int = -scale() + end - begin;
+
+            if (scale() > 0 && exponent >= -6)
+            {
+                if (exponent >= 0)
+                {
+                    result.splice(end - scale(), 0, '.');
+                }
+                else
+                {
+                    result.splice(begin - 1, 0, "0", "."); //$NON-NLS-1$
+                    for (var i:int = 0; i < -exponent - 1; i++)
+                    {
+                        result.splice(begin + 1, 0, "0");
+                    }
+                }
+            }
+            else
+            {
+                if (end - begin >= 1)
+                {
+                    result.splice(begin, 0, '.');
+                    end++;
+                }
+                result.splice(end, 0, 'E');
+                if (exponent > 0)
+                {
+                    result.splice(++end, 0, '+');
+                }
+                result.splice(++end, 0, String(exponent));
+            }
+            return result.join("");
         }
 
         /**
-        * Returns the <code>BigDecimal</code> as a <code>String</code>.
-        * This returns a <code>String</code> that exactly represents this
-        * <code>BigDecimal</code>, as defined in the decimal documentation
-        * (see {@link BigDecimal class header}).
-        * <p>
-        * By definition, using the {@link #BigDecimal(String)} constructor
-        * on the result <code>String</code> will create a
-        * <code>BigDecimal</code> that is exactly equal to the original
-        * <code>BigDecimal</code>.
-        *
-        * @return The <code>String</code> exactly corresponding to this
-        * <code>BigDecimal</code>.
-        * @see #format(int, int)
-        * @see #format(int, int, int, int, int, int)
-        * @see #toCharArray()
-        * @stable ICU 2.0
-        */
-
-        public function toString():String {
-            var charArray:Array = layout();
-            var returnValue:String = "";
-            for(var i:int = 0; i < charArray.length; ++i) {
-                returnValue += charArray[i];
+         * Returns a string representation of this {@code BigDecimal}. This
+         * representation always prints all significant digits of this value.
+         * <p>
+         * If the scale is negative or if {@code scale - precision >= 6} then
+         * engineering notation is used. Engineering notation is similar to the
+         * scientific notation except that the exponent is made to be a multiple of
+         * 3 such that the integer part is >= 1 and < 1000.
+         *
+         * @return a string representation of {@code this} in engineering notation
+         *         if necessary.
+         */
+        public function toEngineeringString():String
+        {
+            const result:Vector.<String> = Vector.<String>(mant);
+            if (ind < 0)
+            {
+                result.splice(0, 0, "-");
             }
-            return returnValue;
+            if (exp == 0)
+            {
+                return result.join("");
+            }
+
+            var begin:int = (ind < 0) ? 2 : 1;
+            var end:int = result.length;
+            var exponent:int = exp + end - begin;
+
+            if (-exp > 0 && exponent >= -6)
+            {
+                if (exponent >= 0)
+                {
+                    result.splice(end - scale(), 0, '.');
+                }
+                else
+                {
+                    result.splice(begin - 1, 0, "0", "."); //$NON-NLS-1$
+                    for (var i:int = 0; i < -exponent - 1; i++)
+                    {
+                        result.splice(begin + 1, 0, "0");
+                    }
+                }
+            } else {
+                var delta:int = end - begin;
+                var rem:int = int(exponent % 3);
+
+                if (rem != 0) {
+                    // adjust exponent so it is a multiple of three
+                    if (ind == 0) {
+                        // zero value
+                        rem = (rem < 0) ? -rem : 3 - rem;
+                        exponent += rem;
+                    } else {
+                        // nonzero value
+                        rem = (rem < 0) ? rem + 3 : rem;
+                        exponent -= rem;
+                        begin += rem;
+                    }
+                    if (delta < 3) {
+                        for (i = rem - delta; i > 0; i--) {
+                            result.splice(end++, 0, '0');
+                        }
+                    }
+                }
+                if (end - begin >= 1) {
+                    result.splice(begin, 0, '.');
+                    end++;
+                }
+                if (exponent != 0) {
+                    result.splice(end, 0, 'E');
+                    if (exponent > 0) {
+                        result.splice(++end, 0, '+');
+                    }
+                    result.splice(++end, 0, String(exponent));
+                }
+            }
+            return result.join("");
+        }
+
+        /**
+         * Returns a string representation of this {@code BigDecimal}. No scientific
+         * notation is used. This methods adds zeros where necessary.
+         * <p>
+         * If this string representation is used to create a new instance, this
+         * instance is generally not identical to {@code this} as the precision
+         * changes.
+         * <p>
+         * {@code x.equals(new BigDecimal(x.toPlainString())} usually returns
+         * {@code false}.
+         * <p>
+         * {@code x.compareTo(new BigDecimal(x.toPlainString())} returns {@code 0}.
+         *
+         * @return a string representation of {@code this} without exponent part.
+         */
+        public function toPlainString():String
+        {
+            var len:int = 0;
+            const v:Vector.<String> = new Vector.<String>();
+            if (ind < 0)
+            {
+                v[len++] = "-";
+            }
+            var dot:int = -1;
+            if (exp < 0)
+            {
+                if (-exp >= mant.length)
+                {
+                    v[len++] = "0.";
+                    var pad:int = -exp - mant.length;
+                    v.length += pad;
+                    while (pad-- > 0)
+                    {
+                        v[len++] = "0";
+                    }
+                }
+                else
+                {
+                    dot = mant.length + exp;
+                }
+            }
+            for (var i:int = 0; i < mant.length; i++)
+            {
+                if (i == dot)
+                {
+                    v[len++] = ".";
+                }
+                v[len++] = mant[i];
+            }
+            if (exp > 0)
+            {
+                pad = exp;
+                v.length += pad;
+                while (pad-- > 0)
+                {
+                    v[len++] = "0";
+                }
+            }
+            return v.join("");
         }
 
         /**
@@ -4716,7 +4437,8 @@ package
         returns this, for convenience
         */
 
-        private function finish(context:MathContext,strip:Boolean):BigDecimal {
+        private function finish(context:MathContext,strip:Boolean):BigDecimal
+        {
             var d:int = 0;
             var i:int = 0;
             var newmant:Array = null;

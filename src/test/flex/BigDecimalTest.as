@@ -14,9 +14,7 @@ public class BigDecimalTest
         var b:BigDecimal = new BigDecimal("45.55");
 
         total = a.add(b);
-
-        var string:String = total.toString();
-        assertTrue(string == "601.05");
+        assertEquals("601.05", total.toString());
 
         var c:BigDecimal = new BigDecimal("0.15015");
         var d:BigDecimal = new BigDecimal("0.34567");
@@ -37,9 +35,7 @@ public class BigDecimalTest
         var b:BigDecimal = new BigDecimal("45.55");
 
         var total:BigDecimal = a.subtract(b);
-
-        var string:String = total.toString();
-        assertTrue(string == "509.95");
+        assertEquals("509.95", total.toString());
 
         var c:BigDecimal = new BigDecimal("0.15015");
         var d:BigDecimal = new BigDecimal("0.34567");
@@ -57,9 +53,7 @@ public class BigDecimalTest
         var b:BigDecimal = new BigDecimal("45.55");
 
         var total:BigDecimal = a.multiply(b);
-
-        var string:String = total.toString();
-        assertTrue(string == "25303.0250");
+        assertEquals("25303.0250", total.toString());
 
         var c:BigDecimal = new BigDecimal("0.15015");
         var d:BigDecimal = new BigDecimal("0.34567");
@@ -149,8 +143,7 @@ public class BigDecimalTest
     {
         var a:BigDecimal = new BigDecimal("-555.567");
         a = a.abs();
-        var string:String = a.toString();
-        assertTrue(string == "555.567");
+        assertEquals("555.567", a.toString());
     }
 
     [Test]
@@ -275,8 +268,12 @@ public class BigDecimalTest
     public function movePointLeft():void
     {
         var d:BigDecimal = new BigDecimal("43.234");
-        assertEquals("0.043234", d.movePointLeft(3).toString());
-        assertEquals("4323400", d.movePointLeft(-5).toString());
+
+        var r:BigDecimal = d.movePointLeft(3);
+        assertEquals("0.043234", r.toString());
+
+        r = d.movePointLeft(-5);
+        assertEquals("4323400", r.toString());
     }
 
     [Test]
@@ -299,8 +296,11 @@ public class BigDecimalTest
         assertEquals("1.234E+10", new BigDecimal("1.234E10").toString());
         assertEquals("1.234E-10", new BigDecimal("1.234e-10").toString());
         assertEquals("4535.4358051100394809", new BigDecimal("4535.4358051100394809").toString());
+        assertEquals("2147483647", new BigDecimal("2147483647").toString()); // int.MAX_VALUE;
+        assertEquals("-2147483648", new BigDecimal("-2147483648").toString()); // int.MIN_VALUE;
+        assertEquals("2147483648", new BigDecimal("2147483648").toString()); // int.MAX_VALUE + 1;
+        assertEquals("-2147483649", new BigDecimal("-2147483649").toString()); // int.MIN_VALUE - 1;
     }
 }
-
 
 }

@@ -181,6 +181,7 @@ public class BigDecimalConvertTest
 //    assertTrue("incorrect value", aNumber.intValue() == result);
 //}
 
+    // todo should be possible
 //    [Test]
 //    /**
 //     * Integer value of a positive BigDecimal
@@ -355,134 +356,147 @@ public class BigDecimalConvertTest
 //    }
 //}
 
-//    [Test]
-//    /**
-//     * Convert a positive BigDecimal to an engineering string representation
-//     */
-//public function testToEngineeringStringPos():void {
-//    var a: String = "123809648392384754573567356745735.63567890295784902768787678287E-501";
-//    var aNumber: BigDecimal = new BigDecimal(a);
-//    var result: String = "123.80964839238475457356735674573563567890295784902768787678287E-471";
-//    assertEquals("incorrect value", result, aNumber.toEngineeringString());
-//}
+    [Test]
+    /**
+     * Convert a positive BigDecimal to an engineering string representation
+     */
+    public function testToEngineeringStringPos():void
+    {
+        var a:String = "123809648392384754573567356745735.63567890295784902768787678287E-501";
+        var aNumber:BigDecimal = new BigDecimal(a);
+        var result:String = "123.80964839238475457356735674573563567890295784902768787678287E-471";
+        assertEquals("incorrect value", result, aNumber.toEngineeringString());
+    }
 
-//    [Test]
-//    /**
-//     * Convert a negative BigDecimal to an engineering string representation
-//     */
-//public function testToEngineeringStringNeg():void {
-//    var a: String = "-123809648392384754573567356745735.63567890295784902768787678287E-501";
-//    var aNumber: BigDecimal = new BigDecimal(a);
-//    var result: String = "-123.80964839238475457356735674573563567890295784902768787678287E-471";
-//    assertEquals("incorrect value", result, aNumber.toEngineeringString());
-//}
+    [Test]
+    /**
+     * Convert a negative BigDecimal to an engineering string representation
+     */
+    public function testToEngineeringStringNeg():void
+    {
+        var a:String = "-123809648392384754573567356745735.63567890295784902768787678287E-501";
+        var aNumber:BigDecimal = new BigDecimal(a);
+        var result:String = "-123.80964839238475457356735674573563567890295784902768787678287E-471";
+        assertEquals("incorrect value", result, aNumber.toEngineeringString());
+    }
 
-//    [Test]
-//    /**
-//     * Convert a negative BigDecimal to an engineering string representation
-//     */
-//public function testToEngineeringStringZeroPosExponent():void {
-//    var a: String = "0.0E+16";
-//    var aNumber: BigDecimal = new BigDecimal(a);
-//    var result: String = "0E+15";
-//    assertEquals("incorrect value", result, aNumber.toEngineeringString());
-//}
+    [Test]
+    /**
+     * Convert a negative BigDecimal to an engineering string representation
+     */
+    public function testToEngineeringStringZeroPosExponent():void
+    {
+        var a:String = "0.0E+16";
+        var aNumber:BigDecimal = new BigDecimal(a);
+        var result:String = "0E+15";
+        assertEquals("incorrect value", result, aNumber.toEngineeringString());
+    }
 
-//    [Test]
-//    /**
-//     * Convert a negative BigDecimal to an engineering string representation
-//     */
-//public function testToEngineeringStringZeroNegExponent():void {
-//    var a: String = "0.0E-16";
-//    var aNumber: BigDecimal = new BigDecimal(a);
-//    var result: String = "0.00E-15";
-//    assertEquals("incorrect value", result, aNumber.toEngineeringString());
-//}
+    [Test]
+    /**
+     * Convert a negative BigDecimal to an engineering string representation
+     */
+    public function testToEngineeringStringZeroNegExponent():void
+    {
+        var a:String = "0.0E-16";
+        var aNumber:BigDecimal = new BigDecimal(a);
+        var result:String = "0.00E-15";
+        assertEquals("incorrect value", result, aNumber.toEngineeringString());
+    }
 
-//    [Test]
-//    /**
-//     * Convert a negative BigDecimal with a negative exponent to a plain string
-//     * representation; scale == 0.
-//     */
-//public function testToPlainStringNegNegExp():void {
-//    var a: String = "-123809648392384754573567356745735.63567890295784902768787678287E-100";
-//    var aNumber: BigDecimal = new BigDecimal(a);
-//    var result: String = "-0.000000000000000000000000000000000000000000000000000000000000000000012380964839238475457356735674573563567890295784902768787678287";
-//    assertTrue("incorrect value", aNumber.toPlainString().equals(result));
-//}
+    [Test]
+    /**
+     * Convert a negative BigDecimal with a negative exponent to a plain string
+     * representation; scale == 0.
+     */
+    public function testToPlainStringNegNegExp():void
+    {
+        var a:String = "-123809648392384754573567356745735.63567890295784902768787678287E-100";
+        var aNumber:BigDecimal = new BigDecimal(a);
+        var result:String = "-0.000000000000000000000000000000000000000000000000000000000000000000012380964839238475457356735674573563567890295784902768787678287";
+        assertEquals("incorrect value", result, aNumber.toPlainString());
+    }
 
-//    [Test]
-//    /**
-//     * Convert a negative BigDecimal with a positive exponent
-//     * to a plain string representation;
-//     * scale == 0.
-//     */
-//public function testToPlainStringNegPosExp():void {
-//    var a: String = "-123809648392384754573567356745735.63567890295784902768787678287E100";
-//    var aNumber: BigDecimal = new BigDecimal(a);
-//    var result: String = "-1238096483923847545735673567457356356789029578490276878767828700000000000000000000000000000000000000000000000000000000000000000000000";
-//    assertTrue("incorrect value", aNumber.toPlainString().equals(result));
-//}
+    [Test]
+    /**
+     * Convert a negative BigDecimal with a positive exponent
+     * to a plain string representation;
+     * scale == 0.
+     */
+    public function testToPlainStringNegPosExp():void
+    {
+        var a:String = "-123809648392384754573567356745735.63567890295784902768787678287E100";
+        var aNumber:BigDecimal = new BigDecimal(a);
+        var result:String = "-1238096483923847545735673567457356356789029578490276878767828700000000000000000000000000000000000000000000000000000000000000000000000";
+        assertEquals("incorrect value", result, aNumber.toPlainString());
+    }
 
-//    [Test]
-//    /**
-//     * Convert a positive BigDecimal with a negative exponent
-//     * to a plain string representation;
-//     * scale == 0.
-//     */
-//public function testToPlainStringPosNegExp():void {
-//    var a: String = "123809648392384754573567356745735.63567890295784902768787678287E-100";
-//    var aNumber: BigDecimal = new BigDecimal(a);
-//    var result: String = "0.000000000000000000000000000000000000000000000000000000000000000000012380964839238475457356735674573563567890295784902768787678287";
-//    assertTrue("incorrect value", aNumber.toPlainString().equals(result));
-//}
+    [Test]
+    /**
+     * Convert a positive BigDecimal with a negative exponent
+     * to a plain string representation;
+     * scale == 0.
+     */
+    public function testToPlainStringPosNegExp():void
+    {
+        var a:String = "123809648392384754573567356745735.63567890295784902768787678287E-100";
+        var aNumber:BigDecimal = new BigDecimal(a);
+        var result:String = "0.000000000000000000000000000000000000000000000000000000000000000000012380964839238475457356735674573563567890295784902768787678287";
+        assertEquals("incorrect value", result, aNumber.toPlainString());
+    }
 
-//    [Test]
-//    /**
-//     * Convert a negative BigDecimal with a negative exponent
-//     * to a plain string representation;
-//     * scale == 0.
-//     */
-//public function testToPlainStringPosPosExp():void {
-//    var a: String = "123809648392384754573567356745735.63567890295784902768787678287E+100";
-//    var aNumber: BigDecimal = new BigDecimal(a);
-//    var result: String = "1238096483923847545735673567457356356789029578490276878767828700000000000000000000000000000000000000000000000000000000000000000000000";
-//    assertTrue("incorrect value", aNumber.toPlainString().equals(result));
-//}
+    [Test]
+    /**
+     * Convert a negative BigDecimal with a negative exponent
+     * to a plain string representation;
+     * scale == 0.
+     */
+    public function testToPlainStringPosPosExp():void
+    {
+        var a:String = "123809648392384754573567356745735.63567890295784902768787678287E+100";
+        var aNumber:BigDecimal = new BigDecimal(a);
+        var result:String = "1238096483923847545735673567457356356789029578490276878767828700000000000000000000000000000000000000000000000000000000000000000000000";
+        assertEquals("incorrect value", result, aNumber.toPlainString());
+    }
 
-//    [Test]
-//    /**
-//     * Convert a BigDecimal to a string representation;
-//     * scale == 0.
-//     */
-//public function testToStringZeroScale():void {
-//    var a: String = "-123809648392384754573567356745735635678902957849027687876782870";
-//    var aNumber: BigDecimal = new BigDecimal(new BigInteger(a));
-//    var result: String = "-123809648392384754573567356745735635678902957849027687876782870";
-//    assertTrue("incorrect value", aNumber.toString().equals(result));
-//}
+    [Test]
+    /**
+     * Convert a BigDecimal to a string representation;
+     * scale == 0.
+     */
+    public function testToStringZeroScale():void
+    {
+        var a:String = "-123809648392384754573567356745735635678902957849027687876782870";
+//        var aNumber:BigDecimal = new BigDecimal(new BigInteger(a));
+        var aNumber:BigDecimal = new BigDecimal(a);
+        var result:String = "-123809648392384754573567356745735635678902957849027687876782870";
+        assertEquals("incorrect value", result, aNumber.toString());
+    }
 
-//    [Test]
-//    /**
-//     * Convert a positive BigDecimal to a string representation
-//     */
-//public function testToStringPos():void {
-//    var a: String = "123809648392384754573567356745735.63567890295784902768787678287E-500";
-//    var aNumber: BigDecimal = new BigDecimal(a);
-//    var result: String = "1.2380964839238475457356735674573563567890295784902768787678287E-468";
-//    assertTrue("incorrect value", aNumber.toString().equals(result));
-//}
+    [Test]
+    /**
+     * Convert a positive BigDecimal to a string representation
+     */
+    public function testToStringPos():void
+    {
+        var a:String = "123809648392384754573567356745735.63567890295784902768787678287E-500";
+        var aNumber:BigDecimal = new BigDecimal(a);
+        var result:String = "1.2380964839238475457356735674573563567890295784902768787678287E-468";
+        assertEquals("incorrect value", result, aNumber.toString());
+    }
 
+    // todo not the same
 //    [Test]
 //    /**
 //     * Convert a negative BigDecimal to a string representation
 //     */
-//public function testToStringNeg():void {
-//    var a: String = "-123.4564563673567380964839238475457356735674573563567890295784902768787678287E-5";
-//    var aNumber: BigDecimal = new BigDecimal(a);
-//    var result: String = "-0.001234564563673567380964839238475457356735674573563567890295784902768787678287";
-//    assertEquals("incorrect value", result, aNumber.toString());
-//}
+//    public function testToStringNeg():void
+//    {
+//        var a:String = "-123.4564563673567380964839238475457356735674573563567890295784902768787678287E-5";
+//        var aNumber:BigDecimal = new BigDecimal(a);
+//        var result:String = "-0.001234564563673567380964839238475457356735674573563567890295784902768787678287";
+//        assertEquals("incorrect value", result, aNumber.toString());
+//    }
 
 //    [Test]
 //    /**

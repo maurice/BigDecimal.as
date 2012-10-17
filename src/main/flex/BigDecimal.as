@@ -3784,8 +3784,7 @@ public class BigDecimal
 
     private static function clone(dec:BigDecimal):BigDecimal
     {
-        var copy:BigDecimal;
-        copy = new BigDecimal(null);
+        const copy:BigDecimal = new BigDecimal(null);
         copy.ind = dec.ind;
         copy.exp = dec.exp;
         copy.form = dec.form;

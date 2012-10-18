@@ -8,6 +8,22 @@ import org.flexunit.asserts.fail;
 public class BigDecimalTest
 {
     [Test]
+    public function constructor():void
+    {
+        var r:BigDecimal = new BigDecimal("-35453");
+        assertEquals("-35453", r.toString());
+
+        r = new BigDecimal("0.0000023423481");
+        assertEquals("0.0000023423481", r.toString());
+
+        r = new BigDecimal(53049580);
+        assertEquals("53049580", r.toString());
+
+        r = new BigDecimal(-423);
+        assertEquals("-423", r.toString());
+    }
+
+    [Test]
     public function add():void
     {
         var a:BigDecimal = new BigDecimal("555.50");

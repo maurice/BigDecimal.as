@@ -1047,13 +1047,13 @@ public class BigDecimal
     /* ---------------------------------------------------------------- */
 
     /**
-     * Returns a new {@code BigDecimal} whose value is the absolute value of
-     * {@code this}. The result is rounded according to the passed context
-     * {@code context}.
+     * Returns a new <code>BigDecimal</code> whose value is the absolute value of
+     * <code>this</code>. The result is rounded according to the passed context
+     * <code>context</code>.
      *
      * @param context
      *            rounding mode and precision for the result of this operation.
-     * @return {@code abs(this)}
+     * @return <code>abs(this)</code>
      */
     public function abs(context:MathContext = null):BigDecimal
     {
@@ -1070,14 +1070,14 @@ public class BigDecimal
     }
 
     /**
-     * Returns a new {@code BigDecimal} whose value is {@code this + rhs}.
-     * The result is rounded according to the passed context {@code context}.
+     * Returns a new <code>BigDecimal</code> whose value is <code>this + rhs</code>.
+     * The result is rounded according to the passed context <code>context</code>.
      *
      * @param rhs
-     *            value to be added to {@code this}.
+     *            value to be added to <code>this</code>.
      * @param context
      *            rounding mode and precision for the result of this operation.
-     * @return {@code this + rhs}.
+     * @return <code>this + rhs</code>.
      */
     public function add(rhs:BigDecimal, context:MathContext = null):BigDecimal
     {
@@ -1362,18 +1362,18 @@ public class BigDecimal
     }
 
     /**
-     * Compares this {@code BigDecimal} with {@code rhs}. Returns one of the
-     * three values {@code 1}, {@code 0}, or {@code -1}. The method behaves as
-     * if {@code this.subtract(rhs)} is computed. If this difference is > 0 then
+     * Compares this <code>BigDecimal</code> with <code>rhs</code>. Returns one of the
+     * three values <code>1</code>, <code>0</code>, or <code>-1</code>. The method behaves as
+     * if <code>this.subtract(rhs)</code> is computed. If this difference is > 0 then
      * 1 is returned, if the difference is < 0 then -1 is returned, and if the
      * difference is 0 then 0 is returned. This means, that if two decimal
      * instances are compared which are equal in value but differ in scale, then
      * these two instances are considered as equal.
      *
      * @param rhs
-     *            value to be compared with {@code this}.
-     * @return {@code 1} if {@code this > rhs}, {@code -1} if {@code this < rhs},
-     *         {@code 0} if {@code this == rhs}.
+     *            value to be compared with <code>this</code>.
+     * @return <code>1</code> if <code>this > rhs</code>, <code>-1</code> if <code>this < rhs</code>,
+     *         <code>0</code> if <code>this == rhs</code>.
      */
     public function compareTo(rhs:BigDecimal, context:MathContext = null):int
     {
@@ -1552,16 +1552,16 @@ public class BigDecimal
     }
 
     /**
-     * Returns a new {@code BigDecimal} whose value is {@code this / rhs}.
-     * The result is rounded according to the passed context {@code context}. If the
-     * passed math context specifies precision {@code 0}, then this call is
-     * equivalent to {@code this.divide(rhs)}.
+     * Returns a new <code>BigDecimal</code> whose value is <code>this / rhs</code>.
+     * The result is rounded according to the passed context <code>context</code>. If the
+     * passed math context specifies precision <code>0</code>, then this call is
+     * equivalent to <code>this.divide(rhs)</code>.
      *
      * @param rhs
-     *            value by which {@code this} is divided.
+     *            value by which <code>this</code> is divided.
      * @param context
      *            rounding mode and precision for the result of this operation.
-     * @return {@code this / rhs}.
+     * @return <code>this / rhs</code>.
      */
     public function divide(rhs:BigDecimal, context:MathContext = null):BigDecimal
     {
@@ -1627,11 +1627,11 @@ public class BigDecimal
     }
 
     /**
-     * Returns the maximum of this {@code BigDecimal} and {@code rhs}.
+     * Returns the maximum of this <code>BigDecimal</code> and <code>rhs</code>.
      *
      * @param rhs
      *            value to be used to compute the maximum with this.
-     * @return {@code max(this, rhs}.
+     * @return <code>max(this, rhs</code>.
      */
     public function max(rhs:BigDecimal, context:MathContext = null):BigDecimal
     {
@@ -1651,11 +1651,11 @@ public class BigDecimal
     }
 
     /**
-     * Returns the minimum of this {@code BigDecimal} and {@code rhs}.
+     * Returns the minimum of this <code>BigDecimal</code> and <code>rhs</code>.
      *
      * @param rhs
      *            value to be used to compute the minimum with this.
-     * @return {@code min(this, rhs}.
+     * @return <code>min(this, rhs</code>.
      */
     public function min(rhs:BigDecimal, context:MathContext = null):BigDecimal
     {
@@ -1675,20 +1675,19 @@ public class BigDecimal
     }
 
     /**
-     * Returns a new {@code BigDecimal} whose value is {@code this *
+     * Returns a new <code>BigDecimal</code> whose value is {@code this *
      * rhs}. The result is rounded according to the passed context
-     * {@code context}.
+     * <code>context</code>.
      *
      * @param rhs
-     *            value to be multiplied with {@code this}.
+     *            value to be multiplied with <code>this</code>.
      * @param context
      *            rounding mode and precision for the result of this operation.
-     * @return {@code this * rhs}.
+     * @return <code>this * rhs</code>.
      */
     public function multiply(rhs:BigDecimal, context:MathContext = null):BigDecimal
     {
         var lhs:BigDecimal;
-        var padding:int;
         var reqdig:int;
         var multer:Array = null;
         var multand:Array = null;
@@ -1711,7 +1710,6 @@ public class BigDecimal
         lhs = this; // name for clarity and proxy
 
         /* Prepare numbers (truncate, unless unlimited precision) */
-        padding = 0; // trailing 0's to add
         reqdig = context.digits; // local copy
 
         if (reqdig > 0)
@@ -1782,12 +1780,12 @@ public class BigDecimal
     }
 
     /**
-     * Returns a new {@code BigDecimal} whose value is the {@code -this}. The
-     * result is rounded according to the passed context {@code context}.
+     * Returns a new <code>BigDecimal</code> whose value is the <code>-this</code>. The
+     * result is rounded according to the passed context <code>context</code>.
      *
      * @param context
      *            rounding mode and precision for the result of this operation.
-     * @return {@code -this}
+     * @return <code>-this</code>
      */
     public function negate(context:MathContext = null):BigDecimal
     {
@@ -1810,12 +1808,12 @@ public class BigDecimal
     }
 
     /**
-     * Returns a new {@code BigDecimal} whose value is {@code +this}. The result
-     * is rounded according to the passed context {@code context}.
+     * Returns a new <code>BigDecimal</code> whose value is <code>+this</code>. The result
+     * is rounded according to the passed context <code>context</code>.
      *
      * @param context
      *            rounding mode and precision for the result of this operation.
-     * @return {@code this}, rounded
+     * @return <code>this</code>, rounded
      */
     public function plus(context:MathContext = null):BigDecimal
     {
@@ -1852,19 +1850,19 @@ public class BigDecimal
     // BigInteger and Math classes.
 
     /**
-     * Returns a new {@code BigDecimal} whose value is {@code this ^ n}. The
-     * scale of the result is {@code n} times the scales of {@code this}.
+     * Returns a new <code>BigDecimal</code> whose value is <code>this ^ n</code>. The
+     * scale of the result is <code>n</code> times the scales of <code>this</code>.
      * <p>
-     * {@code x.pow(0)} returns {@code 1}, even if {@code x == 0}.
+     * <code>x.pow(0)</code> returns <code>1</code>, even if <code>x == 0</code>.
      * <p>
      * Implementation Note: The implementation is based on the ANSI standard
      * X3.274-1996 algorithm.
      *
      * @param n
-     *            exponent to which {@code this} is raised.
-     * @return {@code this ^ n}.
-     * @throws ArithmeticException
-     *             if {@code n < 0} or {@code n > 999999999}.
+     *            exponent to which <code>this</code> is raised.
+     * @return <code>this ^ n</code>.
+     * @throws ArithmeticError
+     *             if <code>n < 0</code> or <code>n > 999999999</code>.
      */
     public function pow(n:int, context:MathContext = null):BigDecimal
     {
@@ -1976,14 +1974,14 @@ public class BigDecimal
     }
 
     /**
-     * Returns a new {@code BigDecimal} whose value is {@code this % rhs}.
+     * Returns a new <code>BigDecimal</code> whose value is <code>this % rhs</code>.
      * <p>
      * The remainder is defined as {@code this -
      * this.divideToIntegralValue(rhs) * rhs}.
      *
      * @param rhs
-     *            value by which {@code this} is divided.
-     * @return {@code this % rhs}.
+     *            value by which <code>this</code> is divided.
+     * @return <code>this % rhs</code>.
      */
     public function remainder(rhs:BigDecimal, context:MathContext = null):BigDecimal
     {
@@ -1996,14 +1994,14 @@ public class BigDecimal
     }
 
     /**
-     * Returns a new {@code BigDecimal} whose value is {@code this - rhs}.
-     * The result is rounded according to the passed context {@code context}.
+     * Returns a new <code>BigDecimal</code> whose value is <code>this - rhs</code>.
+     * The result is rounded according to the passed context <code>context</code>.
      *
      * @param rhs
-     *            value to be subtracted from {@code this}.
+     *            value to be subtracted from <code>this</code>.
      * @param context
      *            rounding mode and precision for the result of this operation.
-     * @return {@code this - rhs}.
+     * @return <code>this - rhs</code>.
      */
     public function subtract(rhs:BigDecimal, context:MathContext = null):BigDecimal
     {
@@ -2055,15 +2053,15 @@ public class BigDecimal
     }
 
     /**
-     * Returns {@code true} if {@code obj} is a {@code BigDecimal} instance and if
+     * Returns <code>true</code> if <code>obj</code> is a <code>BigDecimal</code> instance and if
      * this instance is equal to this big decimal. Two big decimals are equal if
      * their unscaled value and their scale is equal. For example, 1.0
      * (10*10^(-1)) is not equal to 1.00 (100*10^(-2)). Similarly, zero
      * instances are not equal if their scale differs.
      *
      * @param obj
-     *            object to be compared with {@code this}.
-     * @return true if {@code obj} is a {@code BigDecimal} and {@code this == obj}.
+     *            object to be compared with <code>this</code>.
+     * @return true if <code>obj</code> is a <code>BigDecimal</code> and <code>this == obj</code>.
      */
     public function equals(obj:Object):Boolean
     {
@@ -2146,11 +2144,11 @@ public class BigDecimal
      */
 
     /**
-     * Returns this {@code BigDecimal} as a int value if it has no fractional
+     * Returns this <code>BigDecimal</code> as a int value if it has no fractional
      * part and if its value fits to the int range ([-2^{31}..2^{31}-1]). If
-     * these conditions are not met, an {@code ArithmeticException} is thrown.
+     * these conditions are not met, an <code>ArithmeticException</code> is thrown.
      *
-     * @return this {@code BigDecimal} as a int value.
+     * @return this <code>BigDecimal</code> as a int value.
      * @throws Error
      *             if rounding is necessary or the number doesn't fit in a int.
      */
@@ -2250,20 +2248,20 @@ public class BigDecimal
     }
 
     /**
-     * Returns a new {@code BigDecimal} instance where the decimal point has
-     * been moved {@code n} places to the left. If {@code n < 0} then the
-     * decimal point is moved {@code -n} places to the right.
+     * Returns a new <code>BigDecimal</code> instance where the decimal point has
+     * been moved <code>n</code> places to the left. If <code>n < 0</code> then the
+     * decimal point is moved <code>-n</code> places to the right.
      * <p>
      * The result is obtained by changing its scale. If the scale of the result
      * becomes negative, then its precision is increased such that the scale is
      * zero.
      * <p>
-     * Note, that {@code movePointLeft(0)} returns a result which is
-     * mathematically equivalent, but which has {@code scale >= 0}.
+     * Note, that <code>movePointLeft(0)</code> returns a result which is
+     * mathematically equivalent, but which has <code>scale >= 0</code>.
      *
      * @param n
      *            number of placed the decimal point has to be moved.
-     * @return {@code this * 10^(-n}).
+     * @return <code>this * 10^(-n</code>).
      */
     public function movePointLeft(n:int):BigDecimal
     {
@@ -2271,20 +2269,20 @@ public class BigDecimal
     }
 
     /**
-     * Returns a new {@code BigDecimal} instance where the decimal point has
-     * been moved {@code n} places to the right. If {@code n < 0} then the
-     * decimal point is moved {@code -n} places to the left.
+     * Returns a new <code>BigDecimal</code> instance where the decimal point has
+     * been moved <code>n</code> places to the right. If <code>n < 0</code> then the
+     * decimal point is moved <code>-n</code> places to the left.
      * <p>
      * The result is obtained by changing its scale. If the scale of the result
      * becomes negative, then its precision is increased such that the scale is
      * zero.
      * <p>
-     * Note, that {@code movePointRight(0)} returns a result which is
+     * Note, that <code>movePointRight(0)</code> returns a result which is
      * mathematically equivalent, but which has scale >= 0.
      *
      * @param n
      *            number of placed the decimal point has to be moved.
-     * @return {@code this * 10^n}.
+     * @return <code>this * 10^n</code>.
      */
     public function movePointRight(n:int):BigDecimal
     {
@@ -2300,12 +2298,12 @@ public class BigDecimal
     }
 
     /**
-     * Returns the scale of this {@code BigDecimal}. The scale is the number of
-     * digits behind the decimal point. The value of this {@code BigDecimal} is
+     * Returns the scale of this <code>BigDecimal</code>. The scale is the number of
+     * digits behind the decimal point. The value of this <code>BigDecimal</code> is
      * the unsignedValue * 10^(-scale). If the scale is negative, then this
-     * {@code BigDecimal} represents a big integer.
+     * <code>BigDecimal</code> represents a big integer.
      *
-     * @return the scale of this {@code BigDecimal}.
+     * @return the scale of this <code>BigDecimal</code>.
      */
     public function scale():int
     {
@@ -2313,7 +2311,7 @@ public class BigDecimal
     }
 
     /**
-     * Returns a new {@code BigDecimal} instance with the specified scale.
+     * Returns a new <code>BigDecimal</code> instance with the specified scale.
      * <p>
      * If the new scale is greater than the old scale, then additional zeros are
      * added to the unscaled value. In this case no rounding is necessary.
@@ -2327,7 +2325,7 @@ public class BigDecimal
      *            scale of the result returned.
      * @param round
      *            rounding mode to be used to round the result.
-     * @return a new {@code BigDecimal} instance with the specified scale.
+     * @return a new <code>BigDecimal</code> instance with the specified scale.
      */
     public function setScale(scale:int, round:int = -1):BigDecimal
     {
@@ -2396,11 +2394,11 @@ public class BigDecimal
     }
 
     /**
-     * Returns the sign of this {@code BigDecimal}.
+     * Returns the sign of this <code>BigDecimal</code>.
      *
-     * @return {@code -1} if {@code this < 0},
-     *         {@code 0} if {@code this == 0},
-     *         {@code 1} if {@code this > 0}.
+     * @return <code>-1</code> if <code>this < 0</code>,
+     *         <code>0</code> if <code>this == 0</code>,
+     *         <code>1</code> if <code>this > 0</code>.
      */
     public function signum():int
     {
@@ -2483,14 +2481,14 @@ public class BigDecimal
      }
 
      /**
-     * Returns a canonical string representation of this {@code BigDecimal}. If
+     * Returns a canonical string representation of this <code>BigDecimal</code>. If
      * necessary, scientific notation is used. This representation always prints
      * all significant digits of this value.
      * <p>
-     * If the scale is negative or if {@code scale - precision >= 6} then
+     * If the scale is negative or if <code>scale - precision >= 6</code> then
      * scientific notation is used.
      *
-     * @return a string representation of {@code this} in scientific notation if
+     * @return a string representation of <code>this</code> in scientific notation if
      *         necessary.
      */
     public function toString():String
@@ -2542,15 +2540,15 @@ public class BigDecimal
     }
 
     /**
-     * Returns a string representation of this {@code BigDecimal}. This
+     * Returns a string representation of this <code>BigDecimal</code>. This
      * representation always prints all significant digits of this value.
      * <p>
-     * If the scale is negative or if {@code scale - precision >= 6} then
+     * If the scale is negative or if <code>scale - precision >= 6</code> then
      * engineering notation is used. Engineering notation is similar to the
      * scientific notation except that the exponent is made to be a multiple of
      * 3 such that the integer part is >= 1 and < 1000.
      *
-     * @return a string representation of {@code this} in engineering notation
+     * @return a string representation of <code>this</code> in engineering notation
      *         if necessary.
      */
     public function toEngineeringString():String
@@ -2632,19 +2630,19 @@ public class BigDecimal
     }
 
     /**
-     * Returns a string representation of this {@code BigDecimal}. No scientific
+     * Returns a string representation of this <code>BigDecimal</code>. No scientific
      * notation is used. This methods adds zeros where necessary.
      * <p>
      * If this string representation is used to create a new instance, this
-     * instance is generally not identical to {@code this} as the precision
+     * instance is generally not identical to <code>this</code> as the precision
      * changes.
      * <p>
-     * {@code x.equals(new BigDecimal(x.toPlainString())} usually returns
-     * {@code false}.
+     * <code>x.equals(new BigDecimal(x.toPlainString())</code> usually returns
+     * <code>false</code>.
      * <p>
-     * {@code x.compareTo(new BigDecimal(x.toPlainString())} returns {@code 0}.
+     * <code>x.compareTo(new BigDecimal(x.toPlainString())</code> returns <code>0</code>.
      *
-     * @return a string representation of {@code this} without exponent part.
+     * @return a string representation of <code>this</code> without exponent part.
      */
     public function toPlainString():String
     {

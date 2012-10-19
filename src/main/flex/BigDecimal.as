@@ -2780,7 +2780,7 @@ public class BigDecimal
         i = 0;
         for (; $18 > 0; $18--, i++)
         {
-            cmant[i] = new String(mant[i]);
+            cmant[i] = String(mant[i]);
         }
 
         if (form != MathContext.NOTATION_PLAIN)

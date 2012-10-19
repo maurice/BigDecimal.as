@@ -317,6 +317,15 @@ public class BigDecimalTest
         assertEquals("2147483648", new BigDecimal("2147483648").toString()); // int.MAX_VALUE + 1;
         assertEquals("-2147483649", new BigDecimal("-2147483649").toString()); // int.MIN_VALUE - 1;
     }
-}
 
+    [Test]
+    public function numberValue():void
+    {
+        var v:BigDecimal = new BigDecimal("1.234E10");
+        assertEquals("1.234E+10", v.toString());
+
+        var n:Number = v.numberValue();
+        assertEquals(12340000000, n);
+    }
+}
 }

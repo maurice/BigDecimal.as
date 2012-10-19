@@ -838,7 +838,7 @@ public class BigDecimal
                 {
                     j++;
                 }
-                mant[i] = ((inchars.charCodeAt(j)) - (BigDecimal.VALUE_ZERO));
+                mant[i] = (inchars.charCodeAt(j) - (BigDecimal.VALUE_ZERO));
                 j++;
             }
         }

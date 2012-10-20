@@ -445,75 +445,39 @@ public class BigDecimal
     /* ---------------------------------------------------------------- */
 
     /**
-     * Constructs a <code>BigDecimal</code> object from a
-     * <code>BigInteger</code>, with scale 0.
-     * <p>
-     * Constructs a <code>BigDecimal</code> which is the exact decimal
-     * representation of the <code>BigInteger</code>, with a scale of
-     * zero.
-     * The value of the <code>BigDecimal</code> is identical to the value
-     * of the <code>BigInteger</code>.
-     * The parameter must not be <code>null</code>.
-     * <p>
-     * The <code>BigDecimal</code> will contain only decimal digits,
-     * prefixed with a leading minus sign (hyphen) if the
-     * <code>BigInteger</code> is negative. A leading zero will be
-     * present only if the <code>BigInteger</code> is zero.
+     * Constructs a new <code>BigDecimal</code> instance from a given unscaled value
+     * <code>unscaledVal</code> and a given scale. The value of this instance is
+     * <code>unscaledVal</code> (<code>10^-scale</code>). The result is rounded according
+     * to the specified math context.
      *
-     * @param bi The <code>BigInteger</code> to be converted.
-     * @stable ICU 2.0
-     */
-    // ActionScript 3 : Wont Port
-    /*
-     public BigDecimal(java.math.BigInteger JavaDoc bi){
-     this(bi.toString(10));
-     return;}
-     */
-    // exp remains 0
-
-    /**
-     * Constructs a <code>BigDecimal</code> object from a
-     * <code>BigInteger</code> and a scale.
-     * <p>
-     * Constructs a <code>BigDecimal</code> which is the exact decimal
-     * representation of the <code>BigInteger</code>, scaled by the
-     * second parameter, which may not be negative.
-     * The value of the <code>BigDecimal</code> is the
-     * <code>BigInteger</code> divided by ten to the power of the scale.
-     * The <code>BigInteger</code> parameter must not be
-     * <code>null</code>.
-     * <p>
-     * The <code>BigDecimal</code> will contain only decimal digits, (with
-     * an embedded decimal point followed by <code>scale</code> decimal
-     * digits if the scale is positive), prefixed with a leading minus
-     * sign (hyphen) if the <code>BigInteger</code> is negative. A
-     * leading zero will be present only if the <code>BigInteger</code> is
-     * zero.
-     *
-     * @param bi The <code>BigInteger</code> to be converted.
-     * @param scale The <code>int</code> specifying the scale.
-     * @throws ArgumentError if the scale is negative.
-     * @stable ICU 2.0
-     */
-    // ActionScript 3 : Wont Port
-    /*
-     public BigDecimal(java.math.BigInteger JavaDoc bi,int scale){
-     this(bi.toString(10));
-     if (scale<0)
-     throw new java.lang.NumberFormatException JavaDoc("Negative scale:"+" "+scale);
-     exp=(int)-scale; // exponent is -scale
-     return;}
+     * @param unscaledValue
+     *            <code>String</code> representing the unscaled integer value of this
+     *            <code>BigDecimal</code> instance.
+     * @param scale
+     *            scale of this <code>BigDecimal</code> instance.
+     * @param context
+     *            rounding mode and precision for the result of this operation.
+     * @throws ArgumentError
+     *             if <code>mc.precision > 0</code> and
+     *             <code>context.roundingMode == UNNECESSARY</code>
+     *             and the new big decimal cannot be represented
+     *             within the given precision without rounding.
+     * @throws TypeError
+     *             if <code>unscaledValue == null</code>.
      */
     public static function createFromUnscaledInteger(unscaledValue:String, scale:int = 0, context:MathContext = null):BigDecimal
     {
+        if (unscaledValue == null)
+        {
+            throw new TypeError("The unscaledValue parameter cannot be null");
+        }
         const d:BigDecimal = new BigDecimal(unscaledValue);
         if (d.exp != 0 && scale)
         {
             throw new ArgumentError("The unscaledValue '" + unscaledValue + "' already has a scale!");
         }
         d.exp = -scale;
-        // todo round also
-        return d;
+        return d.plus(context);
     }
 
     /**
@@ -3824,7 +3788,7 @@ public class BigDecimal
         }
         else
         {
-            throw new Error("Bad round value:" + " " + mode);
+            throw new ArgumentError("Bad round value: " + mode);
         }
         /*modes*/
 
@@ -3862,7 +3826,7 @@ public class BigDecimal
         // rounding can increase exponent significantly
         if (exp > MaxExp)
         {
-            throw new Error("Exponent Overflow:" + " " + exp);
+            throw new ArithmeticError("Overflow: " + exp);
         }
         return this;
     }

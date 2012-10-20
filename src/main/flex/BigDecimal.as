@@ -283,16 +283,6 @@ public class BigDecimal
 
     // ActionScript 3 Port
     // Utility functions that does not exist in AS3
-    // This one may seem weird, but its incredibly important.
-    // because when we divide 2 ints in AS3 to put it in an array
-    // it will be a float. so lets use this to make sure its 100% perfect.
-    private static function div(a:int, b:int):int
-    {
-        return int((a - (a % b)) / b);
-    }
-
-    // ActionScript 3 Port
-    // Utility functions that does not exist in AS3
     private static function arraycopy(src:Array, srcindex:int, dest:Array, destindex:int, length:int):void
     {
         var i:int;
@@ -954,7 +944,7 @@ public class BigDecimal
 
         for (i = 9; ; i--)
         {
-            mun = div(mun, 10);
+            mun = int(mun / 10);
             if (mun == 0)
             {
                 break;
@@ -967,7 +957,7 @@ public class BigDecimal
         for (; ; i--)
         {
             mant[i] = -(int(num % 10));
-            num = div(num, 10);
+            num = int(num / 10);
             if (num == 0)
             {
                 break;
@@ -1019,7 +1009,7 @@ public class BigDecimal
         var i:int = 18;
         for (; ; i--)
         {
-            mun = div(mun, 10);
+            mun = int(mun / 10);
             if (mun == 0)
             {
                 break;
@@ -1032,7 +1022,7 @@ public class BigDecimal
         for (; ; i--)
         {
             r.mant[i] = -((num % 10));
-            num = div(num, 10);
+            num = int(num / 10);
             if (num == 0)
             {
                 break;
@@ -2215,7 +2205,7 @@ public class BigDecimal
         {
             // note we cannot just test for -ve result, as overflow can move a
             // zero into the top bit [consider 5555555555]
-            topdig = div(result, 1000000000); // get top digit, preserving sign
+            topdig = int(result / 1000000000); // get top digit, preserving sign
             if (topdig != mant[0])
             {
                 // digit must match and be positive
@@ -3187,7 +3177,7 @@ public class BigDecimal
                 }
 
                 /* subtraction needed; V1>=V2 */
-                mult = div((ba * 10), b2b);
+                mult = int(ba * 10) / b2b;
                 if (mult == 0)
                 {
                     mult = 1;
@@ -3620,14 +3610,14 @@ public class BigDecimal
             if (digit >= 0)
             {
                 work[op] = (digit % 10);
-                bytecar[op] = div(digit, 10); // calculate carry
+                bytecar[op] = int(digit / 10); // calculate carry
                 continue /*op*/;
             }
 
             // borrowing...
             digit = digit + 100; // yes, this is right [consider -50]
             work[op] = (digit % 10);
-            bytecar[op] = (div(digit, 10) - 10); // calculate borrow [NB: - after %]
+            bytecar[op] = (int(digit / 10) - 10); // calculate borrow [NB: - after %]
         }
         /*op*/
         return work;

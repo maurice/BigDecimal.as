@@ -3349,9 +3349,9 @@ public class BigDecimal
 
     /* <sgml> Report a conversion exception. </sgml> */
 
-    private function bad(s:String):void
+    private static function bad(s:String):void
     {
-        throw new ArgumentError("Not a number:" + " " + s);
+        throw new ArgumentError("Not a number: " + s);
     }
 
     /* <sgml> Extend byte array to given length, padding with 0s. If no

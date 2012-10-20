@@ -135,6 +135,19 @@ public class BigDecimalTest
     }
 
     [Test]
+    public function divideScaleRound():void
+    {
+        var a:BigDecimal = new BigDecimal("9.999999999999");
+        var b:BigDecimal = new BigDecimal("3");
+
+        var r:BigDecimal = a.divideScaleRound(b, 3, MathContext.ROUND_DOWN);
+        assertEquals("3.333", r.toString());
+
+        r = a.divideScaleRound(b, 3, MathContext.ROUND_UP);
+        assertEquals("3.334", r.toString());
+    }
+
+    [Test]
     public function remainder():void
     {
         var c:BigDecimal = new BigDecimal("23").remainder(new BigDecimal("12"));

@@ -204,10 +204,23 @@ public class BigDecimalTest
         var a:BigDecimal = new BigDecimal("-55.50");
 
         var total:BigDecimal = a.pow(3);
-//        var total:BigDecimal = a.pow(new BigDecimal("3"));
-
         assertEquals("-170953.875000", total.toString());
 
+        try
+        {
+            a.pow(-3);
+            fail("Should throw ArithmeticError");
+        }
+        catch (e:ArithmeticError)
+        {
+            assertEquals("Wrong error message", "Invalid Operation", e.message);
+        }
+
+        a = new BigDecimal("213.3420000");
+        var mc:MathContext = new MathContext(1, MathContext.NOTATION_PLAIN, false, MathContext.ROUND_DOWN);
+        var b:BigDecimal = a.pow(2, mc);
+
+        assertEquals("4E+4", b.toString());
     }
 
     [Test]

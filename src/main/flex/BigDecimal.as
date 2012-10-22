@@ -1822,53 +1822,33 @@ public class BigDecimal
     {
         if (n == 0)
         {
-            return ONE;
+            return ONE; // x**0 == 1
         }
-        if (n < 0 || n > 999999999)
+
+        if (n < 0 || n > MaxExp)
         {
             throw new ArithmeticError("Invalid Operation");
         }
-
-        var lhs:BigDecimal;
-        var reqdig:int;
-        var workdigits:int = 0;
-        var L:int = 0;
-        var workset:MathContext;
-        var res:BigDecimal;
-        var seenbit:Boolean;
-        var i:int;
 
         if (context == null)
         {
             context = MathContext.PLAIN;
         }
 
-        var rhs:BigDecimal = new BigDecimal(String(n)); // todo complete the transition from rhs:BigDecimal to n:int parameter
         if (context.lostDigits)
         {
-            checkdigits(rhs, context.digits);
+            checkdigits(null, context.digits);
         }
 
-        lhs = this; // clarified name
-
-        reqdig = context.digits; // local copy (heavily used)
-
+        var lhs:BigDecimal = this; // clarified name
+        var workdigits:int = 0;
+        const reqdig:int = context.digits; // local copy (heavily used)
         if (reqdig == 0)
         {
-            if (rhs.ind == isneg)
-            {
-                throw new Error("Negative power:" + " " + rhs.toString());
-            }
             workdigits = 0;
         }
         else
         {
-            /* non-0 digits */
-            if ((rhs.mant.length + rhs.exp) > reqdig)
-            {
-                throw Error("Too many digits:" + " " + rhs.toString());
-            }
-
             /* Round the lhs to DIGITS if need be */
             if (lhs.mant.length > reqdig)
             {
@@ -1876,28 +1856,25 @@ public class BigDecimal
             }
 
             /* L for precision calculation [see ANSI X3.274-1996] */
-            L = rhs.mant.length + rhs.exp; // length without decimal zeros/exp
+            var L:int = String(n).length; // length without decimal zeros/exp
+
+            /* non-0 digits */
+            if (L > reqdig)
+            {
+                throw Error("Too many digits: " + n);
+            }
+
             workdigits = (reqdig + L) + 1; // calculate the working DIGITS
         }
 
         /* Create a copy of context for working settings */
         // Note: no need to check for lostDigits again.
         // 1999.07.17 Note: this construction must follow RHS check
-        workset = new MathContext(workdigits, context.form, false, context.roundingMode);
+        const workset:MathContext = new MathContext(workdigits, context.form, false, context.roundingMode);
 
-        res = ONE; // accumulator
-
-        if (n == 0)
-        {
-            return res; // x**0 == 1
-        }
-        if (n < 0)
-        {
-            n = -n; // [rhs.ind records the sign]
-        }
-        seenbit = false; // set once we've seen a 1-bit
-
-        for (i = 1; ; i++)
+        var seenbit:Boolean = false; // set once we've seen a 1-bit
+        var res:BigDecimal = ONE; // accumulator
+        for (var i:int = 1; ; i++)
         {
             // for each bit [top bit ignored]
             n = n + n; // shift left 1 bit
@@ -1911,7 +1888,7 @@ public class BigDecimal
             {
                 break; // that was the last bit
             }
-            if ((!seenbit))
+            if (!seenbit)
             {
                 continue; // we don't have to square 1
             }
@@ -1919,11 +1896,6 @@ public class BigDecimal
         }
         // 32 bits
 
-        if (rhs.ind < 0)
-        {
-            // was a **-n [hence digits>0]
-            res = ONE.divide(res, workset); // .. so acc=1/acc
-        }
         return res.finish(context, true); // round and strip [original digits]
     }
 
@@ -3542,9 +3514,9 @@ public class BigDecimal
         // first check lhs...
         if (this.mant.length > dig)
         {
-            if ((!(allzero(this.mant, dig))))
+            if (!allzero(this.mant, dig))
             {
-                throw new Error("Too many digits:" + " " + this.toString());
+                throw new Error("Too many digits: " + this.toString());
             }
         }
         if (rhs == null)
@@ -3553,9 +3525,9 @@ public class BigDecimal
         }
         if (rhs.mant.length > dig)
         {
-            if ((!(allzero(rhs.mant, dig))))
+            if (!allzero(rhs.mant, dig))
             {
-                throw new Error("Too many digits:" + " " + rhs.toString());
+                throw new Error("Too many digits: " + rhs.toString());
             }
         }
     }
@@ -3772,8 +3744,8 @@ public class BigDecimal
             i = 0;
         }
 
-        var $25:int = array.length - 1;
-        for (; i <= $25; i++)
+        const len:int = array.length;
+        for (; i < len; i++)
         {
             if (array[i] != 0)
             {

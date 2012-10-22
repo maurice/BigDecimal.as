@@ -1016,11 +1016,11 @@ public class BigDecimal
             context = MathContext.PLAIN;
         }
 
-        if (this.ind == isneg)
+        if (ind == isneg)
         {
-            return this.negate(context);
+            return negate(context);
         }
-        return this.plus(context);
+        return plus(context);
     }
 
     /**
@@ -1350,14 +1350,14 @@ public class BigDecimal
         if (this.ind == rhs.ind && this.exp == rhs.exp)
         {
             /* sign & exponent the same [very common] */
-            thislength = this.mant.length;
+            thislength = mant.length;
             if (thislength < rhs.mant.length)
             {
-                return -this.ind;
+                return -ind;
             }
             if (thislength > rhs.mant.length)
             {
-                return this.ind;
+                return ind;
             }
             /* lengths are the same; we can do a straight mantissa compare
              unless maybe rounding [rounding is very unusual] */
@@ -1367,13 +1367,13 @@ public class BigDecimal
                 i = 0;
                 for (; $6 > 0; $6--, i++)
                 {
-                    if (this.mant[i] < rhs.mant[i])
+                    if (mant[i] < rhs.mant[i])
                     {
-                        return -this.ind;
+                        return -ind;
                     }
-                    if (this.mant[i] > rhs.mant[i])
+                    if (mant[i] > rhs.mant[i])
                     {
-                        return this.ind;
+                        return ind;
                     }
                 }
                 return 0; // identical
@@ -1395,7 +1395,7 @@ public class BigDecimal
         /* carry out a subtract to make the comparison */
         newrhs = clone(rhs); // safe copy
         newrhs.ind = -newrhs.ind; // prepare to subtract
-        return this.add(newrhs, context).ind; // add, and return sign of result
+        return add(newrhs, context).ind; // add, and return sign of result
     }
 
     /**
@@ -1458,7 +1458,7 @@ public class BigDecimal
     {
         var context:MathContext;
         context = new MathContext(0, MathContext.NOTATION_PLAIN, false, round); // [checks round, too]
-        return this.dodivide('D', rhs, context, -1); // take scale from LHS
+        return dodivide('D', rhs, context, -1); // take scale from LHS
     }
 
     /**
@@ -1502,7 +1502,7 @@ public class BigDecimal
             throw new ArithmeticError("Negative scale:" + " " + scale);
         }
         context = new MathContext(0, MathContext.NOTATION_PLAIN, false, round); // [checks round]
-        return this.dodivide('D', rhs, context, scale);
+        return dodivide('D', rhs, context, scale);
     }
 
     /**
@@ -1524,7 +1524,7 @@ public class BigDecimal
             context = MathContext.PLAIN;
         }
 
-        return this.dodivide('D', rhs, context, -1);
+        return dodivide('D', rhs, context, -1);
     }
 
     /**
@@ -1577,7 +1577,7 @@ public class BigDecimal
         }
 
         // scale 0 to drop .000 when plain
-        return this.dodivide('I', rhs, context, 0);
+        return dodivide('I', rhs, context, 0);
     }
 
     /**
@@ -1594,7 +1594,7 @@ public class BigDecimal
             context = MathContext.PLAIN;
         }
 
-        if (this.compareTo(rhs, context) >= 0)
+        if (compareTo(rhs, context) >= 0)
         {
             return this.plus(context);
         }
@@ -1618,7 +1618,7 @@ public class BigDecimal
             context = MathContext.PLAIN;
         }
 
-        if (this.compareTo(rhs, context) <= 0)
+        if (compareTo(rhs, context) <= 0)
         {
             return this.plus(context);
         }
@@ -1785,9 +1785,9 @@ public class BigDecimal
         // Optimization: returns same object for some common cases
         if (context.form == MathContext.NOTATION_PLAIN)
         {
-            if (this.form == MathContext.NOTATION_PLAIN)
+            if (form == MathContext.NOTATION_PLAIN)
             {
-                if (this.mant.length <= context.digits)
+                if (mant.length <= context.digits)
                 {
                     return this;
                 }
@@ -1916,7 +1916,7 @@ public class BigDecimal
             context = MathContext.PLAIN;
         }
 
-        return this.dodivide('R', rhs, context, -1);
+        return dodivide('R', rhs, context, -1);
     }
 
     /**
@@ -1948,7 +1948,7 @@ public class BigDecimal
         newrhs = clone(rhs); // safe copy
         newrhs.ind = -newrhs.ind; // prepare to subtract
 
-        return this.add(newrhs, context); // arithmetic
+        return add(newrhs, context); // arithmetic
     }
 
     /* ---------------------------------------------------------------- */
@@ -1975,7 +1975,7 @@ public class BigDecimal
     {
         // We go via a String [as does BigDecimal in JDK 1.2]
         // Next line could possibly raise NumberFormatException
-        return Number(this.toString());
+        return Number(toString());
     }
 
     /**
@@ -2017,7 +2017,7 @@ public class BigDecimal
         {
             // mantissas say all
             // here with equal-length byte arrays to compare
-            var $8:int = this.mant.length;
+            var $8:int = mant.length;
             i = 0;
             for (; $8 > 0; $8--, i++)
             {
@@ -2030,7 +2030,7 @@ public class BigDecimal
         else
         {
             // need proper layout
-            lca = this.layout(); // layout to character array
+            lca = layout(); // layout to character array
             rca = rhs.layout();
             if (lca.length != rca.length)
             {
@@ -2102,7 +2102,7 @@ public class BigDecimal
 
             if (!allzero(mant, lodigit + 1))
             {
-                throw new Error("Decimal part non-zero:" + " " + this.toString());
+                throw new Error("Decimal part non-zero:" + " " + toString());
             }
             if (lodigit < 0)
             {
@@ -2117,7 +2117,7 @@ public class BigDecimal
             if ((exp + lodigit) > 9)
             {
                 // early exit
-                throw new Error("Conversion overflow:" + " " + this.toString());
+                throw new Error("Conversion overflow:" + " " + toString());
             }
             useexp = exp;
         }
@@ -2159,7 +2159,7 @@ public class BigDecimal
                     }
                 }
 
-                throw new Error("Conversion overflow:" + " " + this.toString());
+                throw new Error("Conversion overflow:" + " " + toString());
             }
         }
 
@@ -2275,7 +2275,7 @@ public class BigDecimal
         if (ourscale == scale)
         {
             // already correct scale
-            if (this.form == MathContext.NOTATION_PLAIN)
+            if (form == MathContext.NOTATION_PLAIN)
             {
                 // .. and form
                 return this;
@@ -2328,7 +2328,7 @@ public class BigDecimal
      */
     public function signum():int
     {
-        return this.ind; // [note this assumes values for ind.]
+        return ind; // [note this assumes values for ind.]
     }
 
      /**
@@ -3513,11 +3513,11 @@ public class BigDecimal
             return; // don't check if digits=0
         }
         // first check lhs...
-        if (this.mant.length > dig)
+        if (mant.length > dig)
         {
-            if (!allzero(this.mant, dig))
+            if (!allzero(mant, dig))
             {
-                throw new Error("Too many digits: " + this.toString());
+                throw new Error("Too many digits: " + toString());
             }
         }
         if (rhs == null)
@@ -3785,9 +3785,9 @@ public class BigDecimal
         /* Round if mantissa too long and digits requested */
         if (context.digits != 0)
         {
-            if (this.mant.length > context.digits)
+            if (mant.length > context.digits)
             {
-                this.roundContext(context);
+                roundContext(context);
             }
         }
 
@@ -3797,12 +3797,12 @@ public class BigDecimal
         {
             if (context.form != MathContext.NOTATION_PLAIN)
             {
-                d = this.mant.length;
+                d = mant.length;
                 /* see if we need to drop any trailing zeros */
                 i = d - 1;
                 for (; i >= 1; i--)
                 {
-                    if (this.mant[i] != 0)
+                    if (mant[i] != 0)
                     {
                         break;
                     }
@@ -3810,12 +3810,12 @@ public class BigDecimal
                     exp++;
                 }
 
-                if (d < this.mant.length)
+                if (d < mant.length)
                 {
                     /* need to reduce */
                     newmant = new Array(d);
-                    arraycopy(this.mant, 0, newmant, 0, d);
-                    this.mant = newmant;
+                    arraycopy(mant, 0, newmant, 0, d);
+                    mant = newmant;
                 }
             }
         }
@@ -3823,19 +3823,19 @@ public class BigDecimal
         form = MathContext.NOTATION_PLAIN; // preset
 
         /* Now check for leading- and all- zeros in mantissa */
-        var $26:int = this.mant.length;
+        var $26:int = mant.length;
         i = 0;
         for (; $26 > 0; $26--, i++) /*i*/
         {
-            if (this.mant[i] != 0)
+            if (mant[i] != 0)
             {
                 // non-0 result; ind will be correct
                 // remove leading zeros [e.g., after subtract]
                 if (i > 0) /*delead*/
                 {
-                    newmant = new Array(this.mant.length - i);
-                    arraycopy(this.mant, i, newmant, 0, this.mant.length - i);
-                    this.mant = newmant;
+                    newmant = new Array(mant.length - i);
+                    arraycopy(mant, i, newmant, 0, mant.length - i);
+                    mant = newmant;
                 }
                 /*delead*/
 

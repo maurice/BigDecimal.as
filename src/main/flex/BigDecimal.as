@@ -1448,8 +1448,8 @@ public class BigDecimal
      * @throws Error if <code>round</code> is not a
      * valid rounding mode.
      * @throws ArithmeticError if <code>rhs</code> is zero.
-     * @throws ArithmeticError if <code>round</code> is {@link
-     * MathContext#ROUND_UNNECESSARY} and
+     * @throws ArithmeticError if <code>round</code> is
+     * {@link MathContext#ROUND_UNNECESSARY} and
      * <code>this.scale()</code> is insufficient to
      * represent the result exactly.
      * @stable ICU 2.0
@@ -1489,8 +1489,8 @@ public class BigDecimal
      * valid rounding mode.
      * @throws ArithmeticError if <code>rhs</code> is zero.
      * @throws ArithmeticError if <code>scale</code> is negative.
-     * @throws ArithmeticError if <code>round</code> is {@link
-     * MathContext#ROUND_UNNECESSARY} and <code>scale</code>
+     * @throws ArithmeticError if <code>round</code>
+     * is {@link MathContext#ROUND_UNNECESSARY} and <code>scale</code>
      * is insufficient to represent the result exactly.
      * @stable ICU 2.0
      */

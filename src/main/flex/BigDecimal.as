@@ -2124,7 +2124,7 @@ public class BigDecimal
         /* convert the mantissa to binary, inline for speed */
 
         result = 0;
-        var $16:int = lodigit + useexp;
+        const $16:int = lodigit + useexp;
         i = 0;
         for (; i <= $16; i++)
         {
@@ -2497,37 +2497,38 @@ public class BigDecimal
      */
     public function toPlainString():String
     {
-        var len:int = 0;
+        const len:int = mant.length;
         const v:Vector.<String> = new Vector.<String>();
+        var vi:int = 0;
         if (ind < 0)
         {
-            v[len++] = "-";
+            v[vi++] = "-";
         }
         var dot:int = -1;
         if (exp < 0)
         {
-            if (-exp >= mant.length)
+            if (-exp >= len)
             {
-                v[len++] = "0.";
-                var pad:int = -exp - mant.length;
+                v[vi++] = "0.";
+                var pad:int = -exp - len;
                 v.length += pad;
                 while (pad-- > 0)
                 {
-                    v[len++] = "0";
+                    v[vi++] = "0";
                 }
             }
             else
             {
-                dot = mant.length + exp;
+                dot = len + exp;
             }
         }
-        for (var i:int = 0; i < mant.length; i++)
+        for (var i:int = 0; i < len; i++)
         {
             if (i == dot)
             {
-                v[len++] = ".";
+                v[vi++] = ".";
             }
-            v[len++] = mant[i];
+            v[vi++] = mant[i];
         }
         if (exp > 0)
         {
@@ -2535,7 +2536,7 @@ public class BigDecimal
             v.length += pad;
             while (pad-- > 0)
             {
-                v[len++] = "0";
+                v[vi++] = "0";
             }
         }
         return v.join("");
@@ -3053,7 +3054,7 @@ public class BigDecimal
                 }
                 /* V1 now probably has leading zeros, remove leading 0's and try
                  again. (It could be longer than V2) */
-                var $23:int = var1len - 2;
+                const $23:int = var1len - 2;
                 start = 0;
                 for (; start <= $23; start++) /* start */
                 {

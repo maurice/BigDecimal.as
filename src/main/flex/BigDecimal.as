@@ -1991,11 +1991,6 @@ public class BigDecimal
      */
     public function equals(obj:Object):Boolean
     {
-        var rhs:BigDecimal;
-        var i:int = 0;
-        var lca:Array = null;
-        var rca:Array = null;
-
         // We are equal iff toString of both are exactly the same
         if (obj == null)
         {
@@ -2007,7 +2002,7 @@ public class BigDecimal
             return false; // not a decimal
         }
 
-        rhs = obj as BigDecimal; // cast; we know it will work
+        const rhs:BigDecimal = obj as BigDecimal; // cast; we know it will work
         if (this.ind != rhs.ind)
         {
             return false; // different signs never match
@@ -2018,7 +2013,7 @@ public class BigDecimal
             // mantissas say all
             // here with equal-length byte arrays to compare
             var $8:int = mant.length;
-            i = 0;
+            var i:int = 0;
             for (; $8 > 0; $8--, i++)
             {
                 if (this.mant[i] != rhs.mant[i])
@@ -2030,8 +2025,8 @@ public class BigDecimal
         else
         {
             // need proper layout
-            lca = layout(); // layout to character array
-            rca = rhs.layout();
+            const lca:Vector.<String> = toCharVector(); // layout to character array
+            const rca:Vector.<String> = rhs.toCharVector();
             if (lca.length != rca.length)
             {
                 return false; // mismatch
@@ -2344,32 +2339,37 @@ public class BigDecimal
      */
     public function toString():String
     {
-        const result:Vector.<String> = Vector.<String>(mant);
+        return toCharVector().join("");
+    }
+
+    private function toCharVector():Vector.<String>
+    {
+        const buf:Vector.<String> = Vector.<String>(mant);
         if (ind < 0)
         {
-            result.splice(0, 0, "-");
+            buf.splice(0, 0, "-");
         }
         if (scale() == 0)
         {
-            return result.join("");
+            return buf;
         }
 
         const begin:int = (ind < 0) ? 2 : 1;
-        var end:int = result.length;
+        var end:int = buf.length;
         const exponent:int = -scale() + end - begin;
 
         if (scale() > 0 && exponent >= -6)
         {
             if (exponent >= 0)
             {
-                result.splice(end - scale(), 0, '.');
+                buf.splice(end - scale(), 0, '.');
             }
             else
             {
-                result.splice(begin - 1, 0, "0", "."); //$NON-NLS-1$
+                buf.splice(begin - 1, 0, "0", ".");
                 for (var i:int = 0; i < -exponent - 1; i++)
                 {
-                    result.splice(begin + 1, 0, "0");
+                    buf.splice(begin + 1, 0, "0");
                 }
             }
         }
@@ -2377,17 +2377,20 @@ public class BigDecimal
         {
             if (end - begin >= 1)
             {
-                result.splice(begin, 0, '.');
-                end++;
+                buf.splice(begin, 0, '.');
             }
-            result.splice(end, 0, 'E');
+            buf[buf.length] = 'E';
             if (exponent > 0)
             {
-                result.splice(++end, 0, '+');
+                buf[buf.length] = '+';
             }
-            result.splice(++end, 0, String(exponent));
+            const exp:String = String(exponent);
+            for (i = 0; i < exp.length; i++)
+            {
+                buf[buf.length] = exp.charAt(i);
+            }
         }
-        return result.join("");
+        return buf;
     }
 
     /**
@@ -2404,32 +2407,32 @@ public class BigDecimal
      */
     public function toEngineeringString():String
     {
-        const result:Vector.<String> = Vector.<String>(mant);
+        const buf:Vector.<String> = Vector.<String>(mant);
         if (ind < 0)
         {
-            result.splice(0, 0, "-");
+            buf.splice(0, 0, "-");
         }
         if (exp == 0)
         {
-            return result.join("");
+            return buf.join("");
         }
 
         var begin:int = (ind < 0) ? 2 : 1;
-        var end:int = result.length;
+        var end:int = buf.length;
         var exponent:int = exp + end - begin;
 
         if (-exp > 0 && exponent >= -6)
         {
             if (exponent >= 0)
             {
-                result.splice(end - scale(), 0, '.');
+                buf.splice(end - scale(), 0, '.');
             }
             else
             {
-                result.splice(begin - 1, 0, "0", "."); //$NON-NLS-1$
+                buf.splice(begin - 1, 0, "0", "."); //$NON-NLS-1$
                 for (var i:int = 0; i < -exponent - 1; i++)
                 {
-                    result.splice(begin + 1, 0, "0");
+                    buf.splice(begin + 1, 0, "0");
                 }
             }
         }
@@ -2458,26 +2461,25 @@ public class BigDecimal
                 {
                     for (i = rem - delta; i > 0; i--)
                     {
-                        result.splice(end++, 0, '0');
+                        buf.splice(end++, 0, '0');
                     }
                 }
             }
             if (end - begin >= 1)
             {
-                result.splice(begin, 0, '.');
-                end++;
+                buf.splice(begin, 0, '.');
             }
             if (exponent != 0)
             {
-                result.splice(end, 0, 'E');
+                buf[buf.length] = 'E';
                 if (exponent > 0)
                 {
-                    result.splice(++end, 0, '+');
+                    buf[buf.length] = '+';
                 }
-                result.splice(++end, 0, String(exponent));
+                buf[buf.length] = String(exponent);
             }
         }
-        return result.join("");
+        return buf.join("");
     }
 
     /**
@@ -2498,23 +2500,23 @@ public class BigDecimal
     public function toPlainString():String
     {
         const len:int = mant.length;
-        const v:Vector.<String> = new Vector.<String>();
-        var vi:int = 0;
+        const buf:Vector.<String> = new Vector.<String>();
+        var bufLen:int = 0;
         if (ind < 0)
         {
-            v[vi++] = "-";
+            buf[bufLen++] = "-";
         }
         var dot:int = -1;
         if (exp < 0)
         {
             if (-exp >= len)
             {
-                v[vi++] = "0.";
+                buf[bufLen++] = "0.";
                 var pad:int = -exp - len;
-                v.length += pad;
+                buf.length += pad;
                 while (pad-- > 0)
                 {
-                    v[vi++] = "0";
+                    buf[bufLen++] = "0";
                 }
             }
             else
@@ -2526,20 +2528,20 @@ public class BigDecimal
         {
             if (i == dot)
             {
-                v[vi++] = ".";
+                buf[bufLen++] = ".";
             }
-            v[vi++] = mant[i];
+            buf[bufLen++] = mant[i];
         }
         if (exp > 0)
         {
             pad = exp;
-            v.length += pad;
+            buf.length += pad;
             while (pad-- > 0)
             {
-                v[vi++] = "0";
+                buf[bufLen++] = "0";
             }
         }
-        return v.join("");
+        return buf.join("");
     }
 
     /**
@@ -2602,193 +2604,6 @@ public class BigDecimal
     /* ---------------------------------------------------------------- */
     /* Private methods */
     /* ---------------------------------------------------------------- */
-
-    /* <sgml> Return char array value of a BigDecimal (conversion from
-     BigDecimal to laid-out canonical char array).
-     <p>The mantissa will either already have been rounded (following an
-     operation) or will be of length appropriate (in the case of
-     construction from an int, for example).
-     <p>We must not alter the mantissa, here.
-     <p>'form' describes whether we are to use exponential notation (and
-     if so, which), or if we are to lay out as a plain/pure numeric.
-     </sgml> */
-
-    private function layout():Array
-    {
-        var cmant:Array;
-        var i:int;
-        var sb:String = null;
-        var euse:int = 0;
-        var sig:int = 0;
-        var csign:String = "";
-        var rec:Array = null;
-        var needsign:int;
-        var mag:int;
-        var len:int = 0;
-
-        cmant = new Array(mant.length); // copy byte[] to a char[]
-
-        var $18:int = mant.length;
-        i = 0;
-        for (; $18 > 0; $18--, i++)
-        {
-            cmant[i] = String(mant[i]);
-        }
-
-        if (form != MathContext.NOTATION_PLAIN)
-        {
-            /* exponential notation needed */
-            sb = "";
-            if (ind == isneg)
-            {
-                sb += "-";
-            }
-            euse = (exp + cmant.length) - 1; // exponent to use
-            /* setup sig=significant digits and copy to result */
-            if (form == MathContext.NOTATION_SCIENTIFIC)
-            {
-                // [default]
-                sb += cmant[0]; // significant character
-                if (cmant.length > 1)
-                {
-                    // have decimal part
-                    sb += ".";
-                    sb += cmant.slice(1).join("");
-                }
-            }
-            else /* engineering */
-            {
-                sig = euse % 3; // common
-                if (sig < 0)
-                {
-                    sig = 3 + sig; // negative exponent
-                }
-                euse = euse - sig;
-                sig++;
-                if (sig >= cmant.length)
-                {
-                    // zero padding may be needed
-                    sb += cmant.join("");
-                    {
-                        var $19:int = sig - cmant.length;
-                        for (; $19 > 0; $19--)
-                        {
-                            sb += "0";
-                        }
-                    }
-                }
-                else
-                {
-                    // decimal point needed
-                    sb += cmant.slice(0, sig).join("");
-                    sb += ".";
-                    sb += cmant.slice(sig).join("");
-                }
-            }
-            /*engineering*/
-
-            if (euse != 0)
-            {
-                if (euse < 0)
-                {
-                    csign = "-";
-                    euse = -euse;
-                }
-                else
-                {
-                    csign = "+";
-                }
-                sb += "E";
-                sb += csign;
-                sb += euse;
-            }
-
-            return sb.split("");
-        }
-
-        /* Here for non-exponential (plain) notation */
-        if (exp == 0)
-        {
-            /* easy */
-            if (ind >= 0)
-            {
-                return cmant; // non-negative integer
-            }
-            rec = new Array(cmant.length + 1);
-            rec[0] = "-";
-            arraycopy(cmant, 0, rec, 1, cmant.length);
-
-            return rec;
-        }
-
-        /* Need a '.' and/or some zeros */
-        needsign = ((ind == isneg) ? 1 : 0); // space for sign? 0 or 1
-
-        /* MAG is the position of the point in the mantissa (index of the
-         character it follows) */
-        mag = exp + cmant.length;
-
-        if (mag < 1)
-        {
-            /* 0.00xxxx form */
-            len = (needsign + 2) - exp;
-            rec = new Array(len);
-            if (needsign != 0)
-            {
-                rec[0] = "-";
-            }
-            rec[needsign] = "0";
-            rec[needsign + 1] = ".";
-            var $20:int = -mag;
-            i = needsign + 2;
-            for (; $20 > 0; $20--, i++)
-            {
-                // maybe none
-                rec[i] = "0";
-            }
-
-            arraycopy(cmant, 0, rec, (needsign + 2) - mag, cmant.length);
-            return rec;
-        }
-
-        if (mag > cmant.length)
-        {
-            /* xxxx0000 form */
-            len = needsign + mag;
-            rec = new Array(len);
-            if (needsign != 0)
-            {
-                rec[0] = "-";
-            }
-
-            arraycopy(cmant, 0, rec, needsign, cmant.length);
-
-            var $21:int = mag - cmant.length;
-            i = needsign + cmant.length;
-            for (; $21 > 0; $21--, i++)
-            {
-                // never 0
-                rec[i] = "0";
-            }
-
-            return rec;
-        }
-
-        /* decimal point is in the middle of the mantissa */
-        len = (needsign + 1) + cmant.length;
-        rec = new Array(len);
-
-        if (needsign != 0)
-        {
-            rec[0] = '-';
-        }
-
-        arraycopy(cmant, 0, rec, needsign, mag);
-        rec[needsign + mag] = ".";
-        arraycopy(cmant, mag, rec, (needsign + mag) + 1, cmant.length - mag);
-
-        return rec;
-    }
 
     /* <sgml> Carry out division operations. </sgml> */
     /*

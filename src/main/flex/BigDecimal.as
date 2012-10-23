@@ -2501,22 +2501,22 @@ public class BigDecimal
     {
         const len:int = mant.length;
         const buf:Vector.<String> = new Vector.<String>();
-        var bufLen:int = 0;
         if (ind < 0)
         {
-            buf[bufLen++] = "-";
+            buf[buf.length] = "-";
         }
         var dot:int = -1;
         if (exp < 0)
         {
             if (-exp >= len)
             {
-                buf[bufLen++] = "0.";
+                buf[buf.length] = "0.";
+                var pos:int = buf.length;
                 var pad:int = -exp - len;
                 buf.length += pad;
-                while (pad-- > 0)
+                for ( ; pad-- > 0; pos++)
                 {
-                    buf[bufLen++] = "0";
+                    buf[pos] = "0";
                 }
             }
             else
@@ -2528,17 +2528,18 @@ public class BigDecimal
         {
             if (i == dot)
             {
-                buf[bufLen++] = ".";
+                buf[buf.length] = ".";
             }
-            buf[bufLen++] = mant[i];
+            buf[buf.length] = mant[i];
         }
         if (exp > 0)
         {
+            pos = buf.length;
             pad = exp;
             buf.length += pad;
-            while (pad-- > 0)
+            for ( ; pad-- > 0; pos++)
             {
-                buf[bufLen++] = "0";
+                buf[pos] = "0";
             }
         }
         return buf.join("");

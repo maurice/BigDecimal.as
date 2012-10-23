@@ -246,8 +246,6 @@ public class MathContext
      * never significant.
      * <p>
      * <code>digits</code> will always be non-negative.
-     *
-     * @serial
      */
     public function get digits():int
     {
@@ -279,7 +277,6 @@ public class MathContext
      * @see #NOTATION_ENGINEERING
      * @see #NOTATION_PLAIN
      * @see #NOTATION_SCIENTIFIC
-     * @serial
      */
     public function get form():int
     {
@@ -310,8 +307,6 @@ public class MathContext
      * <code>ArithmeticException</code> if an operand is more precise
      * than the digits setting (that is, digits would be lost).
      * When disabled, operands are rounded to the specified digits.
-     *
-     * @serial
      */
     public function get lostDigits():Boolean
     {
@@ -337,7 +332,6 @@ public class MathContext
      * @see #ROUND_HALF_UP
      * @see #ROUND_UNNECESSARY
      * @see #ROUND_UP
-     * @serial
      */
     public function get roundingMode():int
     {
@@ -418,73 +412,6 @@ public class MathContext
         setForm(form);
         setRoundingMode(roundingMode);
         _lostDigits = lostDigits; // [no bad value possible]
-    }
-
-    /**
-     * Returns the digits setting.
-     * This value is always non-negative.
-     *
-     * @return an <code>int</code> which is the value of the digits
-     * setting
-     * @stable ICU 2.0
-     */
-    [Deprecated("Use the `digits` property getter instead")]
-    public function getDigits():int
-    {
-        return digits;
-    }
-
-    /**
-     * Returns the form setting.
-     * This will be one of
-     * {@link #NOTATION_ENGINEERING},
-     * {@link #NOTATION_PLAIN}, or
-     * {@link #NOTATION_SCIENTIFIC}.
-     *
-     * @return an <code>int</code> which is the value of the form setting
-     * @stable ICU 2.0
-     */
-    [Deprecated("Use the `form` property getter instead")]
-    public function getForm():int
-    {
-        return form;
-    }
-
-    /**
-     * Returns the lostDigits setting.
-     * This will be either <code>true</code> (enabled) or
-     * <code>false</code> (disabled).
-     *
-     * @return a <code>boolean</code> which is the value of the lostDigits
-     * setting
-     * @stable ICU 2.0
-     */
-    [Deprecated("Use the `lostDigits` property getter instead")]
-    public function getLostDigits():Boolean
-    {
-        return lostDigits;
-    }
-
-    /**
-     * Returns the roundingMode setting.
-     * This will be one of
-     * {@link #ROUND_CEILING},
-     * {@link #ROUND_DOWN},
-     * {@link #ROUND_FLOOR},
-     * {@link #ROUND_HALF_DOWN},
-     * {@link #ROUND_HALF_EVEN},
-     * {@link #ROUND_HALF_UP},
-     * {@link #ROUND_UNNECESSARY}, or
-     * {@link #ROUND_UP}.
-     *
-     * @return an <code>int</code> which is the value of the roundingMode
-     * setting
-     * @stable ICU 2.0
-     */
-    [Deprecated("Use the `roundindMode` property getter instead")]
-    public function getRoundingMode():int
-    {
-        return roundingMode;
     }
 
     /** Returns the <code>MathContext</code> as a readable string.

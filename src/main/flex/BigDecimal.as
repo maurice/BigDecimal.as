@@ -281,43 +281,6 @@ import flash.utils.getQualifiedClassName;
 public class BigDecimal
 {
 
-    // ActionScript 3 Port
-    // Utility functions that does not exist in AS3
-    private static function arraycopy(src:Array, srcindex:int, dest:Array, destindex:int, length:int):void
-    {
-        var i:int;
-
-        if (destindex > srcindex)
-        {
-            // in case src and dest are equals, but also doesn't hurt
-            // if they are different
-            for (i = length - 1; i >= 0; --i)
-            {
-                dest[i + destindex] = src[i + srcindex];
-            }
-        }
-        else
-        {
-            for (i = 0; i < length; ++i)
-            {
-                dest[i + destindex] = src[i + srcindex];
-            }
-        }
-    }
-
-    // ActionScript 3 Port
-    // Utility functions that does not exist in AS3
-    private static function createArrayWithZeros(length:int):Array
-    {
-        var retVal:Array = new Array(length);
-        var i:int;
-        for (i = 0; i < length; ++i)
-        {
-            retVal[i] = 0;
-        }
-        return retVal;
-    }
-
     /* ----- Constants ----- */
     /* properties constant public */ // useful to others
     /**
@@ -424,7 +387,7 @@ public class BigDecimal
      *
      * @serial
      */
-    private var mant:Array; // assumed null
+    private var mant:Vector.<int>; // assumed null
 
     /**
      * The exponent.
@@ -746,7 +709,7 @@ public class BigDecimal
         /*i*/
 
         /* Create the mantissa array */
-        mant = new Array(d); // we know the length
+        mant = new Vector.<int>(d); // we know the length
         j = offset; // input offset
 
         if (exotic)
@@ -869,7 +832,7 @@ public class BigDecimal
                 else
                 {
                     {
-                        mant = new Array(1);
+                        mant = new Vector.<int>(1);
                         if (num > 0)
                         {
                             mant[0] = num;
@@ -916,7 +879,7 @@ public class BigDecimal
         }
 
         // i is the position of the leftmost digit placed
-        mant = new Array(10 - i);
+        mant = new Vector.<int>(10 - i);
         i = (10 - i) - 1;
         for (; ; i--)
         {
@@ -981,7 +944,7 @@ public class BigDecimal
         }
 
         // i is the position of the leftmost digit placed
-        r.mant = new Array(19 - i);
+        r.mant = new Vector.<int>(19 - i);
         i = (19 - i) - 1;
         for (; ; i--)
         {
@@ -1038,7 +1001,7 @@ public class BigDecimal
         var newlen:int = 0;
         var tlen:int = 0;
         var mult:int = 0;
-        var t:Array = null;
+        var t:Vector.<int> = null;
         var ia:int = 0;
         var ib:int = 0;
         var ea:int = 0;
@@ -1100,9 +1063,9 @@ public class BigDecimal
         // Note sign may be 0 if digits (reqdig) is 0
         // usel and user will be the byte arrays passed to the adder; we'll
         // use them on all paths except quick exits
-        var usel:Array = lhs.mant;
+        var usel:Vector.<int> = lhs.mant;
         var usellen:int = lhs.mant.length;
-        var user:Array = rhs.mant;
+        var user:Vector.<int> = rhs.mant;
         var userlen:int = rhs.mant.length;
 
         /*padder*/
@@ -1131,7 +1094,8 @@ public class BigDecimal
                     if (usellen < reqdig)
                     {
                         // need 0 padding
-                        res.mant = extend(lhs.mant, reqdig);
+                        res.mant = lhs.mant.slice();
+                        res.mant.length = reqdig;
                         res.exp = res.exp - ((reqdig - usellen));
                     }
 
@@ -1172,7 +1136,8 @@ public class BigDecimal
                     if (userlen < reqdig)
                     {
                         // need 0 padding
-                        res.mant = extend(rhs.mant, reqdig);
+                        res.mant = rhs.mant.slice();
+                        res.mant.length = reqdig;
                         res.exp = res.exp - ((reqdig - userlen));
                     }
                     return res.finish(context, false);
@@ -1643,12 +1608,12 @@ public class BigDecimal
     {
         var lhs:BigDecimal;
         var reqdig:int;
-        var multer:Array = null;
-        var multand:Array = null;
+        var multer:Vector.<int> = null;
+        var multand:Vector.<int> = null;
         var multandlen:int;
         var acclen:int = 0;
         var res:BigDecimal;
-        var acc:Array;
+        var acc:Vector.<int>;
         var n:int;
         var mult:int = 0;
 
@@ -1708,7 +1673,7 @@ public class BigDecimal
 
         /* Now the main long multiplication loop */
         res = new BigDecimal(); // where we'll build result
-        acc = createArrayWithZeros(acclen); // accumulator, all zeros
+        acc = new Vector.<int>(acclen); // accumulator, all zeros
         // 1998.07.01: calculate from left to right so that accumulator goes
         // to likely final length on first addition; this avoids a one-digit
         // extension (and object allocation) each time around the loop.
@@ -2250,11 +2215,6 @@ public class BigDecimal
      */
     public function setScale(scale:int, round:int = -1):BigDecimal
     {
-        var ourscale:int;
-        var res:BigDecimal;
-        var padding:int = 0;
-        var newlen:int = 0;
-
         //ActionScript 3
         //Correct the default parameter patch because of 
         //Compiler bug for the compile time constants
@@ -2265,8 +2225,7 @@ public class BigDecimal
 
         // at present this naughtily only checks the round value if it is
         // needed (used), for speed
-        ourscale = this.scale();
-
+        const ourscale:int = this.scale();
         if (ourscale == scale)
         {
             // already correct scale
@@ -2276,11 +2235,13 @@ public class BigDecimal
                 return this;
             }
         }
-        res = clone(this); // need copy
+
+        var res:BigDecimal = clone(this); // need copy
         if (ourscale <= scale)
         {
             // simply zero-padding/changing form
             // if ourscale is 0 we may have lots of 0s to add
+            var padding:int = 0;
             if (ourscale == 0)
             {
                 padding = res.exp + scale;
@@ -2289,7 +2250,8 @@ public class BigDecimal
             {
                 padding = scale - ourscale;
             }
-            res.mant = extend(res.mant, res.mant.length + padding);
+            res.mant = res.mant.slice(); // cannot re-use, make a copy
+            res.mant.length += padding; // and extend
             res.exp = -scale; // as requested
         }
         else
@@ -2300,13 +2262,14 @@ public class BigDecimal
                 throw new Error("Negative scale:" + " " + scale);
             }
             // [round() will raise exception if invalid round]
-            newlen = res.mant.length - ((ourscale - scale)); // [<=0 is OK]
+            const newlen:int = res.mant.length - ((ourscale - scale)); // [<=0 is OK]
             res = res.round(newlen, round); // round to required length
             // This could have shifted left if round (say) 0.9->1[.0]
             // Repair if so by adding a zero and reducing exponent
             if (res.exp != (-scale))
             {
-                res.mant = extend(res.mant, res.mant.length + 1);
+                res.mant = res.mant.slice(); // cannot re-use, make a copy
+                res.mant.length += 1; // and extend
                 res.exp = res.exp - 1;
             }
         }
@@ -2530,7 +2493,7 @@ public class BigDecimal
             {
                 buf[buf.length] = ".";
             }
-            buf[buf.length] = mant[i];
+            buf[buf.length] = String(mant[i]);
         }
         if (exp > 0)
         {
@@ -2660,11 +2623,9 @@ public class BigDecimal
         var lhs:BigDecimal;
         var reqdig:int;
         var newexp:int;
-        var res:BigDecimal;
         var newlen:int;
-        var var1:Array;
         var var1len:int;
-        var var2:Array;
+        var var2:Vector.<int>;
         var var2len:int;
         var b2b:int;
         var have:int;
@@ -2676,10 +2637,8 @@ public class BigDecimal
         var start:int;
         var padding:int = 0;
         var d:int = 0;
-        var newvar1:Array = null;
         var lasthave:int = 0;
         var actdig:int = 0;
-        var newmant:Array = null;
 
         if (context.lostDigits)
         {
@@ -2764,15 +2723,17 @@ public class BigDecimal
         }
 
         /* We need slow division */
-        res = new BigDecimal(); // where we'll build result
+        const res:BigDecimal = new BigDecimal(); // where we'll build result
         res.ind = (lhs.ind * rhs.ind); // final sign (for D/I)
         res.exp = newexp; // initial exponent (for D/I)
-        res.mant = createArrayWithZeros(reqdig + 1); // where build the result
+        res.mant = new Vector.<int>(reqdig + 1); // where build the result
 
         /* Now [virtually pad the mantissae with trailing zeros */
         // Also copy the LHS, which will be our working array
         newlen = (reqdig + reqdig) + 1;
-        var1 = extend(lhs.mant, newlen); // always makes longer, so new safe array
+
+        var var1:Vector.<int> = lhs.mant.slice();
+        var1.length = newlen; // always makes longer, so new safe array
         var1len = newlen; // [remaining digits are 0]
 
         var2 = rhs.mant;
@@ -2888,7 +2849,10 @@ public class BigDecimal
                     continue /*inner*/;
                 }
                 // shift left
-                arraycopy(var1, start, var1, 0, var1len);
+                for (i = 0; i < var1len; i++)
+                {
+                    var1[i] = var1[start + i];
+                }
             }
             /*inner*/
 
@@ -2985,9 +2949,7 @@ public class BigDecimal
                 if (d < var1.length)
                 {
                     /* need to reduce */
-                    newvar1 = new Array(d);
-                    arraycopy(var1, 0, newvar1, 0, d); // shorten
-                    var1 = newvar1;
+                    var1.length = d;
                 }
                 res.mant = var1;
                 return res.finish(context, false);
@@ -3029,7 +2991,7 @@ public class BigDecimal
             // Repair if so by adding a zero and reducing exponent
             if (res.exp != (-scale))
             {
-                res.mant = extend(res.mant, res.mant.length + 1);
+                res.mant.length += 1;
                 res.exp = res.exp - 1;
             }
             return res.finish(context, true); // [strip if not PLAIN]
@@ -3052,9 +3014,7 @@ public class BigDecimal
             // make the mantissa truly just 'have' long
             // [we could let finish do this, during strip, if we adjusted
             // the exponent; however, truncation avoids the strip loop]
-            newmant = new Array(have); // shorten
-            arraycopy(res.mant, 0, newmant, 0, have);
-            res.mant = newmant;
+            res.mant.length = have;
         }
 
         return res.finish(context, true);
@@ -3066,27 +3026,6 @@ public class BigDecimal
     private static function bad(s:String):void
     {
         throw new ArgumentError("Not a number: " + s);
-    }
-
-    /* <sgml> Extend byte array to given length, padding with 0s. If no
-     extension is required then return the same array. </sgml>
-
-     Arg1 is the source byte array
-     Arg2 is the new length (longer)
-     */
-
-    private static function extend(inarr:Array, newlen:int):Array
-    {
-        var newarr:Array;
-        if (inarr.length == newlen)
-        {
-            return inarr;
-        }
-        newarr = createArrayWithZeros(newlen);
-        //--java.lang.System.arraycopy((java.lang.Object)inarr,0,(java.lang.Object)newarr,0,inarr.length);
-        arraycopy(inarr, 0, newarr, 0, inarr.length);
-        // 0 padding is carried out by the JVM on allocation initialization
-        return newarr;
     }
 
     /* <sgml> Add or subtract two >=0 integers in byte arrays
@@ -3124,35 +3063,21 @@ public class BigDecimal
     // 1999.08.07 -- avoid multiply when mult=1, and make db an int
     // 1999.12.22 -- special case m=-1, also drop 0 special case
 
-    private static function byteaddsub(a:Array, avlen:int, b:Array, bvlen:int, m:int, reuse:Boolean):Array
+    private static function byteaddsub(a:Vector.<int>, avlen:int, b:Vector.<int>, bvlen:int, m:int, reuse:Boolean):Vector.<int>
     {
-        var alength:int;
-        var blength:int;
-        var ap:int;
-        var bp:int;
-        var maxarr:int;
-        var reb:Array;
-        var quickm:Boolean;
-        var digit:int;
-        var op:int;
-        var dp90:int = 0;
-        var newarr:Array;
-        var i:int = 0;
-
         // We'll usually be right if we assume no carry
-        alength = a.length; // physical lengths
-        blength = b.length; // ..
-        ap = avlen - 1; // -> final (rightmost) digit
-        bp = bvlen - 1; // ..
-        maxarr = bp;
+        const alength:int = a.length; // physical lengths
+        const blength:int = b.length; // ..
+        var ap:int = avlen - 1; // -> final (rightmost) digit
+        var bp:int = bvlen - 1; // ..
+        var maxarr:int = bp;
 
         if (maxarr < ap)
         {
             maxarr = ap;
         }
 
-        reb = null; // result byte array
-
+        var reb:Vector.<int>; // result byte array
         if (reuse)
         {
             if ((maxarr + 1) == alength)
@@ -3162,11 +3087,10 @@ public class BigDecimal
         }
         if (reb == null)
         {
-            reb = createArrayWithZeros(maxarr + 1); // need new array
+            reb = new Vector.<int>(maxarr + 1); // need new array
         }
 
-        quickm = false; // 1 if no multiply needed
-
+        var quickm:Boolean = false; // 1 if no multiply needed
         if (m == 1)
         {
             quickm = true; // most common
@@ -3176,9 +3100,8 @@ public class BigDecimal
             quickm = true; // also common
         }
 
-        digit = 0; // digit, with carry or borrow
-
-        op = maxarr;
+        var digit:int = 0; // digit, with carry or borrow
+        var op:int = maxarr;
         for (; op >= 0; op--) /*op*/
         {
             if (ap >= 0)
@@ -3226,7 +3149,7 @@ public class BigDecimal
                 /*quick*/
             }
 
-            dp90 = digit + 90;
+            var dp90:int = digit + 90;
             reb[op] = bytedig[dp90]; // this digit
             digit = bytecar[dp90]; // carry or borrow
         }
@@ -3240,35 +3163,8 @@ public class BigDecimal
         // if digit<0 then signal ArithmeticException("internal.error ["digit"]")
 
         /* We have carry -- need to make space for the extra digit */
-        newarr = null;
-        if (reuse)
-        {
-            if ((maxarr + 2) == a.length)
-            {
-                newarr = a; // OK to reuse A
-            }
-        }
-        if (newarr == null)
-        {
-            newarr = new Array(maxarr + 2);
-        }
-        newarr[0] = digit; // the carried digit ..
-        // .. and all the rest [use local loop for short numbers]
-        if (maxarr < 10)
-        {
-            var $24:int = maxarr + 1;
-            i = 0;
-            for (; $24 > 0; $24--, i++)
-            {
-                newarr[i + 1] = reb[i];
-            }
-        }
-        else
-        {
-            arraycopy(reb, 0, newarr, 1, maxarr + 1);
-        }
-
-        return newarr;
+        reb.splice(0, 0, digit);
+        return reb;
     }
 
     /* <sgml> Initializer for digit array properties (lookaside). </sgml>
@@ -3375,11 +3271,11 @@ public class BigDecimal
     {
         var adjust:int;
         var sign:int;
-        var oldmant:Array;
+        var oldmant:Vector.<int>;
         var reuse:Boolean = false;
         var first:int = 0;
         var increment:int;
-        var newmant:Array = null;
+        var newmant:Vector.<int> = null;
 
         adjust = mant.length - len;
         if (adjust <= 0)
@@ -3394,8 +3290,7 @@ public class BigDecimal
         if (len > 0)
         {
             // remove the unwanted digits
-            mant = new Array(len);
-            arraycopy(oldmant, 0, mant, 0, len);
+            mant = mant.slice(0, len);
             reuse = true; // can reuse mantissa
             first = oldmant[len]; // first of discarded digits
         }
@@ -3528,12 +3423,9 @@ public class BigDecimal
                     // drop rightmost digit and raise exponent
                     exp++;
                     // mant is already the correct length
-                    arraycopy(newmant, 0, mant, 0, mant.length);
+                    newmant.length = mant.length;
                 }
-                else
-                {
-                    mant = newmant;
-                }
+                mant = newmant;
             }
         }
         /*bump*/
@@ -3554,7 +3446,7 @@ public class BigDecimal
      Arg2 may be beyond array bounds, in which case 1 is returned
      </sgml> */
 
-    private static function allzero(array:Array, i:int):Boolean
+    private static function allzero(array:Vector.<int>, i:int):Boolean
     {
         if (i < 0)
         {
@@ -3592,12 +3484,6 @@ public class BigDecimal
 
     private function finish(context:MathContext, strip:Boolean):BigDecimal
     {
-        var d:int = 0;
-        var i:int = 0;
-        var newmant:Array = null;
-        var mag:int = 0;
-        var sig:int = 0;
-
         /* Round if mantissa too long and digits requested */
         if (context.digits != 0)
         {
@@ -3613,9 +3499,9 @@ public class BigDecimal
         {
             if (context.form != MathContext.NOTATION_PLAIN)
             {
-                d = mant.length;
+                var d:int = mant.length;
                 /* see if we need to drop any trailing zeros */
-                i = d - 1;
+                var i:int = d - 1;
                 for (; i >= 1; i--)
                 {
                     if (mant[i] != 0)
@@ -3629,9 +3515,7 @@ public class BigDecimal
                 if (d < mant.length)
                 {
                     /* need to reduce */
-                    newmant = new Array(d);
-                    arraycopy(mant, 0, newmant, 0, d);
-                    mant = newmant;
+                    mant = mant.slice(0, d);
                 }
             }
         }
@@ -3649,14 +3533,12 @@ public class BigDecimal
                 // remove leading zeros [e.g., after subtract]
                 if (i > 0) /*delead*/
                 {
-                    newmant = new Array(mant.length - i);
-                    arraycopy(mant, i, newmant, 0, mant.length - i);
-                    mant = newmant;
+                    mant = mant.slice(i);
                 }
                 /*delead*/
 
                 // now determine form if not PLAIN
-                mag = exp + mant.length;
+                var mag:int = exp + mant.length;
                 if (mag > 0)
                 {
                     // most common path
@@ -3684,7 +3566,7 @@ public class BigDecimal
                         // possible reprieve if form is engineering
                         if (form == MathContext.NOTATION_ENGINEERING)
                         {
-                            sig = mag % 3; // leftover
+                            var sig:int = mag % 3; // leftover
                             if (sig < 0)
                             {
                                 sig = 3 + sig; // negative exponent

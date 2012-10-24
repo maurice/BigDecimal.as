@@ -40,8 +40,17 @@ public class BigDecimalTest
 
         assertEquals(0.76479, total.numberValue());
         total = total.setScale(3, MathContext.ROUND_HALF_UP);
-
         assertEquals(0.765, total.numberValue());
+    }
+
+    [Test]
+    public function addWithContext():void
+    {
+        var a:BigDecimal = new BigDecimal("12333454e45");
+        var b:BigDecimal = new BigDecimal("123e460");
+        var mc:MathContext = new MathContext(100);
+        var total:BigDecimal = a.add(b, mc);
+        assertEquals("1.230000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000E+462", total.toString());
     }
 
     [Test]

@@ -333,8 +333,8 @@ public class BigDecimal
 
     /* properties static private */
     // Precalculated constant arrays (used by byteaddsub)
-    private static const bytecar:Array = new Array((90 + 99) + 1); // carry/borrow array
-    private static const bytedig:Array = diginit(); // next digit array
+    private static const bytecar:Vector.<int> = new Vector.<int>((90 + 99) + 1, true); // carry/borrow array
+    private static const bytedig:Vector.<int> = diginit(); // next digit array
 
     /* ----- Instance properties [all private and immutable] ----- */
     /* properties private */
@@ -3170,17 +3170,13 @@ public class BigDecimal
     /* <sgml> Initializer for digit array properties (lookaside). </sgml>
      Returns the digit array, and initializes the carry array. */
 
-    private static function diginit():Array
+    private static function diginit():Vector.<int>
     {
-        var work:Array;
-        var op:int;
-        var digit:int = 0;
-
-        work = new Array((90 + 99) + 1);
-        op = 0;
+        const work:Vector.<int> = new Vector.<int>((90 + 99) + 1, true);
+        var op:int = 0;
         for (; op <= (90 + 99); op++) /*op*/
         {
-            digit = op - 90;
+            var digit:int = op - 90;
             if (digit >= 0)
             {
                 work[op] = (digit % 10);

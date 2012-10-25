@@ -296,7 +296,7 @@ public class BigDecimal
      * @see #TEN
      * @stable ICU 2.0
      */
-    public static const ZERO:BigDecimal = BigDecimal.createStatic(0); // use long as we want the int constructor
+    public static const ZERO:BigDecimal = createStatic(0); // use long as we want the int constructor
     // .. to be able to use this, for speed
 
     /**
@@ -306,7 +306,7 @@ public class BigDecimal
      * @see #ZERO
      * @stable ICU 2.0
      */
-    public static const ONE:BigDecimal = BigDecimal.createStatic(1); // use long as we want the int constructor
+    public static const ONE:BigDecimal = createStatic(1); // use long as we want the int constructor
     // .. to be able to use this, for speed
 
     /**
@@ -316,7 +316,7 @@ public class BigDecimal
      * @see #ZERO
      * @stable ICU 2.0
      */
-    public static const TEN:BigDecimal = BigDecimal.createStatic(10);
+    public static const TEN:BigDecimal = createStatic(10);
 
     /* properties constant private */ // locals
     private static const ispos:int = 1; // ind: indicates positive (must be 1)
@@ -556,10 +556,10 @@ public class BigDecimal
         for (var $1:int = length, i:int = offset; $1 > 0; $1--, i++) /*i*/
         {
             si = inchars.charCodeAt(i);
-            if (si >= BigDecimal.VALUE_ZERO)
+            if (si >= VALUE_ZERO)
             {
                 // test for Arabic digit
-                if (si <= BigDecimal.VALUE_NINE)
+                if (si <= VALUE_NINE)
                 {
                     last = i;
                     d++; // still in mantissa
@@ -567,7 +567,7 @@ public class BigDecimal
                 }
             }
 
-            if (si == BigDecimal.VALUE_DOT)
+            if (si == VALUE_DOT)
             {
                 // record and ignore
                 if (dotoff >= 0)
@@ -578,12 +578,12 @@ public class BigDecimal
                 continue /*i*/;
             }
 
-            if (si != BigDecimal.VALUE_ELOWER)
+            if (si != VALUE_ELOWER)
             {
-                if (si != BigDecimal.VALUE_EUPPER)
+                if (si != VALUE_EUPPER)
                 {
                     // expect an extra digit
-                    if (si < BigDecimal.VALUE_ZERO || si > BigDecimal.VALUE_NINE)
+                    if (si < VALUE_ZERO || si > VALUE_NINE)
                     {
                         bad(inchars); // not a number
                     }
@@ -629,11 +629,11 @@ public class BigDecimal
             for (var $2:int = elen; $2 > 0; $2--, j++) /*j*/
             {
                 sj = inchars.charCodeAt(j);
-                if (sj < BigDecimal.VALUE_ZERO)
+                if (sj < VALUE_ZERO)
                 {
                     bad(inchars); // always bad
                 }
-                if (sj > BigDecimal.VALUE_NINE)
+                if (sj > VALUE_NINE)
                 {
                     // maybe an exotic digit
                     // ActionScript 3 PORT
@@ -646,7 +646,7 @@ public class BigDecimal
                     bad(inchars); // not base 10
                     //}
                 }
-                exp = (exp * 10) + (sj - BigDecimal.VALUE_ZERO);
+                exp = (exp * 10) + (sj - VALUE_ZERO);
             }
             /*j*/
 
@@ -677,18 +677,18 @@ public class BigDecimal
         for (; i <= $3; i++) /*i*/
         {
             si = inchars.charCodeAt(i);
-            if (si == BigDecimal.VALUE_ZERO)
+            if (si == VALUE_ZERO)
             {
                 offset++;
                 dotoff--;
                 d--;
             }
-            else if (si == BigDecimal.VALUE_DOT)
+            else if (si == VALUE_DOT)
             {
                 offset++; // step past dot
                 dotoff--;
             }
-            else if (si <= BigDecimal.VALUE_NINE)
+            else if (si <= VALUE_NINE)
             {
                 break;
                 /* non-0 */
@@ -728,7 +728,7 @@ public class BigDecimal
                     j++; // at dot
                 }
                 sj = inchars[j];
-                if (sj <= BigDecimal.VALUE_NINE)
+                if (sj <= VALUE_NINE)
                 {
                     mant[i] = (sj - VALUE_ZERO);
                     /* easy */
@@ -757,7 +757,7 @@ public class BigDecimal
                 {
                     j++;
                 }
-                mant[i] = (inchars.charCodeAt(j) - (BigDecimal.VALUE_ZERO));
+                mant[i] = (inchars.charCodeAt(j) - VALUE_ZERO);
                 j++;
             }
         }

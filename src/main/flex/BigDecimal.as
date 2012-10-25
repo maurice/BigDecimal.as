@@ -464,48 +464,44 @@ public class BigDecimal
      */
     public function BigDecimal(inobject:Object = 0, offset:int = 0, length:int = -1)
     {
-        //ActionScript 3 :
-        // Allow internal code to short-circuit the constructor, since AS3 doesn't
-        // have overloading
-        if (inobject === NULL)
+        if (inobject is String)
         {
-            return;
+            createFromString(inobject as String, offset, length);
         }
-
-        if (inobject == null)
-        {
-            throw new ArgumentError("The inobject parameter cannot be null");
-        }
-
-        //Path the multiple possibilities of constructing
-        if (inobject is int)
+        else if (inobject is int)
         {
             createFromInt(inobject as int);
-            return;
         }
-
-        var inchars:String = null;
-        if (inobject is Number)
+        else if (inobject is Number)
         {
             if (isNaN(Number(inobject)) || !isFinite(Number(inobject)))
             {
                 throw new ArgumentError("Infinite or NaN");
             }
-            inchars = (inobject as Number).toString();
+            createFromString(String(inobject as Number), offset, length);
         }
-        else if (!(inobject is String))
+        else if (inobject == null)
+        {
+            throw new ArgumentError("The inobject parameter cannot be null");
+        }
+        else if (inobject != NULL) //ActionScript 3 : allow internal code to bypass constructor
         {
             throw new ArgumentError("Unhandled parameter type: " + getQualifiedClassName(inobject));
         }
-        else
-        {
-            inchars = inobject as String;
-        }
+    }
 
+    /**
+     * Creates the BigDecimal from the given string
+     * @param chars string to build BigDecimal from
+     * @param offset offset to start parsing at
+     * @param length length of the substring to parse, if any, otherwise -1
+     */
+    private function createFromString(chars:String, offset:int, length:int):void
+    {
         //Default parameter correction
         if (length == -1)
         {
-            length = inchars.length;
+            length = chars.length;
         }
 
         // This is the primary constructor; all incoming strings end up
@@ -516,30 +512,30 @@ public class BigDecimal
         // 1999.03.06: no embedded blanks; allow offset and length
         if (length <= 0)
         {
-            bad(inchars); // bad conversion (empty string)
+            bad(chars); // bad conversion (empty string)
             // [bad offset will raise array bounds exception]
         }
 
         /* Handle and step past sign */
         ind = ispos; // assume positive
 
-        if (inchars.charAt(offset) == "-")
+        if (chars.charAt(offset) == "-")
         {
             length--;
 
             if (length == 0)
             {
-                bad(inchars); // nothing after sign
+                bad(chars); // nothing after sign
             }
             ind = isneg;
             offset++;
         }
-        else if (inchars.charAt(offset) == "+")
+        else if (chars.charAt(offset) == "+")
         {
             length--;
             if (length == 0)
             {
-                bad(inchars); // nothing after sign
+                bad(chars); // nothing after sign
             }
             offset++;
         }
@@ -555,7 +551,7 @@ public class BigDecimal
         var sj:int = 0;
         for (var $1:int = length, i:int = offset; $1 > 0; $1--, i++) /*i*/
         {
-            si = inchars.charCodeAt(i);
+            si = chars.charCodeAt(i);
             if (si >= VALUE_ZERO)
             {
                 // test for Arabic digit
@@ -572,7 +568,7 @@ public class BigDecimal
                 // record and ignore
                 if (dotoff >= 0)
                 {
-                    bad(inchars); // two dots
+                    bad(chars); // two dots
                 }
                 dotoff = i - offset; // offset into mantissa
                 continue /*i*/;
@@ -585,7 +581,7 @@ public class BigDecimal
                     // expect an extra digit
                     if (si < VALUE_ZERO || si > VALUE_NINE)
                     {
-                        bad(inchars); // not a number
+                        bad(chars); // not a number
                     }
                     // defer the base 10 check until later to avoid extra method call
                     exotic = true; // will need conversion later
@@ -599,17 +595,17 @@ public class BigDecimal
             // 1998.07.11: sign no longer required
             if (i - offset > length - 2)
             {
-                bad(inchars); // no room for even one digit
+                bad(chars); // no room for even one digit
             }
 
             var eneg:Boolean = false;
             var k:int = 0;
-            if (inchars.charAt(i + 1) == "-")
+            if (chars.charAt(i + 1) == "-")
             {
                 eneg = true;
                 k = i + 2;
             }
-            else if (inchars.charAt(i + 1) == "+")
+            else if (chars.charAt(i + 1) == "+")
             {
                 k = i + 2;
             }
@@ -622,16 +618,16 @@ public class BigDecimal
             const elen:int = length - (k - offset); // possible number of digits
             if (elen == 0 || elen > 9)
             {
-                bad(inchars); // 0 or more than 9 digits
+                bad(chars); // 0 or more than 9 digits
             }
 
             var j:int = k;
             for (var $2:int = elen; $2 > 0; $2--, j++) /*j*/
             {
-                sj = inchars.charCodeAt(j);
+                sj = chars.charCodeAt(j);
                 if (sj < VALUE_ZERO)
                 {
-                    bad(inchars); // always bad
+                    bad(chars); // always bad
                 }
                 if (sj > VALUE_NINE)
                 {
@@ -639,11 +635,11 @@ public class BigDecimal
                     // ActionScript 3 PORT
                     // Lets forget exotics for now... i dont have time.
                     //if ((!(isDigit(sj)))) {
-                    //    bad(inchars); // not a number
+                    //    bad(chars); // not a number
                     //}
                     //dvalue=java.lang.Character.digit(sj,10); // check base
                     //if (dvalue<0) {
-                    bad(inchars); // not base 10
+                    bad(chars); // not base 10
                     //}
                 }
                 exp = (exp * 10) + (sj - VALUE_ZERO);
@@ -663,7 +659,7 @@ public class BigDecimal
         /* Here when all inspected */
         if (d == 0)
         {
-            bad(inchars); // no mantissa digits
+            bad(chars); // no mantissa digits
         }
         if (dotoff >= 0)
         {
@@ -676,7 +672,7 @@ public class BigDecimal
 
         for (; i <= $3; i++) /*i*/
         {
-            si = inchars.charCodeAt(i);
+            si = chars.charCodeAt(i);
             if (si == VALUE_ZERO)
             {
                 offset++;
@@ -727,7 +723,7 @@ public class BigDecimal
                 {
                     j++; // at dot
                 }
-                sj = inchars[j];
+                sj = chars[j];
                 if (sj <= VALUE_NINE)
                 {
                     mant[i] = (sj - VALUE_ZERO);
@@ -739,7 +735,7 @@ public class BigDecimal
                     // Lets forget exotics for now... i dont have time.
                     //dvalue=java.lang.Character.digit(sj,10);
                     //if (dvalue<0) {
-                    bad(inchars); // not a number after all
+                    bad(chars); // not a number after all
                     //}
                     //mant[i]=(byte)dvalue;
                 }
@@ -757,7 +753,7 @@ public class BigDecimal
                 {
                     j++;
                 }
-                mant[i] = (inchars.charCodeAt(j) - VALUE_ZERO);
+                mant[i] = (chars.charCodeAt(j) - VALUE_ZERO);
                 j++;
             }
         }
@@ -785,7 +781,7 @@ public class BigDecimal
                 const mag:int = (exp + mant.length) - 1; // true exponent in scientific notation
                 if ((mag < MinExp) || (mag > MaxExp))
                 {
-                    bad(inchars);
+                    bad(chars);
                 }
             }
         }

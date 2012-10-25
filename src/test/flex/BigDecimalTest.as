@@ -30,6 +30,15 @@ public class BigDecimalTest
         catch (e:ArgumentError)
         {
         }
+
+        try
+        {
+            new BigDecimal({not_valid: true});
+            fail("No ArgumentError");
+        }
+        catch (e:ArgumentError)
+        {
+        }
     }
 
     [Test]

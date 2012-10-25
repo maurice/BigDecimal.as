@@ -280,6 +280,12 @@ import flash.utils.getQualifiedClassName;
 
 public class BigDecimal
 {
+    /**
+     * Used by BigDecimal internally to call its own constructor with a "null" parameter.
+     * Note since statics are initialized in declaration order, top to bottom,
+     * this needs to come before the public constants defined with createStatic
+     */
+    private static const NULL:Object = {};
 
     /* ----- Constants ----- */
     /* properties constant public */ // useful to others
@@ -432,7 +438,7 @@ public class BigDecimal
     {
         if (unscaledValue == null)
         {
-            throw new TypeError("The unscaledValue parameter cannot be null");
+            throw new ArgumentError("The unscaledValue parameter cannot be null");
         }
         const d:BigDecimal = new BigDecimal(unscaledValue);
         if (d.exp != 0 && scale)
@@ -458,22 +464,17 @@ public class BigDecimal
      */
     public function BigDecimal(inobject:Object = 0, offset:int = 0, length:int = -1)
     {
-        var si:int = 0;
-        var eneg:Boolean = false;
-        var k:int = 0;
-        var elen:int = 0;
-        var j:int = 0;
-        var sj:int = 0;
-        var dvalue:int = 0;
-        var mag:int = 0;
-        var inchars:String = null;
-
         //ActionScript 3 :
-        //This is only for the createStatic
-        //People should never pass null to the constructor
-        if (inobject == null)
+        // Allow internal code to short-circuit the constructor, since AS3 doesn't
+        // have overloading
+        if (inobject === NULL)
         {
             return;
+        }
+
+        if (inobject == null)
+        {
+            throw new ArgumentError("The inobject parameter cannot be null");
         }
 
         //Path the multiple possibilities of constructing
@@ -482,7 +483,9 @@ public class BigDecimal
             createFromInt(inobject as int);
             return;
         }
-        else if (inobject is Number)
+
+        var inchars:String = null;
+        if (inobject is Number)
         {
             if (isNaN(Number(inobject)) || !isFinite(Number(inobject)))
             {
@@ -548,6 +551,8 @@ public class BigDecimal
         var dotoff:int = -1; // offset where dot was found
         var last:int = -1; // last character of mantissa
 
+        var si:int = 0;
+        var sj:int = 0;
         for (var $1:int = length, i:int = offset; $1 > 0; $1--, i++) /*i*/
         {
             si = inchars.charCodeAt(i);
@@ -596,8 +601,9 @@ public class BigDecimal
             {
                 bad(inchars); // no room for even one digit
             }
-            eneg = false;
 
+            var eneg:Boolean = false;
+            var k:int = 0;
             if (inchars.charAt(i + 1) == "-")
             {
                 eneg = true;
@@ -613,13 +619,13 @@ public class BigDecimal
             }
 
             // k is offset of first expected digit
-            elen = length - (k - offset); // possible number of digits
+            const elen:int = length - (k - offset); // possible number of digits
             if (elen == 0 || elen > 9)
             {
                 bad(inchars); // 0 or more than 9 digits
             }
 
-            j = k;
+            var j:int = k;
             for (var $2:int = elen; $2 > 0; $2--, j++) /*j*/
             {
                 sj = inchars.charCodeAt(j);
@@ -640,11 +646,7 @@ public class BigDecimal
                     bad(inchars); // not base 10
                     //}
                 }
-                else
-                {
-                    dvalue = (sj) - (BigDecimal.VALUE_ZERO);
-                }
-                exp = (exp * 10) + dvalue;
+                exp = (exp * 10) + (sj - BigDecimal.VALUE_ZERO);
             }
             /*j*/
 
@@ -780,7 +782,7 @@ public class BigDecimal
             {
                 form = MathContext.NOTATION_SCIENTIFIC;
                 // 1999.06.29 check for overflow
-                mag = (exp + mant.length) - 1; // true exponent in scientific notation
+                const mag:int = (exp + mant.length) - 1; // true exponent in scientific notation
                 if ((mag < MinExp) || (mag > MaxExp))
                 {
                     bad(inchars);
@@ -911,7 +913,7 @@ public class BigDecimal
         //them in the 1st place with the normal int constructor.
     private static function createStatic(num:int):BigDecimal
     {
-        const r:BigDecimal = new BigDecimal(null);
+        const r:BigDecimal = new BigDecimal(NULL);
 
         // Not really worth fastpathing commoners in this constructor [also,
         // we use this to construct the static constants].
@@ -3201,7 +3203,7 @@ public class BigDecimal
 
     private static function clone(dec:BigDecimal):BigDecimal
     {
-        const copy:BigDecimal = new BigDecimal(null);
+        const copy:BigDecimal = new BigDecimal(NULL);
         copy.ind = dec.ind;
         copy.exp = dec.exp;
         copy.form = dec.form;

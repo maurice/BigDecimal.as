@@ -21,6 +21,15 @@ public class BigDecimalTest
 
         r = new BigDecimal(-423);
         assertEquals("-423", r.toString());
+
+        try
+        {
+            new BigDecimal(null);
+            fail("No ArgumentError");
+        }
+        catch (e:ArgumentError)
+        {
+        }
     }
 
     [Test]

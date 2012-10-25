@@ -522,7 +522,6 @@ public class BigDecimal
         if (chars.charAt(offset) == "-")
         {
             length--;
-
             if (length == 0)
             {
                 bad(chars); // nothing after sign
@@ -552,15 +551,12 @@ public class BigDecimal
         for (var $1:int = length, i:int = offset; $1 > 0; $1--, i++) /*i*/
         {
             si = chars.charCodeAt(i);
-            if (si >= VALUE_ZERO)
+            // test for Arabic digit
+            if (si >= VALUE_ZERO && si <= VALUE_NINE)
             {
-                // test for Arabic digit
-                if (si <= VALUE_NINE)
-                {
-                    last = i;
-                    d++; // still in mantissa
-                    continue;
-                }
+                last = i;
+                d++; // still in mantissa
+                continue;
             }
 
             if (si == VALUE_DOT)
@@ -574,21 +570,18 @@ public class BigDecimal
                 continue /*i*/;
             }
 
-            if (si != VALUE_ELOWER)
+            if (si != VALUE_ELOWER && si != VALUE_EUPPER)
             {
-                if (si != VALUE_EUPPER)
+                // expect an extra digit
+                if (si < VALUE_ZERO || si > VALUE_NINE)
                 {
-                    // expect an extra digit
-                    if (si < VALUE_ZERO || si > VALUE_NINE)
-                    {
-                        bad(chars); // not a number
-                    }
-                    // defer the base 10 check until later to avoid extra method call
-                    exotic = true; // will need conversion later
-                    last = i;
-                    d++; // still in mantissa
-                    continue /*i*/;
+                    bad(chars); // not a number
                 }
+                // defer the base 10 check until later to avoid extra method call
+                exotic = true; // will need conversion later
+                last = i;
+                d++; // still in mantissa
+                continue /*i*/;
             }
 
             /* Found 'e' or 'E' -- now process explicit exponent */

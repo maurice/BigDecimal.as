@@ -533,7 +533,6 @@ public class BigDecimal
         }
 
         /* We're at the start of the number */
-        var exotic:Boolean = false; // have extra digits
         var d:int = 0; // count of digits found
         var dotoff:int = -1; // offset where dot was found
         var last:int = -1; // last character of mantissa
@@ -569,11 +568,6 @@ public class BigDecimal
                 {
                     bad(chars); // not a number
                 }
-                // defer the base 10 check until later to avoid extra method call
-                exotic = true; // will need conversion later
-                last = i;
-                d++; // still in mantissa
-                continue /*i*/;
             }
 
             /* Found 'e' or 'E' -- now process explicit exponent */
@@ -613,16 +607,7 @@ public class BigDecimal
                 }
                 if (sj > VALUE_NINE)
                 {
-                    // maybe an exotic digit
-                    // ActionScript 3 PORT
-                    // Lets forget exotics for now... i dont have time.
-                    //if ((!(isDigit(sj)))) {
-                    //    bad(chars); // not a number
-                    //}
-                    //dvalue=java.lang.Character.digit(sj,10); // check base
-                    //if (dvalue<0) {
                     bad(chars); // not base 10
-                    //}
                 }
                 exponent = (exponent * 10) + (sj - VALUE_ZERO);
             }
@@ -666,24 +651,10 @@ public class BigDecimal
                 offset++; // step past dot
                 dotoff--;
             }
-            else if (si <= VALUE_NINE)
+            else
             {
                 break;
                 /* non-0 */
-            }
-            else
-            {
-                /* exotic */
-                // ActionScript 3 PORT
-                // Lets forget exotics for now... i dont have time.
-                //if ((java.lang.Character.digit(si,10))!=0) {
-                break; // non-0 or bad
-                //}
-
-                // is 0 .. strip like '0'
-                //offset++;
-                //dotoff--;
-                //d--;
             }
         }
         /*i*/
@@ -692,52 +663,16 @@ public class BigDecimal
         mant = new Vector.<int>(d); // we know the length
         j = offset; // input offset
 
-        if (exotic)
+        var $5:int = d;
+        i = 0;
+        for (; $5 > 0; $5--, i++) /*simple*/
         {
-            /* exotica: */
-            // slow: check for exotica
-            var $4:int = d;
-            i = 0;
-
-            for (; $4 > 0; $4--, i++)
+            if (i == dotoff)
             {
-                if (i == dotoff)
-                {
-                    j++; // at dot
-                }
-                sj = chars[j];
-                if (sj <= VALUE_NINE)
-                {
-                    mant[i] = (sj - VALUE_ZERO);
-                    /* easy */
-                }
-                else
-                {
-                    // ActionScript 3 PORT
-                    // Lets forget exotics for now... i dont have time.
-                    //dvalue=java.lang.Character.digit(sj,10);
-                    //if (dvalue<0) {
-                    bad(chars); // not a number after all
-                    //}
-                    //mant[i]=(byte)dvalue;
-                }
-
                 j++;
             }
-        }
-        else /*simple*/
-        {
-            var $5:int = d;
-            i = 0;
-            for (; $5 > 0; $5--, i++)
-            {
-                if (i == dotoff)
-                {
-                    j++;
-                }
-                mant[i] = (chars.charCodeAt(j) - VALUE_ZERO);
-                j++;
-            }
+            mant[i] = (chars.charCodeAt(j) - VALUE_ZERO);
+            j++;
         }
         /*simple*/
 

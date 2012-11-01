@@ -42,6 +42,87 @@ public class BigDecimalTest
     }
 
     [Test]
+    public function constructorExponentBoundaries():void
+    {
+        // Note: not quite the same as Java's which has different error messages
+        // and doesn't like -ve exponents <= -2147483647
+        var a:BigDecimal = new BigDecimal("1.0e2147483647");
+        assertEquals("1.0E+2147483647",a.toString());
+
+        try
+        {
+            new BigDecimal("1.0e2147483648");
+            fail("Should throw NumberFormatException");
+        }
+        catch (e:ArgumentError)
+        {
+            assertEquals("Exponent too large: 1.0e2147483648", e.message);
+        }
+
+        a = new BigDecimal("1.0e-2147483646");
+        assertEquals("1.0E-2147483646",a.toString());
+
+        a = new BigDecimal("1.0e-2147483647");
+        assertEquals("1.0E-2147483647",a.toString());
+
+        try
+        {
+            new BigDecimal("1.0e-2147483648");
+            fail("Should throw NumberFormatException");
+        }
+        catch (e:ArgumentError)
+        {
+            assertEquals("Exponent too large: 1.0e-2147483648", e.message);
+        }
+
+        try
+        {
+            new BigDecimal("1.0e-2147483649");
+            fail("Should throw NumberFormatException");
+        }
+        catch (e:ArgumentError)
+        {
+            assertEquals("Exponent too large: 1.0e-2147483649", e.message);
+        }
+    }
+
+    [Test]
+    public function createFromUnscaledIntInvalidParams():void
+    {
+        // Most invalid string inputs handled mostly by constructor, so only bare minimum here
+        try
+        {
+            BigDecimal.createFromUnscaledInteger(null, 0);
+            fail("Should throw ArgumentError");
+        }
+        catch (e:ArgumentError)
+        {
+            // pass
+        }
+
+        try
+        {
+            BigDecimal.createFromUnscaledInteger("234e3gh", 0);
+            fail("Should throw ArgumentError");
+        }
+        catch (e:ArgumentError)
+        {
+            // pass
+        }
+
+        // Specific to this method
+        try
+        {
+            BigDecimal.createFromUnscaledInteger("1.234", 5);
+            fail("Should throw ArgumentError");
+        }
+        catch (e:ArgumentError)
+        {
+            assertEquals("The unscaledValue already has a scale: 1.234", e.message);
+        }
+    }
+
+    [Test]
     public function add():void
     {
         var a:BigDecimal = new BigDecimal("555.50");

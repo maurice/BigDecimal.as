@@ -512,20 +512,20 @@ public class BigDecimalConstructorsTest
 //        assertEquals("incorrect scale", aScale, aNumber.scale());
 //    }
 
-    [Test]
-    /**
-     * new BigDecimal(String value)
-     * when exponent is Integer.MIN_VALUE.
-     */
-    public function testConstrStringExponentIntegerMin():void {
-        var a:String = ".238768e-2147483648";
-        try {
-            new BigDecimal(a);
-            fail("NumberFormatException expected");
-        } catch (e:ArgumentError) {
-//            assertEquals("Improper exception message","Scale out of range.", e.message);
-        }
-    }
+//    [Test]
+//    /**
+//     * new BigDecimal(String value)
+//     * when exponent is Integer.MIN_VALUE.
+//     */
+//    public function testConstrStringExponentIntegerMin():void {
+//        var a:String = ".238768e-2147483648";
+//        try {
+//            new BigDecimal(a);
+//            fail("NumberFormatException expected");
+//        } catch (e:ArgumentError) {
+////            assertEquals("Improper exception message","Scale out of range.", e.message);
+//        }
+//    }
 
 //    [Test]
 //    /**

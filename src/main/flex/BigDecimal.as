@@ -324,9 +324,6 @@ public class BigDecimal
     private static const isneg:int = -1; // ind: indicates negative (must be -1)
     // [later could add NaN, +/- infinity, here]
 
-    private static const MinExp:int = -999999999; // minimum exponent allowed
-    private static const MaxExp:int = 999999999; // maximum exponent allowed
-
     // ActionScript 3 Port
     // In AS3 there is no char, byte or native arrays
     // So lets create the int value of each char we need in the
@@ -436,14 +433,10 @@ public class BigDecimal
      */
     public static function createFromUnscaledInteger(unscaledValue:String, scale:int = 0, context:MathContext = null):BigDecimal
     {
-        if (unscaledValue == null)
-        {
-            throw new ArgumentError("The unscaledValue parameter cannot be null");
-        }
         const d:BigDecimal = new BigDecimal(unscaledValue);
         if (d.exp != 0 && scale)
         {
-            throw new ArgumentError("The unscaledValue '" + unscaledValue + "' already has a scale!");
+            throw new ArgumentError("The unscaledValue already has a scale: " + unscaledValue);
         }
         d.exp = -scale;
         return d.plus(context);
@@ -541,7 +534,6 @@ public class BigDecimal
 
         /* We're at the start of the number */
         var exotic:Boolean = false; // have extra digits
-        var hadexp:Boolean = false; // had explicit exponent
         var d:int = 0; // count of digits found
         var dotoff:int = -1; // offset where dot was found
         var last:int = -1; // last character of mantissa
@@ -592,28 +584,25 @@ public class BigDecimal
             }
 
             var eneg:Boolean = false;
-            var k:int = 0;
-            if (chars.charAt(i + 1) == "-")
+            var k:int = i + 1;
+            if (chars.charAt(k) == "-")
             {
                 eneg = true;
-                k = i + 2;
+                k++;
             }
-            else if (chars.charAt(i + 1) == "+")
+            else if (chars.charAt(k) == "+")
             {
-                k = i + 2;
-            }
-            else
-            {
-                k = i + 1;
+                k++;
             }
 
             // k is offset of first expected digit
             const elen:int = length - (k - offset); // possible number of digits
-            if (elen == 0 || elen > 9)
+            if (elen == 0 || elen > 10)
             {
-                bad(chars); // 0 or more than 9 digits
+                bad(chars); // 0 or more than 10 digits
             }
 
+            var exponent:Number = 0;
             var j:int = k;
             for (var $2:int = elen; $2 > 0; $2--, j++) /*j*/
             {
@@ -635,16 +624,16 @@ public class BigDecimal
                     bad(chars); // not base 10
                     //}
                 }
-                exp = (exp * 10) + (sj - VALUE_ZERO);
+                exponent = (exponent * 10) + (sj - VALUE_ZERO);
             }
             /*j*/
 
-            if (eneg)
+            if (exponent > int.MAX_VALUE)
             {
-                exp = -exp; // was negative
+                throw new ArgumentError("Exponent too large: " + chars);
             }
+            exp = eneg ? -exponent : exponent;
 
-            hadexp = true; // remember we had one
             break; // we are done
         }
         /*i*/
@@ -761,22 +750,6 @@ public class BigDecimal
         if (mant[0] == 0)
         {
             ind = iszero; // force to show zero
-        }
-        else
-        {
-            // non-zero
-            // [ind was set earlier]
-            // now determine form
-            if (hadexp)
-            {
-                form = MathContext.NOTATION_SCIENTIFIC;
-                // 1999.06.29 check for overflow
-                const mag:int = (exp + mant.length) - 1; // true exponent in scientific notation
-                if ((mag < MinExp) || (mag > MaxExp))
-                {
-                    bad(chars);
-                }
-            }
         }
     }
 
@@ -1781,7 +1754,7 @@ public class BigDecimal
             return ONE; // x**0 == 1
         }
 
-        if (n < 0 || n > MaxExp)
+        if (n < 0 || n > 999999999)
         {
             throw new ArithmeticError("Invalid Operation");
         }
@@ -2169,7 +2142,7 @@ public class BigDecimal
     private function movePoint(n:int):BigDecimal
     {
         var res:BigDecimal = clone(this);
-        res.exp = res.exp + n;
+        res.exp = toIntExponent(exp + n);
         res = res.finish(MathContext.PLAIN, false);
         return res.exp < 0 ? res : res.setScale(0, MathContext.ROUND_UNNECESSARY);
     }
@@ -3011,6 +2984,23 @@ public class BigDecimal
         return res.finish(context, true);
     }
 
+    /**
+     * Returns the given exponent as an int, throwing an error if too large or small
+     * @param exponent the value to convert to int
+     * @return exponent as int
+     */
+    private static function toIntExponent(exponent:Number):int
+    {
+        if (exponent < int.MIN_VALUE)
+        {
+            throw new ArithmeticError("Underflow");
+        }
+        else if (exponent > int.MAX_VALUE)
+        {
+            throw new ArithmeticError("Overflow");
+        }
+        return exponent;
+    }
 
     /* <sgml> Report a conversion exception. </sgml> */
 
@@ -3270,7 +3260,7 @@ public class BigDecimal
             return this; // nowt to do
         }
 
-        exp = exp + adjust; // exponent of result
+        exp = toIntExponent(exp + adjust); // exponent of result
         sign = ind; // save [assumes -1, 0, 1]
         oldmant = mant; // save
 
@@ -3416,11 +3406,6 @@ public class BigDecimal
             }
         }
         /*bump*/
-        // rounding can increase exponent significantly
-        if (exp > MaxExp)
-        {
-            throw new ArithmeticError("Overflow: " + exp);
-        }
         return this;
     }
 
@@ -3524,55 +3509,6 @@ public class BigDecimal
                 }
                 /*delead*/
 
-                // now determine form if not PLAIN
-                var mag:int = exp + mant.length;
-                if (mag > 0)
-                {
-                    // most common path
-                    if (mag > context.digits)
-                    {
-                        if (context.digits != 0)
-                        {
-                            form = context.form;
-                        }
-                    }
-                    if ((mag - 1) <= MaxExp)
-                    {
-                        return this; // no overflow; quick return
-                    }
-                }
-                else if (mag < (-5))
-                {
-                    form = context.form;
-                }
-                /* check for overflow */
-                mag--;
-                if ((mag < MinExp) || (mag > MaxExp))
-                {
-                    overflow:{
-                        // possible reprieve if form is engineering
-                        if (form == MathContext.NOTATION_ENGINEERING)
-                        {
-                            var sig:int = mag % 3; // leftover
-                            if (sig < 0)
-                            {
-                                sig = 3 + sig; // negative exponent
-                            }
-                            mag = mag - sig; // exponent to use
-                            // 1999.06.29: second test here must be MaxExp
-                            if (mag >= MinExp)
-                            {
-                                if (mag <= MaxExp)
-                                {
-                                    break overflow;
-                                }
-                            }
-                        }
-                        throw new ArithmeticError("Underflow");
-                    }
-                }
-                /*overflow*/
-
                 return this;
             }
         }
@@ -3580,24 +3516,6 @@ public class BigDecimal
 
         // Drop through to here only if mantissa is all zeros
         ind = iszero;
-
-        if (context.form != MathContext.NOTATION_PLAIN)
-        {
-            exp = 0; // standard result; go to '0'
-        }
-        else if (exp > 0)
-        {
-            exp = 0; // +ve exponent also goes to '0'
-        }
-        else
-        {
-            // a plain number with -ve exponent; preserve and check exponent
-            if (exp < MinExp)
-            {
-                throw new ("Exponent Overflow:" + " " + exp);
-            }
-        }
-
         mant = ZERO.mant; // canonical mantissa
         return this;
     }

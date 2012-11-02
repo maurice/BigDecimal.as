@@ -2354,7 +2354,7 @@ public class BigDecimal
             }
             buf[buf.length] = String(mant[i]);
         }
-        if (exp > 0)
+        if (exp > 0 && ind != iszero)
         {
             pos = buf.length;
             pad = exp;

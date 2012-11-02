@@ -123,6 +123,20 @@ public class BigDecimalTest
     }
 
     [Test]
+    public function toPlainStringDoesNotIncludeZeroPaddingWhenNumberZero():void
+    {
+        var a:BigDecimal = new BigDecimal("0.0e3");
+        assertEquals(-2, a.scale());
+        assertEquals("0E+2", a.toString());
+        assertEquals("0", a.toPlainString());
+
+        var b:BigDecimal = new BigDecimal("000");
+        assertEquals(0, b.scale());
+        assertEquals("0", b.toString());
+        assertEquals("0", b.toPlainString());
+    }
+
+    [Test]
     public function add():void
     {
         var a:BigDecimal = new BigDecimal("555.50");

@@ -153,6 +153,18 @@ public class BigDecimalTest
     }
 
     [Test]
+    public function addToZero():void
+    {
+        var a:BigDecimal = new BigDecimal("10.4");
+
+        var r:BigDecimal = BigDecimal.ZERO.add(a);
+        assertEquals("10.4", r.toPlainString());
+
+        r = a.add(BigDecimal.ZERO);
+        assertEquals("10.4", r.toPlainString());
+    }
+
+    [Test]
     public function subtract():void
     {
         var a:BigDecimal = new BigDecimal("555.50");
@@ -325,7 +337,7 @@ public class BigDecimalTest
         }
 
         a = new BigDecimal("213.3420000");
-        var mc:MathContext = new MathContext(1, MathContext.NOTATION_PLAIN, false, MathContext.ROUND_DOWN);
+        var mc:MathContext = new MathContext(1, false, MathContext.ROUND_DOWN);
         var b:BigDecimal = a.pow(2, mc);
 
         assertEquals("4E+4", b.toString());

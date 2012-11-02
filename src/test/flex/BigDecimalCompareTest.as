@@ -64,7 +64,7 @@ public class BigDecimalCompareTest
         var aNumber:BigDecimal = new BigDecimal(a);
         var precision:int = 15;
 //    var rm:RoundingMode = RoundingMode.HALF_DOWN;
-        var mc:MathContext = new MathContext(precision, MathContext.NOTATION_SCIENTIFIC, false, MathContext.ROUND_HALF_DOWN);
+        var mc:MathContext = new MathContext(precision, false, MathContext.ROUND_HALF_DOWN);
         var result:String = "1.23809648392385E+53";
         var resScale:int = -39;
         var res:BigDecimal = aNumber.abs(mc);
@@ -82,7 +82,7 @@ public class BigDecimalCompareTest
         var aNumber:BigDecimal = new BigDecimal(a);
         var precision:int = 41;
 //    var rm:RoundingMode = RoundingMode.HALF_EVEN;
-        var mc:MathContext = new MathContext(precision, MathContext.NOTATION_SCIENTIFIC, false, MathContext.ROUND_HALF_EVEN);
+        var mc:MathContext = new MathContext(precision, false, MathContext.ROUND_HALF_EVEN);
         var result:String = "1.2380964839238475457356735674573563567890E+53";
         var resScale:int = -13;
         var res:BigDecimal = aNumber.abs(mc);
@@ -425,7 +425,7 @@ public class BigDecimalCompareTest
         var aScale:int = 41;
         var precision:int = 37;
 //    var rm:RoundingMode = RoundingMode.FLOOR;
-        var mc:MathContext = new MathContext(precision, MathContext.NOTATION_SCIENTIFIC, false, MathContext.ROUND_FLOOR);
+        var mc:MathContext = new MathContext(precision, false, MathContext.ROUND_FLOOR);
         var c:String = "929487820944884782312124789.8748298842";
         var cScale:int = 10;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
@@ -460,7 +460,7 @@ public class BigDecimalCompareTest
         var aScale:int = 49;
         var precision:int = 46;
         //    var rm:RoundingMode = RoundingMode.CEILING;
-        var mc:MathContext = new MathContext(precision, MathContext.NOTATION_SCIENTIFIC, false, MathContext.ROUND_CEILING);
+        var mc:MathContext = new MathContext(precision, false, MathContext.ROUND_CEILING);
         var c:String = "-9294878209448847823.121247898748298842980877981";
         var cScale:int = 27;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);

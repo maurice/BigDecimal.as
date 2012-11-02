@@ -77,46 +77,6 @@ public class MathContext
 
     /* ----- Properties ----- */
     /* properties public constant */
-    /**
-     * Plain (fixed point) notation, without any exponent.
-     * Used as a setting to control the form of the result of a
-     * <code>BigDecimal</code> operation.
-     * A zero result in plain form may have a decimal part of one or
-     * more zeros.
-     *
-     * @see #NOTATION_ENGINEERING
-     * @see #NOTATION_SCIENTIFIC
-     * @stable ICU 2.0
-     */
-    public static const NOTATION_PLAIN:int = 0; // [no exponent]
-
-    /**
-     * Standard floating point notation (with scientific exponential
-     * format, where there is one digit before any decimal point).
-     * Used as a setting to control the form of the result of a
-     * <code>BigDecimal</code> operation.
-     * A zero result in plain form may have a decimal part of one or
-     * more zeros.
-     *
-     * @see #NOTATION_ENGINEERING
-     * @see #NOTATION_PLAIN
-     * @stable ICU 2.0
-     */
-    public static const NOTATION_SCIENTIFIC:int = 1; // 1 digit before .
-
-    /**
-     * Standard floating point notation (with engineering exponential
-     * format, where the power of ten is a multiple of 3).
-     * Used as a setting to control the form of the result of a
-     * <code>BigDecimal</code> operation.
-     * A zero result in plain form may have a decimal part of one or
-     * more zeros.
-     *
-     * @see #NOTATION_PLAIN
-     * @see #NOTATION_SCIENTIFIC
-     * @stable ICU 2.0
-     */
-    public static const NOTATION_ENGINEERING:int = 2; // 1-3 digits before .
 
     // The rounding modes match the original BigDecimal class values
     /**
@@ -228,7 +188,7 @@ public class MathContext
      */
     public static function roundUnnecessary():MathContext
     {
-        return new MathContext(DEFAULT_DIGITS, DEFAULT_FORM, DEFAULT_LOSTDIGITS, ROUND_UNNECESSARY);
+        return new MathContext(DEFAULT_DIGITS, DEFAULT_LOSTDIGITS, ROUND_UNNECESSARY);
     }
 
     /* properties shared */
@@ -263,35 +223,6 @@ public class MathContext
             throw new ArgumentError("Digits too large: " + value);
         }
         _digits = value;
-    }
-
-    private var _form:int; // values for this must fit in a byte
-
-    /**
-     * The form of results from an operation.
-     * <p>
-     * The {@link BigDecimal} operator methods use this value to
-     * determine the form of results, in particular whether and how
-     * exponential notation should be used.
-     *
-     * @see #NOTATION_ENGINEERING
-     * @see #NOTATION_PLAIN
-     * @see #NOTATION_SCIENTIFIC
-     */
-    public function get form():int
-    {
-        return _form;
-    }
-
-    private function setForm(value:int):void
-    {
-        if (value != NOTATION_SCIENTIFIC &&
-            value != NOTATION_ENGINEERING &&
-            value != NOTATION_PLAIN)
-        {
-            throw new ArgumentError("Bad form value: " + value);
-        }
-        _form = value;
     }
 
     private var _lostDigits:Boolean;
@@ -350,7 +281,6 @@ public class MathContext
 
     /* properties private constant */
     // default settings
-    private static const DEFAULT_FORM:int = NOTATION_SCIENTIFIC;
     private static const DEFAULT_DIGITS:int = 9;
     private static const DEFAULT_LOSTDIGITS:Boolean = false;
     private static const DEFAULT_ROUNDINGMODE:int = ROUND_HALF_UP;
@@ -374,13 +304,12 @@ public class MathContext
      * <code>digits=9 form=SCIENTIFIC lostDigits=false
      * roundingMode=ROUND_HALF_UP</code>.
      *
-     * @see #NOTATION_SCIENTIFIC
      * @see #ROUND_HALF_UP
      * @stable ICU 2.0
      */
-    public static const DEFAULT:MathContext = new MathContext(DEFAULT_DIGITS, DEFAULT_FORM, DEFAULT_LOSTDIGITS, DEFAULT_ROUNDINGMODE);
+    public static const DEFAULT:MathContext = new MathContext(DEFAULT_DIGITS, DEFAULT_LOSTDIGITS, DEFAULT_ROUNDINGMODE);
 
-    public static const PLAIN:MathContext = new MathContext(0, NOTATION_PLAIN); // context for plain unlimited math
+    public static const PLAIN:MathContext = new MathContext(0); // context for plain unlimited math
 
     /* ----- Constructors ----- */
 
@@ -396,8 +325,6 @@ public class MathContext
      *
      * @param digits The <code>int</code> digits setting
      * for this <code>MathContext</code>.
-     * @param form The <code>int</code> form setting
-     * for this <code>MathContext</code>.
      * @param lostDigits The <code>boolean</code> lostDigits
      * setting for this <code>MathContext</code>.
      * @param roundingMode The <code>int</code> roundingMode setting
@@ -405,11 +332,10 @@ public class MathContext
      * @throws ArgumentError parameter out of range.
      * @stable ICU 2.0
      */
-    public function MathContext(digits:int, form:int = DEFAULT_FORM, lostDigits:Boolean = DEFAULT_LOSTDIGITS, roundingMode:int = DEFAULT_ROUNDINGMODE)
+    public function MathContext(digits:int, lostDigits:Boolean = DEFAULT_LOSTDIGITS, roundingMode:int = DEFAULT_ROUNDINGMODE)
     {
         // set values, after checking
         setDigits(digits);
-        setForm(form);
         setRoundingMode(roundingMode);
         _lostDigits = lostDigits; // [no bad value possible]
     }
@@ -453,25 +379,10 @@ public class MathContext
      */
     public function toString():String
     {
-        var formStr:String = null;
-        if (form == NOTATION_SCIENTIFIC)
-        {
-            formStr = "SCIENTIFIC";
-        }
-        else if (form == NOTATION_ENGINEERING)
-        {
-            formStr = "ENGINEERING";
-        }
-        else
-        {
-            /* form=PLAIN */
-            formStr = "PLAIN";
-        }
-
         const r:int = ROUNDS.indexOf(_roundingMode);
         var roundWord:String = ROUNDWORDS[r];
 
-        return "digits=" + digits + " " + "form=" + formStr + " " + "lostDigits=" + (lostDigits ? "1" : "0") + " " + "roundingMode=" + roundWord;
+        return "digits=" + digits + " " + "lostDigits=" + (lostDigits ? "1" : "0") + " " + "roundingMode=" + roundWord;
     }
 }
 }

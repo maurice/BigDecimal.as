@@ -58,7 +58,7 @@ public class BigDecimalArithmeticTest
         var cScale:int = -37;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
-        var mc:MathContext = new MathContext(5, MathContext.NOTATION_PLAIN, false, MathContext.ROUND_UP);
+        var mc:MathContext = new MathContext(5, false, MathContext.ROUND_UP);
         var result:BigDecimal = aNumber.add(bNumber, mc);
         assertEquals("incorrect value", c, result.toString());
         assertEquals("incorrect scale", cScale, result.scale());
@@ -97,7 +97,7 @@ public class BigDecimalArithmeticTest
         var cScale:int = -57;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
-        var mc:MathContext = new MathContext(5, MathContext.NOTATION_PLAIN, false, MathContext.ROUND_FLOOR);
+        var mc:MathContext = new MathContext(5, false, MathContext.ROUND_FLOOR);
         var result:BigDecimal = aNumber.add(bNumber, mc);
         assertEquals("incorrect value ", c, result.toString());
         assertEquals("incorrect scale", cScale, result.scale());
@@ -136,7 +136,7 @@ public class BigDecimalArithmeticTest
         var cScale:int = -31;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
-        var mc:MathContext = new MathContext(15, MathContext.NOTATION_PLAIN, false, MathContext.ROUND_CEILING);
+        var mc:MathContext = new MathContext(15, false, MathContext.ROUND_CEILING);
         var result:BigDecimal = aNumber.add(bNumber, mc);
         assertEquals("incorrect value", c, result.toString());
         assertEquals("incorrect scale", cScale, result.scale());
@@ -213,7 +213,7 @@ public class BigDecimalArithmeticTest
         var cScale:int = -27;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
-        var mc:MathContext = new MathContext(15, MathContext.NOTATION_PLAIN, false, MathContext.ROUND_CEILING);
+        var mc:MathContext = new MathContext(15, false, MathContext.ROUND_CEILING);
         var result:BigDecimal = aNumber.subtract(bNumber, mc);
         assertEquals("incorrect value", c, result.toString());
         assertEquals("incorrect scale", cScale, result.scale());
@@ -314,7 +314,7 @@ public class BigDecimalArithmeticTest
         var cScale:int = -2;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
-        var mc:MathContext = new MathContext(70, MathContext.NOTATION_PLAIN, false, MathContext.ROUND_HALF_DOWN);
+        var mc:MathContext = new MathContext(70, false, MathContext.ROUND_HALF_DOWN);
         var result:BigDecimal = aNumber.subtract(bNumber, mc);
         assertEquals("incorrect value", c, result.toString());
         assertEquals("incorrect scale", cScale, result.scale());
@@ -353,7 +353,7 @@ public class BigDecimalArithmeticTest
         var cScale:int = -69;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
-        var mc:MathContext = new MathContext(40, MathContext.NOTATION_PLAIN, false, MathContext.ROUND_HALF_DOWN);
+        var mc:MathContext = new MathContext(40, false, MathContext.ROUND_HALF_DOWN);
         var result:BigDecimal = aNumber.multiply(bNumber, mc);
         assertEquals("incorrect value", c, result.toString());
         assertEquals("incorrect scale", cScale, result.scale());

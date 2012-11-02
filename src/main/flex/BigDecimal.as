@@ -358,24 +358,6 @@ public class BigDecimal
     // smooth future extension].
 
     /**
-     * The formatting style. This may take the values:
-     * <ul>
-     * <li>MathContext.PLAIN -- no exponent needed
-     * <li>MathContext.SCIENTIFIC -- scientific notation required
-     * <li>MathContext.ENGINEERING -- engineering notation required
-     * </ul>
-     * <p>
-     * This property is an optimization; it allows us to defer number
-     * layout until it is actually needed as a string, hence avoiding
-     * unnecessary formatting.
-     *
-     * @serial
-     */
-    private var form:int = MathContext.NOTATION_PLAIN; // assumed PLAIN
-    // We only need two bits for this, at present, but use a byte
-    // [again, to allow for smooth future extension]
-
-    /**
      * The value of the mantissa.
      * <p>
      * Once constructed, this may become shared between several BigDecimal
@@ -923,19 +905,13 @@ public class BigDecimal
 
         /* Quick exit for add floating 0 */
         // plus() will optimize to return same object if possible
-        if (lhs.ind == 0)
+        if (lhs.ind == iszero)
         {
-            if (context.form != MathContext.NOTATION_PLAIN)
-            {
-                return rhs.plus(context);
-            }
-            if (rhs.ind == 0)
-            {
-                if (context.form != MathContext.NOTATION_PLAIN)
-                {
-                    return lhs.plus(context);
-                }
-            }
+            return rhs.plus(context);
+        }
+        if (rhs.ind == iszero)
+        {
+            return lhs.plus(context);
         }
 
         /* Prepare numbers (round, unless unlimited precision) */
@@ -998,7 +974,7 @@ public class BigDecimal
                         res.exp = res.exp - ((reqdig - usellen));
                     }
 
-                    return res.finish(context, false);
+                    return res.finish(context);
                 }
             }
 
@@ -1039,7 +1015,7 @@ public class BigDecimal
                         res.mant.length = reqdig;
                         res.exp = res.exp - ((reqdig - userlen));
                     }
-                    return res.finish(context, false);
+                    return res.finish(context);
                 }
             }
             // LHS may affect result
@@ -1125,12 +1101,7 @@ public class BigDecimal
                     {
                         if (ib > eb)
                         {
-                            /* identical */
-                            if (context.form != MathContext.NOTATION_PLAIN)
-                            {
-                                return ZERO;
-                            }
-                            // [if PLAIN we must do the subtract, in case of 0.000 results]
+                            // [we must do the subtract, in case of 0.000 results]
                             break /*compare*/;
                         }
                         ca = 0;
@@ -1176,7 +1147,7 @@ public class BigDecimal
         // [reuse possible only after chop; accounting makes not worthwhile]
 
         // Finish() rounds before stripping leading 0's, then sets form, etc.
-        return res.finish(context, false);
+        return res.finish(context);
     }
 
     /**
@@ -1321,7 +1292,7 @@ public class BigDecimal
     public function divideRound(rhs:BigDecimal, round:int):BigDecimal
     {
         var context:MathContext;
-        context = new MathContext(0, MathContext.NOTATION_PLAIN, false, round); // [checks round, too]
+        context = new MathContext(0, false, round); // [checks round, too]
         return dodivide('D', rhs, context, -1); // take scale from LHS
     }
 
@@ -1365,7 +1336,7 @@ public class BigDecimal
         {
             throw new ArithmeticError("Negative scale:" + " " + scale);
         }
-        context = new MathContext(0, MathContext.NOTATION_PLAIN, false, round); // [checks round]
+        context = new MathContext(0, false, round); // [checks round]
         return dodivide('D', rhs, context, scale);
     }
 
@@ -1594,7 +1565,7 @@ public class BigDecimal
         res.ind = (lhs.ind * rhs.ind); // final sign
         res.exp = (lhs.exp + rhs.exp); // final exponent
         res.mant = acc;
-        return res.finish(context, false);
+        return res.finish(context);
     }
 
     /**
@@ -1622,7 +1593,7 @@ public class BigDecimal
         res = clone(this); // safe copy
         res.ind = -res.ind;
 
-        return res.finish(context, false);
+        return res.finish(context);
     }
 
     /**
@@ -1647,21 +1618,15 @@ public class BigDecimal
             checkdigits(null as BigDecimal, context.digits);
         }
         // Optimization: returns same object for some common cases
-        if (context.form == MathContext.NOTATION_PLAIN)
+        if (mant.length <= context.digits)
         {
-            if (form == MathContext.NOTATION_PLAIN)
-            {
-                if (mant.length <= context.digits)
-                {
-                    return this;
-                }
-                if (context.digits == 0)
-                {
-                    return this;
-                }
-            }
+            return this;
         }
-        return clone(this).finish(context, false);
+        if (context.digits == 0)
+        {
+            return this;
+        }
+        return clone(this).finish(context);
     }
 
     // The name for this method is inherited from the precedent set by the
@@ -1734,7 +1699,7 @@ public class BigDecimal
         /* Create a copy of context for working settings */
         // Note: no need to check for lostDigits again.
         // 1999.07.17 Note: this construction must follow RHS check
-        const workset:MathContext = new MathContext(workdigits, context.form, false, context.roundingMode);
+        const workset:MathContext = new MathContext(workdigits, false, context.roundingMode);
 
         var seenbit:Boolean = false; // set once we've seen a 1-bit
         var res:BigDecimal = ONE; // accumulator
@@ -1760,7 +1725,7 @@ public class BigDecimal
         }
         // 32 bits
 
-        return res.finish(context, true); // round and strip [original digits]
+        return res.finish(context); // round [original digits]
     }
 
     /**
@@ -1872,7 +1837,7 @@ public class BigDecimal
             return false; // different signs never match
         }
 
-        if (this.mant.length == rhs.mant.length && this.exp == rhs.exp && this.form == rhs.form)
+        if (this.mant.length == rhs.mant.length && this.exp == rhs.exp)
         {
             // mantissas say all
             // here with equal-length byte arrays to compare
@@ -2078,7 +2043,7 @@ public class BigDecimal
     {
         var res:BigDecimal = clone(this);
         res.exp = toIntExponent(exp + n);
-        res = res.finish(MathContext.PLAIN, false);
+        res = res.finish(MathContext.PLAIN);
         return res.exp < 0 ? res : res.setScale(0, MathContext.ROUND_UNNECESSARY);
     }
 
@@ -2128,11 +2093,7 @@ public class BigDecimal
         if (ourscale == scale)
         {
             // already correct scale
-            if (form == MathContext.NOTATION_PLAIN)
-            {
-                // .. and form
-                return this;
-            }
+            return this;
         }
 
         var res:BigDecimal = clone(this); // need copy
@@ -2172,7 +2133,6 @@ public class BigDecimal
                 res.exp = res.exp - 1;
             }
         }
-        res.form = MathContext.NOTATION_PLAIN; // by definition
         return res;
     }
 
@@ -2554,12 +2514,7 @@ public class BigDecimal
 
         if (lhs.ind == 0)
         {
-            // 0/x => 0 [possibly with .0s]
-            if (context.form != MathContext.NOTATION_PLAIN)
-            {
-                return ZERO;
-            }
-            if (scale == (-1))
+            if (scale == -1)
             {
                 return lhs;
             }
@@ -2617,7 +2572,7 @@ public class BigDecimal
                     return ZERO; // easy - no integer part
                 }
                 /* Must be 'R'; remainder is [finished clone of] input value */
-                return clone(lhs).finish(context, false);
+                return clone(lhs).finish(context);
             }
         }
 
@@ -2815,7 +2770,7 @@ public class BigDecimal
                 if (res.mant[0] == 0)
                 {
                     // no integer part was found
-                    return clone(lhs).finish(context, false); // .. so return lhs, canonical
+                    return clone(lhs).finish(context); // .. so return lhs, canonical
                 }
                 if (var1[0] == 0)
                 {
@@ -2851,7 +2806,7 @@ public class BigDecimal
                     var1.length = d;
                 }
                 res.mant = var1;
-                return res.finish(context, false);
+                return res.finish(context);
             }
             /*remainder*/
         }
@@ -2881,19 +2836,19 @@ public class BigDecimal
             if (have != res.mant.length)
             {
                 // already padded with 0's, so just adjust exponent
-                res.exp = res.exp - ((res.mant.length - have));
+                res.exp = res.exp - (res.mant.length - have);
             }
             // calculate number of digits we really want [may be 0]
-            actdig = res.mant.length - (((-res.exp) - scale));
+            actdig = res.mant.length - (-res.exp - scale);
             res.round(actdig, context.roundingMode); // round to desired length
             // This could have shifted left if round (say) 0.9->1[.0]
             // Repair if so by adding a zero and reducing exponent
-            if (res.exp != (-scale))
+            if (res.exp != -scale)
             {
                 res.mant.length += 1;
                 res.exp = res.exp - 1;
             }
-            return res.finish(context, true); // [strip if not PLAIN]
+            return res.finish(context);
         }
         /*scaled*/
 
@@ -2916,7 +2871,7 @@ public class BigDecimal
             res.mant.length = have;
         }
 
-        return res.finish(context, true);
+        return res.finish(context);
     }
 
     /**
@@ -3120,7 +3075,6 @@ public class BigDecimal
         const copy:BigDecimal = new BigDecimal(NULL);
         copy.ind = dec.ind;
         copy.exp = dec.exp;
-        copy.form = dec.form;
         copy.mant = dec.mant;
         return copy;
     }
@@ -3384,12 +3338,10 @@ public class BigDecimal
      It always sets form.
      </sgml>
      Arg1 is requested MathContext (length to round to, trigger, and FORM)
-     Arg2 is 1 if trailing insignificant zeros should be removed after
-     round (for division, etc.), provided that set.form isn't PLAIN.
      returns this, for convenience
      */
 
-    private function finish(context:MathContext, strip:Boolean):BigDecimal
+    private function finish(context:MathContext):BigDecimal
     {
         /* Round if mantissa too long and digits requested */
         if (context.digits != 0)
@@ -3400,39 +3352,9 @@ public class BigDecimal
             }
         }
 
-        /* If strip requested (and standard formatting), remove
-         insignificant trailing zeros. */
-        if (strip)
-        {
-            if (context.form != MathContext.NOTATION_PLAIN)
-            {
-                var d:int = mant.length;
-                /* see if we need to drop any trailing zeros */
-                var i:int = d - 1;
-                for (; i >= 1; i--)
-                {
-                    if (mant[i] != 0)
-                    {
-                        break;
-                    }
-                    d--;
-                    exp++;
-                }
-
-                if (d < mant.length)
-                {
-                    /* need to reduce */
-                    mant = mant.slice(0, d);
-                }
-            }
-        }
-
-        form = MathContext.NOTATION_PLAIN; // preset
-
         /* Now check for leading- and all- zeros in mantissa */
-        var $26:int = mant.length;
-        i = 0;
-        for (; $26 > 0; $26--, i++) /*i*/
+        const len:int = mant.length;
+        for (var i:int = 0; i < len; i++) /*i*/
         {
             if (mant[i] != 0)
             {

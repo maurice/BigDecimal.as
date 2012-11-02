@@ -1841,37 +1841,17 @@ public class BigDecimal
         {
             // mantissas say all
             // here with equal-length byte arrays to compare
-            var $8:int = mant.length;
-            var i:int = 0;
-            for (; $8 > 0; $8--, i++)
+            const len:int = mant.length;
+            for (var i:int = 0; i < len; i++)
             {
                 if (this.mant[i] != rhs.mant[i])
                 {
                     return false;
                 }
             }
+            return true; // arrays have identical content
         }
-        else
-        {
-            // need proper layout
-            const lca:Vector.<String> = toCharVector(); // layout to character array
-            const rca:Vector.<String> = rhs.toCharVector();
-            if (lca.length != rca.length)
-            {
-                return false; // mismatch
-            }
-            // here with equal-length character arrays to compare
-            var $9:int = lca.length;
-            i = 0;
-            for (; $9 > 0; $9--, i++)
-            {
-                if (lca[i] != rca[i])
-                {
-                    return false;
-                }
-            }
-        }
-        return true; // arrays have identical content
+        return false;
     }
 
     /**
@@ -2161,11 +2141,6 @@ public class BigDecimal
      */
     public function toString():String
     {
-        return toCharVector().join("");
-    }
-
-    private function toCharVector():Vector.<String>
-    {
         const buf:Vector.<String> = Vector.<String>(mant);
         if (ind < 0)
         {
@@ -2173,7 +2148,7 @@ public class BigDecimal
         }
         if (scale() == 0)
         {
-            return buf;
+            return buf.join("");
         }
 
         const begin:int = (ind < 0) ? 2 : 1;
@@ -2206,13 +2181,9 @@ public class BigDecimal
             {
                 buf[buf.length] = '+';
             }
-            const exp:String = String(exponent);
-            for (i = 0; i < exp.length; i++)
-            {
-                buf[buf.length] = exp.charAt(i);
-            }
+            buf[buf.length] = String(exponent);
         }
-        return buf;
+        return buf.join("");
     }
 
     /**

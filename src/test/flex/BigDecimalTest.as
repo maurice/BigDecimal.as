@@ -402,6 +402,7 @@ public class BigDecimalTest
         assertFalse(new BigDecimal("1").equals(new BigDecimal("-1")));
         assertFalse(new BigDecimal("0.9").equals(new BigDecimal("1")));
         assertTrue(new BigDecimal(".5").equals(new BigDecimal("0.5")));
+        assertFalse(new BigDecimal("123456").equals(new BigDecimal("123457")));
     }
 
     [Test]

@@ -398,11 +398,43 @@ public class BigDecimalTest
     {
         assertTrue(new BigDecimal("1").equals(new BigDecimal("1")));
         assertFalse(new BigDecimal("1").equals(new BigDecimal("1.0")));
+        assertFalse(new BigDecimal("1").equals(new BigDecimal("1.000000")));
         assertFalse(new BigDecimal("1").equals(new BigDecimal("-1")));
         assertFalse(new BigDecimal("1").equals(new BigDecimal("-1")));
         assertFalse(new BigDecimal("0.9").equals(new BigDecimal("1")));
         assertTrue(new BigDecimal(".5").equals(new BigDecimal("0.5")));
         assertFalse(new BigDecimal("123456").equals(new BigDecimal("123457")));
+    }
+
+    [Test]
+    public function scale():void
+    {
+        var a:BigDecimal = new BigDecimal("12.34");
+        assertEquals(2, a.scale());
+
+        a = new BigDecimal("-12.34");
+        assertEquals(2, a.scale());
+
+        a = new BigDecimal("12.345000");
+        assertEquals(6, a.scale());
+
+        a = new BigDecimal("1e5");
+        assertEquals(-5, a.scale());
+
+        a = new BigDecimal("1e-5");
+        assertEquals(5, a.scale());
+
+        a = new BigDecimal("905835.90345345E450");
+        assertEquals(-442, a.scale());
+
+        a = new BigDecimal("-905835.90345345E450");
+        assertEquals(-442, a.scale());
+
+        a = new BigDecimal("905835.90345345E-450");
+        assertEquals(458, a.scale());
+
+        a = new BigDecimal("-905835.90345345E-450");
+        assertEquals(458, a.scale());
     }
 
     [Test]

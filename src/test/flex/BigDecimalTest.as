@@ -1,5 +1,8 @@
 package
 {
+import flash.utils.ByteArray;
+import flash.utils.IExternalizable;
+
 import org.flexunit.asserts.assertEquals;
 import org.flexunit.asserts.assertFalse;
 import org.flexunit.asserts.assertTrue;
@@ -33,7 +36,7 @@ public class BigDecimalTest
 
         try
         {
-            new BigDecimal({not_valid: true});
+            new BigDecimal({not_valid:true});
             fail("No ArgumentError");
         }
         catch (e:ArgumentError)
@@ -57,7 +60,7 @@ public class BigDecimalTest
         // Note: not quite the same as Java's which has different error messages
         // and doesn't like -ve exponents <= -2147483647
         var a:BigDecimal = new BigDecimal("1.0e2147483647");
-        assertEquals("1.0E+2147483647",a.toString());
+        assertEquals("1.0E+2147483647", a.toString());
 
         try
         {
@@ -70,10 +73,10 @@ public class BigDecimalTest
         }
 
         a = new BigDecimal("1.0e-2147483646");
-        assertEquals("1.0E-2147483646",a.toString());
+        assertEquals("1.0E-2147483646", a.toString());
 
         a = new BigDecimal("1.0e-2147483647");
-        assertEquals("1.0E-2147483647",a.toString());
+        assertEquals("1.0E-2147483647", a.toString());
 
         try
         {
@@ -263,7 +266,7 @@ public class BigDecimalTest
 
         assertEquals("1.6149526889472623986174998258858", total.toString());
     }
-    
+
     [Test]
     public function divideInteger():void
     {
@@ -402,7 +405,7 @@ public class BigDecimalTest
         assertEquals(1, new BigDecimal("9").compareTo(new BigDecimal("0.E+11")));
         assertEquals(0, new BigDecimal("1234567890000000000000000").compareTo(new BigDecimal("1234567890.0e+15")));
     }
-    
+
     [Test]
     public function equals():void
     {
@@ -529,6 +532,18 @@ public class BigDecimalTest
 
         var n:Number = v.numberValue();
         assertEquals(12340000000, n);
+    }
+
+    [Test]
+    public function implementsIExternalizable():void
+    {
+        var a:IExternalizable = new BigDecimal("5353.2465464");
+        var bs:ByteArray = new ByteArray();
+        a.writeExternal(bs);
+        bs.position = 0; // reset for read
+        var b:IExternalizable = new BigDecimal();
+        b.readExternal(bs);
+        assertEquals("5353.2465464", String(b));
     }
 }
 }

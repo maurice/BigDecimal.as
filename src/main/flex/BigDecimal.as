@@ -1,5 +1,8 @@
 package
 {
+import flash.utils.IDataInput;
+import flash.utils.IDataOutput;
+import flash.utils.IExternalizable;
 import flash.utils.getQualifiedClassName;
 
 //##header 1189099963000 FOUNDATION
@@ -278,7 +281,7 @@ import flash.utils.getQualifiedClassName;
  **/
 
 
-public class BigDecimal
+public class BigDecimal implements IExternalizable
 {
     /**
      * Used by BigDecimal internally to call its own constructor with a "null" parameter.
@@ -3301,6 +3304,26 @@ public class BigDecimal
         ind = iszero;
         mant = ZERO.mant; // canonical mantissa
         return this;
+    }
+
+    /**
+     * @copy IExternalizable#writeExternal
+     */
+    public function writeExternal(output:IDataOutput):void
+    {
+        output.writeObject(mant);
+        output.writeInt(exp);
+        output.writeInt(ind);
+    }
+
+    /**
+     * @copy IExternalizable#readExternal
+     */
+    public function readExternal(input:IDataInput):void
+    {
+        mant = input.readObject();
+        exp = input.readInt();
+        ind = input.readInt();
     }
 }
 }

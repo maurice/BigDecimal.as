@@ -328,11 +328,13 @@ public class BigDecimal
     // In AS3 there is no char, byte or native arrays
     // So lets create the int value of each char we need in the
     // algorythms
-    private static const VALUE_ZERO:int = "0".charCodeAt(0); // use long as we want the int constructor
-    private static const VALUE_NINE:int = "9".charCodeAt(0); // use long as we want the int constructor
-    private static const VALUE_EUPPER:int = "e".charCodeAt(0); // use long as we want the int constructor
-    private static const VALUE_ELOWER:int = "E".charCodeAt(0); // use long as we want the int constructor
-    private static const VALUE_DOT:int = ".".charCodeAt(0); // use long as we want the int constructor
+    private static const CODE_0:int = "0".charCodeAt(0); // use long as we want the int constructor
+    private static const CODE_9:int = "9".charCodeAt(0); // use long as we want the int constructor
+    private static const CODE_e:int = "e".charCodeAt(0); // use long as we want the int constructor
+    private static const CODE_E:int = "E".charCodeAt(0); // use long as we want the int constructor
+    private static const CODE_dot:int = ".".charCodeAt(0); // use long as we want the int constructor
+    private static const CODE_plus:int = "+".charCodeAt(0); // use long as we want the int constructor
+    private static const CODE_minus:int = "-".charCodeAt(0); // use long as we want the int constructor
 
     /* properties static private */
     // Precalculated constant arrays (used by byteaddsub)
@@ -466,208 +468,168 @@ public class BigDecimal
     }
 
     /**
-     * Creates the BigDecimal from the given string
-     * @param chars string to build BigDecimal from
+     * Populates this BigDecimal from the given string
+     * @param str string to build BigDecimal from
      * @param offset offset to start parsing at
      * @param length length of the substring to parse, if any, otherwise -1
+     * @throws ArgumentError if the given string, offset or length are invalid
      */
-    private function createFromString(chars:String, offset:int, length:int):void
+    private function createFromString(str:String, offset:int = 0, length:int = -1):void
     {
-        //Default parameter correction
         if (length == -1)
         {
-            length = chars.length;
+            length = str.length;
         }
 
-        // This is the primary constructor; all incoming strings end up
-        // here; it uses explicit (inline) parsing for speed and to avoid
-        // generating intermediate (temporary) objects of any kind.
-        // 1998.06.25: exponent form built only if E/e in string
-        // 1998.06.25: trailing zeros not removed for zero
-        // 1999.03.06: no embedded blanks; allow offset and length
-        if (length <= 0)
+        if (length <= 0 || length - offset > str.length)
         {
-            bad(chars); // bad conversion (empty string)
-            // [bad offset will raise array bounds exception]
+            throw new ArgumentError("Invalid offset/length: " + offset + "/" + length + " for string: " + str);
         }
 
-        /* Handle and step past sign */
-        ind = ispos; // assume positive
+        var scientific:Boolean; // true for XXXeYYY numbers
+        var dot:int = -1; // index of decimal point, if any
+        var c:int; // current character code
 
-        if (chars.charAt(offset) == "-")
+        // check for sign
+        ind = 1; // assume positive
+        c = str.charCodeAt(offset);
+        if (c == CODE_minus)
         {
-            length--;
-            if (length == 0)
+            // negative number
+            ind = -1;
+            offset++
+        }
+        else if (c == CODE_plus)
+        {
+            offset++
+        }
+
+        // locate mantissa, dot and exponent indicator
+        var nz:int = offset;
+        var zero:Boolean = true; // true if the last mantissa digit was zero
+        for (var i:int = offset; i < length; i++)
+        {
+            c = str.charCodeAt(i);
+            if (c >= CODE_0 && c <= CODE_9)
             {
-                bad(chars); // nothing after sign
-            }
-            ind = isneg;
-            offset++;
-        }
-        else if (chars.charAt(offset) == "+")
-        {
-            length--;
-            if (length == 0)
-            {
-                bad(chars); // nothing after sign
-            }
-            offset++;
-        }
-
-        /* We're at the start of the number */
-        var d:int = 0; // count of digits found
-        var dotoff:int = -1; // offset where dot was found
-        var last:int = -1; // last character of mantissa
-
-        var si:int = 0;
-        var sj:int = 0;
-        for (var $1:int = length, i:int = offset; $1 > 0; $1--, i++) /*i*/
-        {
-            si = chars.charCodeAt(i);
-            // test for Arabic digit
-            if (si >= VALUE_ZERO && si <= VALUE_NINE)
-            {
-                last = i;
-                d++; // still in mantissa
+                if (zero)
+                {
+                    offset = i; // offset is index of first number, ignoring leading zeroes
+                }
+                if (c != CODE_0)
+                {
+                    nz = i; // index of last *non-zero* number in mantissa
+                    zero = false;
+                }
                 continue;
             }
 
-            if (si == VALUE_DOT)
+            if (c == CODE_dot)
             {
-                // record and ignore
-                if (dotoff >= 0)
+                if (dot != -1)
                 {
-                    bad(chars); // two dots
+                    throw new ArgumentError("Not a number: " + str);
                 }
-                dotoff = i - offset; // offset into mantissa
-                continue /*i*/;
+                // save dot index and continue
+                dot = i;
+                continue;
             }
 
-            if (si != VALUE_ELOWER && si != VALUE_EUPPER)
+            if (c == CODE_e || c == CODE_E)
             {
-                // expect an extra digit
-                if (si < VALUE_ZERO || si > VALUE_NINE)
-                {
-                    bad(chars); // not a number
-                }
-            }
-
-            /* Found 'e' or 'E' -- now process explicit exponent */
-            // 1998.07.11: sign no longer required
-            if (i - offset > length - 2)
-            {
-                bad(chars); // no room for even one digit
-            }
-
-            var eneg:Boolean = false;
-            var k:int = i + 1;
-            if (chars.charAt(k) == "-")
-            {
-                eneg = true;
-                k++;
-            }
-            else if (chars.charAt(k) == "+")
-            {
-                k++;
-            }
-
-            // k is offset of first expected digit
-            const elen:int = length - (k - offset); // possible number of digits
-            if (elen == 0 || elen > 10)
-            {
-                bad(chars); // 0 or more than 10 digits
-            }
-
-            var exponent:Number = 0;
-            var j:int = k;
-            for (var $2:int = elen; $2 > 0; $2--, j++) /*j*/
-            {
-                sj = chars.charCodeAt(j);
-                if (sj < VALUE_ZERO)
-                {
-                    bad(chars); // always bad
-                }
-                if (sj > VALUE_NINE)
-                {
-                    bad(chars); // not base 10
-                }
-                exponent = (exponent * 10) + (sj - VALUE_ZERO);
-            }
-            /*j*/
-
-            if (exponent > int.MAX_VALUE)
-            {
-                throw new ArgumentError("Exponent too large: " + chars);
-            }
-            exp = eneg ? -exponent : exponent;
-
-            break; // we are done
-        }
-        /*i*/
-
-        /* Here when all inspected */
-        if (d == 0)
-        {
-            bad(chars); // no mantissa digits
-        }
-        if (dotoff >= 0)
-        {
-            exp = (exp + dotoff) - d; // adjust exponent if had dot
-        }
-
-        /* strip leading zeros/dot (leave final if all 0's) */
-        var $3:int = last - 1;
-        i = offset;
-
-        for (; i <= $3; i++) /*i*/
-        {
-            si = chars.charCodeAt(i);
-            if (si == VALUE_ZERO)
-            {
-                offset++;
-                dotoff--;
-                d--;
-            }
-            else if (si == VALUE_DOT)
-            {
-                offset++; // step past dot
-                dotoff--;
-            }
-            else
-            {
+                // process exponent in a different loop
+                scientific = true;
                 break;
-                /* non-0 */
             }
+
+            throw new ArgumentError("Not a number: " + str);
         }
-        /*i*/
 
-        /* Create the mantissa array */
-        mant = new Vector.<int>(d); // we know the length
-        j = offset; // input offset
+        const end:int = i - 1; // index of final mantissa digit
 
-        var $5:int = d;
-        i = 0;
-        for (; $5 > 0; $5--, i++) /*simple*/
+        // determine mantissa storage length
+        const len:int = i - offset - (dot >= offset ? 1 : 0);
+        if (len == 0)
         {
-            if (i == dotoff)
-            {
-                j++;
-            }
-            mant[i] = (chars.charCodeAt(j) - VALUE_ZERO);
-            j++;
+            throw new ArgumentError("Not a number: " + str);
         }
-        /*simple*/
 
-        /* Looks good. Set the sign indicator and form, as needed. */
-        // Trailing zeros are preserved
-        // The rule here for form is:
-        // If no E-notation, then request plain notation
-        // Otherwise act as though add(0,DEFAULT) and request scientific notation
-        // [form is already PLAIN]
+        // allocate and populate mantissa
+        mant = new Vector.<int>(len, true);
+        for (i = 0; offset <= nz; offset++)
+        {
+            c = str.charCodeAt(offset);
+            if (offset != dot)
+            {
+                mant[i++] = (c - CODE_0);
+            }
+        }
+
+        // zero?
         if (mant[0] == 0)
         {
-            ind = iszero; // force to show zero
+            ind = 0;
         }
+
+
+        // parse exponent
+        var exponent:Number = 0;
+        if (scientific)
+        {
+            offset = end + 2; // offset is the index of first exponent digit
+
+            var neg:Boolean;
+            c = str.charCodeAt(offset);
+            if (c == CODE_minus)
+            {
+                // negative exponent
+                neg = true;
+                offset++
+            }
+            else if (c == CODE_plus)
+            {
+                offset++
+            }
+
+            if (length - offset > 10)
+            {
+                throw new ArgumentError("Exponent too large: " + str);
+            }
+
+            for (i = offset; i < length; i++)
+            {
+                c = str.charCodeAt(i);
+                if (c >= CODE_0 && c <= CODE_9)
+                {
+                    exponent = (exponent * 10) + (c - CODE_0);
+                    continue;
+                }
+
+                throw new ArgumentError("Not a number: " + str);
+            }
+
+            if (i == offset) // no exponent digits
+            {
+                throw new ArgumentError("Not a number: " + str);
+            }
+            if (exponent > int.MAX_VALUE)
+            {
+                throw new ArgumentError("Exponent too large: " + str);
+            }
+
+            if (neg)
+            {
+                exponent = -exponent;
+            }
+        }
+
+        if (dot == -1) // whole number? If so, dot is implicit
+        {
+            dot = end;
+        }
+
+        // set exponent, adjusting for dot position if any
+        exp = exponent - (end - dot);
     }
 
     /**
@@ -2861,13 +2823,6 @@ public class BigDecimal
             throw new ArithmeticError("Overflow");
         }
         return exponent;
-    }
-
-    /* <sgml> Report a conversion exception. </sgml> */
-
-    private static function bad(s:String):void
-    {
-        throw new ArgumentError("Not a number: " + s);
     }
 
     /* <sgml> Add or subtract two >=0 integers in byte arrays

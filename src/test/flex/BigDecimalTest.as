@@ -39,6 +39,16 @@ public class BigDecimalTest
         catch (e:ArgumentError)
         {
         }
+
+        try
+        {
+            new BigDecimal("0", 0, -9);
+            fail("No ArgumentError");
+        }
+        catch (e:ArgumentError)
+        {
+            assertEquals("Invalid offset/length: 0/-9 for string: 0", e.message);
+        }
     }
 
     [Test]

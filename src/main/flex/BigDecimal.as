@@ -1774,7 +1774,7 @@ public class BigDecimal implements IExternalizable
     {
         // We go via a String [as does BigDecimal in JDK 1.2]
         // Next line could possibly raise NumberFormatException
-        return Number(toCanonicalString());
+        return Number(toString());
     }
 
     /**
@@ -1876,7 +1876,7 @@ public class BigDecimal implements IExternalizable
 
             if (!allzero(mant, lodigit + 1))
             {
-                throw new Error("Decimal part non-zero:" + " " + toCanonicalString());
+                throw new Error("Decimal part non-zero:" + " " + toString());
             }
             if (lodigit < 0)
             {
@@ -1891,7 +1891,7 @@ public class BigDecimal implements IExternalizable
             if ((exp + lodigit) > 9)
             {
                 // early exit
-                throw new Error("Conversion overflow:" + " " + toCanonicalString());
+                throw new Error("Conversion overflow:" + " " + toString());
             }
             useexp = exp;
         }
@@ -1933,7 +1933,7 @@ public class BigDecimal implements IExternalizable
                     }
                 }
 
-                throw new Error("Conversion overflow:" + " " + toCanonicalString());
+                throw new Error("Conversion overflow:" + " " + toString());
             }
         }
 
@@ -3044,7 +3044,7 @@ public class BigDecimal implements IExternalizable
         {
             if (!allzero(mant, dig))
             {
-                throw new Error("Too many digits: " + toCanonicalString());
+                throw new Error("Too many digits: " + toString());
             }
         }
         if (rhs == null)
@@ -3055,7 +3055,7 @@ public class BigDecimal implements IExternalizable
         {
             if (!allzero(rhs.mant, dig))
             {
-                throw new Error("Too many digits: " + rhs.toCanonicalString());
+                throw new Error("Too many digits: " + rhs.toString());
             }
         }
     }

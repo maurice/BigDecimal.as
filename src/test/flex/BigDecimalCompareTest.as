@@ -39,7 +39,7 @@ public class BigDecimalCompareTest
         var a:String = "-123809648392384754573567356745735.63567890295784902768787678287E+21";
         var aNumber:BigDecimal = new BigDecimal(a);
         var result:String = "123809648392384754573567356745735635678902957849027687.87678287";
-        assertEquals("incorrect value", result, aNumber.abs().toString());
+        assertEquals("incorrect value", result, aNumber.abs().toCanonicalString());
     }
 
     [Test]
@@ -51,7 +51,7 @@ public class BigDecimalCompareTest
         var a:String = "123809648392384754573567356745735.63567890295784902768787678287E+21";
         var aNumber:BigDecimal = new BigDecimal(a);
         var result:String = "123809648392384754573567356745735635678902957849027687.87678287";
-        assertEquals("incorrect value", result, aNumber.abs().toString());
+        assertEquals("incorrect value", result, aNumber.abs().toCanonicalString());
     }
 
     [Test]
@@ -68,7 +68,7 @@ public class BigDecimalCompareTest
         var result:String = "1.23809648392385E+53";
         var resScale:int = -39;
         var res:BigDecimal = aNumber.abs(mc);
-        assertEquals("incorrect value", result, res.toString());
+        assertEquals("incorrect value", result, res.toCanonicalString());
         assertEquals("incorrect scale", resScale, res.scale());
     }
 
@@ -86,7 +86,7 @@ public class BigDecimalCompareTest
         var result:String = "1.2380964839238475457356735674573563567890E+53";
         var resScale:int = -13;
         var res:BigDecimal = aNumber.abs(mc);
-        assertEquals("incorrect value", result, res.toString());
+        assertEquals("incorrect value", result, res.toCanonicalString());
         assertEquals("incorrect scale", resScale, res.scale());
     }
 
@@ -430,7 +430,7 @@ public class BigDecimalCompareTest
         var cScale:int = 10;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var res:BigDecimal = aNumber.plus(mc);
-        assertEquals("incorrect value", c, res.toString());
+        assertEquals("incorrect value", c, res.toCanonicalString());
         assertEquals("incorrect scale", cScale, res.scale());
     }
 
@@ -465,7 +465,7 @@ public class BigDecimalCompareTest
         var cScale:int = 27;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var res:BigDecimal = aNumber.plus(mc);
-        assertEquals("incorrect value", c, res.toString());
+        assertEquals("incorrect value", c, res.toCanonicalString());
         assertEquals("incorrect scale", cScale, res.scale());
     }
 

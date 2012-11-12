@@ -14,16 +14,16 @@ public class BigDecimalTest
     public function constructor():void
     {
         var r:BigDecimal = new BigDecimal("-35453");
-        assertEquals("-35453", r.toString());
+        assertEquals("-35453", r.toCanonicalString());
 
         r = new BigDecimal("0.0000023423481");
-        assertEquals("0.0000023423481", r.toString());
+        assertEquals("0.0000023423481", r.toCanonicalString());
 
         r = new BigDecimal(53049580);
-        assertEquals("53049580", r.toString());
+        assertEquals("53049580", r.toCanonicalString());
 
         r = new BigDecimal(-423);
-        assertEquals("-423", r.toString());
+        assertEquals("-423", r.toCanonicalString());
 
         try
         {
@@ -60,7 +60,7 @@ public class BigDecimalTest
         // Note: not quite the same as Java's which has different error messages
         // and doesn't like -ve exponents <= -2147483647
         var a:BigDecimal = new BigDecimal("1.0e2147483647");
-        assertEquals("1.0E+2147483647", a.toString());
+        assertEquals("1.0E+2147483647", a.toCanonicalString());
 
         try
         {
@@ -73,10 +73,10 @@ public class BigDecimalTest
         }
 
         a = new BigDecimal("1.0e-2147483646");
-        assertEquals("1.0E-2147483646", a.toString());
+        assertEquals("1.0E-2147483646", a.toCanonicalString());
 
         a = new BigDecimal("1.0e-2147483647");
-        assertEquals("1.0E-2147483647", a.toString());
+        assertEquals("1.0E-2147483647", a.toCanonicalString());
 
         try
         {
@@ -140,12 +140,12 @@ public class BigDecimalTest
     {
         var a:BigDecimal = new BigDecimal("0.0e3");
         assertEquals(-2, a.scale());
-        assertEquals("0E+2", a.toString());
+        assertEquals("0E+2", a.toCanonicalString());
         assertEquals("0", a.toPlainString());
 
         var b:BigDecimal = new BigDecimal("000");
         assertEquals(0, b.scale());
-        assertEquals("0", b.toString());
+        assertEquals("0", b.toCanonicalString());
         assertEquals("0", b.toPlainString());
     }
 
@@ -156,7 +156,7 @@ public class BigDecimalTest
         var b:BigDecimal = new BigDecimal("45.55");
 
         total = a.add(b);
-        assertEquals("601.05", total.toString());
+        assertEquals("601.05", total.toCanonicalString());
 
         var c:BigDecimal = new BigDecimal("0.15015");
         var d:BigDecimal = new BigDecimal("0.34567");
@@ -176,7 +176,7 @@ public class BigDecimalTest
         var b:BigDecimal = new BigDecimal("123e460");
         var mc:MathContext = new MathContext(100);
         var total:BigDecimal = a.add(b, mc);
-        assertEquals("1.230000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000E+462", total.toString());
+        assertEquals("1.230000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000E+462", total.toCanonicalString());
     }
 
     [Test]
@@ -198,7 +198,7 @@ public class BigDecimalTest
         var b:BigDecimal = new BigDecimal("45.55");
 
         var total:BigDecimal = a.subtract(b);
-        assertEquals("509.95", total.toString());
+        assertEquals("509.95", total.toCanonicalString());
 
         var c:BigDecimal = new BigDecimal("0.15015");
         var d:BigDecimal = new BigDecimal("0.34567");
@@ -216,7 +216,7 @@ public class BigDecimalTest
         var b:BigDecimal = new BigDecimal("45.55");
 
         var total:BigDecimal = a.multiply(b);
-        assertEquals("25303.0250", total.toString());
+        assertEquals("25303.0250", total.toCanonicalString());
 
         var c:BigDecimal = new BigDecimal("0.15015");
         var d:BigDecimal = new BigDecimal("0.34567");
@@ -255,7 +255,7 @@ public class BigDecimalTest
 
         var total:BigDecimal = a.divide(b);
 
-        assertEquals("12.1953896817", total.toString());
+        assertEquals("12.1953896817", total.toCanonicalString());
 
         var c:BigDecimal = new BigDecimal("0.15015");
         c = c.setScale(31);
@@ -264,21 +264,21 @@ public class BigDecimalTest
 
         total = c.divide(d).divide(e);
 
-        assertEquals("1.6149526889472623986174998258858", total.toString());
+        assertEquals("1.6149526889472623986174998258858", total.toCanonicalString());
     }
 
     [Test]
     public function divideInteger():void
     {
         var c:BigDecimal = new BigDecimal("23").divideInteger(new BigDecimal("12"));
-        assertEquals("1", c.toString());
+        assertEquals("1", c.toCanonicalString());
     }
 
     [Test]
     public function divideRound():void
     {
         var c:BigDecimal = new BigDecimal("23").divideRound(new BigDecimal("12"), MathContext.ROUND_HALF_UP);
-        assertEquals("2", c.toString());
+        assertEquals("2", c.toCanonicalString());
     }
 
     [Test]
@@ -288,17 +288,17 @@ public class BigDecimalTest
         var b:BigDecimal = new BigDecimal("3");
 
         var r:BigDecimal = a.divideScaleRound(b, 3, MathContext.ROUND_DOWN);
-        assertEquals("3.333", r.toString());
+        assertEquals("3.333", r.toCanonicalString());
 
         r = a.divideScaleRound(b, 3, MathContext.ROUND_UP);
-        assertEquals("3.334", r.toString());
+        assertEquals("3.334", r.toCanonicalString());
     }
 
     [Test]
     public function remainder():void
     {
         var c:BigDecimal = new BigDecimal("23").remainder(new BigDecimal("12"));
-        assertEquals("11", c.toString());
+        assertEquals("11", c.toCanonicalString());
     }
 
     [Test]
@@ -319,14 +319,14 @@ public class BigDecimalTest
     {
         var a:BigDecimal = new BigDecimal("-555.567");
         a = a.abs();
-        assertEquals("555.567", a.toString());
+        assertEquals("555.567", a.toCanonicalString());
     }
 
     [Test]
     public function plus():void
     {
         var a:BigDecimal = new BigDecimal("45.3234");
-        assertEquals(a.toString(), a.plus().toString());
+        assertEquals(a.toCanonicalString(), a.plus().toCanonicalString());
 
 //        a = new BigDecimal("-42342.994");
 //        a = a.plus();
@@ -339,10 +339,10 @@ public class BigDecimalTest
         var a:BigDecimal = new BigDecimal("45.3234");
 
         a = a.negate();
-        assertEquals("-45.3234", a.toString());
+        assertEquals("-45.3234", a.toCanonicalString());
 
         a = a.negate();
-        assertEquals("45.3234", a.toString());
+        assertEquals("45.3234", a.toCanonicalString());
     }
 
     [Test]
@@ -351,7 +351,7 @@ public class BigDecimalTest
         var a:BigDecimal = new BigDecimal("-55.50");
 
         var total:BigDecimal = a.pow(3);
-        assertEquals("-170953.875000", total.toString());
+        assertEquals("-170953.875000", total.toCanonicalString());
 
         try
         {
@@ -367,7 +367,7 @@ public class BigDecimalTest
         var mc:MathContext = new MathContext(1, false, MathContext.ROUND_DOWN);
         var b:BigDecimal = a.pow(2, mc);
 
-        assertEquals("4E+4", b.toString());
+        assertEquals("4E+4", b.toCanonicalString());
     }
 
     [Test]
@@ -470,20 +470,20 @@ public class BigDecimalTest
     public function max():void
     {
         var r:BigDecimal = new BigDecimal("100").max(new BigDecimal("200"));
-        assertEquals("200", r.toString());
+        assertEquals("200", r.toCanonicalString());
 
         r = new BigDecimal("-0.001").max(new BigDecimal("0.001"));
-        assertEquals("0.001", r.toString());
+        assertEquals("0.001", r.toCanonicalString());
     }
 
     [Test]
     public function min():void
     {
         var r:BigDecimal = new BigDecimal("100").min(new BigDecimal("200"));
-        assertEquals("100", r.toString());
+        assertEquals("100", r.toCanonicalString());
 
         r = new BigDecimal("-0.001").min(new BigDecimal("0.001"));
-        assertEquals("-0.001", r.toString());
+        assertEquals("-0.001", r.toCanonicalString());
     }
 
     [Test]
@@ -492,43 +492,43 @@ public class BigDecimalTest
         var d:BigDecimal = new BigDecimal("43.234");
 
         var r:BigDecimal = d.movePointLeft(3);
-        assertEquals("0.043234", r.toString());
+        assertEquals("0.043234", r.toCanonicalString());
 
         r = d.movePointLeft(-5);
-        assertEquals("4323400", r.toString());
+        assertEquals("4323400", r.toCanonicalString());
     }
 
     [Test]
     public function movePointRight():void
     {
         var d:BigDecimal = new BigDecimal("43.234");
-        assertEquals("43234", d.movePointRight(3).toString());
-        assertEquals("0.00043234", d.movePointRight(-5).toString());
+        assertEquals("43234", d.movePointRight(3).toCanonicalString());
+        assertEquals("0.00043234", d.movePointRight(-5).toCanonicalString());
     }
 
     [Test]
     public function strings():void
     {
-        assertEquals("0", new BigDecimal("0").toString());
-        assertEquals("-54", new BigDecimal("-54").toString());
-        assertEquals("20.765", new BigDecimal("20.765").toString());
-        assertEquals("0.003", new BigDecimal("+0.003").toString());
-        assertEquals("0.89", new BigDecimal(".89").toString());
-        assertEquals("7", new BigDecimal("7.").toString());
-        assertEquals("1.234E+10", new BigDecimal("1.234E10").toString());
-        assertEquals("1.234E-10", new BigDecimal("1.234e-10").toString());
-        assertEquals("4535.4358051100394809", new BigDecimal("4535.4358051100394809").toString());
-        assertEquals("2147483647", new BigDecimal("2147483647").toString()); // int.MAX_VALUE;
-        assertEquals("-2147483648", new BigDecimal("-2147483648").toString()); // int.MIN_VALUE;
-        assertEquals("2147483648", new BigDecimal("2147483648").toString()); // int.MAX_VALUE + 1;
-        assertEquals("-2147483649", new BigDecimal("-2147483649").toString()); // int.MIN_VALUE - 1;
+        assertEquals("0", new BigDecimal("0").toCanonicalString());
+        assertEquals("-54", new BigDecimal("-54").toCanonicalString());
+        assertEquals("20.765", new BigDecimal("20.765").toCanonicalString());
+        assertEquals("0.003", new BigDecimal("+0.003").toCanonicalString());
+        assertEquals("0.89", new BigDecimal(".89").toCanonicalString());
+        assertEquals("7", new BigDecimal("7.").toCanonicalString());
+        assertEquals("1.234E+10", new BigDecimal("1.234E10").toCanonicalString());
+        assertEquals("1.234E-10", new BigDecimal("1.234e-10").toCanonicalString());
+        assertEquals("4535.4358051100394809", new BigDecimal("4535.4358051100394809").toCanonicalString());
+        assertEquals("2147483647", new BigDecimal("2147483647").toCanonicalString()); // int.MAX_VALUE;
+        assertEquals("-2147483648", new BigDecimal("-2147483648").toCanonicalString()); // int.MIN_VALUE;
+        assertEquals("2147483648", new BigDecimal("2147483648").toCanonicalString()); // int.MAX_VALUE + 1;
+        assertEquals("-2147483649", new BigDecimal("-2147483649").toCanonicalString()); // int.MIN_VALUE - 1;
     }
 
     [Test]
     public function numberValue():void
     {
         var v:BigDecimal = new BigDecimal("1.234E10");
-        assertEquals("1.234E+10", v.toString());
+        assertEquals("1.234E+10", v.toCanonicalString());
 
         var n:Number = v.numberValue();
         assertEquals(12340000000, n);

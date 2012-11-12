@@ -36,7 +36,7 @@ public class BigDecimalConstructorsTest
     {
         var oneS:String = "1";
         var oneD:Number = 1.0;
-        assertEquals("incorrect string value", oneS, BigDecimal.ONE.toString());
+        assertEquals("incorrect string value", oneS, BigDecimal.ONE.toCanonicalString());
         assertEquals("incorrect double value", oneD, BigDecimal.ONE.numberValue()); //, 0);
     }
 
@@ -48,7 +48,7 @@ public class BigDecimalConstructorsTest
     {
         var oneS:String = "10";
         var oneD:Number = 10.0;
-        assertEquals("incorrect string value", oneS, BigDecimal.TEN.toString());
+        assertEquals("incorrect string value", oneS, BigDecimal.TEN.toCanonicalString());
         assertEquals("incorrect double value", oneD, BigDecimal.TEN.numberValue()); //, 0);
     }
 
@@ -60,7 +60,7 @@ public class BigDecimalConstructorsTest
     {
         var oneS:String = "0";
         var oneD:Number = 0.0;
-        assertEquals("incorrect string value", oneS, BigDecimal.ZERO.toString());
+        assertEquals("incorrect string value", oneS, BigDecimal.ZERO.toCanonicalString());
         assertEquals("incorrect double value", oneD, BigDecimal.ZERO.numberValue()); //, 0);
     }
 

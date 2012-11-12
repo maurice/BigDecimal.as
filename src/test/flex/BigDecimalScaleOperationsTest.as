@@ -272,7 +272,7 @@ public class BigDecimalScaleOperationsTest
         var result:BigDecimal = aNumber.setScale(newScale, MathContext.ROUND_HALF_EVEN);
         var res:String = "123121247898748298842980.877981045763478138";
         var resScale:int = 18;
-        assertEquals("incorrect value", res, result.toString());
+        assertEquals("incorrect value", res, result.toCanonicalString());
         assertEquals("incorrect scale", resScale, result.scale());
     }
 

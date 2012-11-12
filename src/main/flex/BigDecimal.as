@@ -1769,7 +1769,7 @@ public class BigDecimal implements IExternalizable
     {
         // We go via a String [as does BigDecimal in JDK 1.2]
         // Next line could possibly raise NumberFormatException
-        return Number(toString());
+        return Number(toCanonicalString());
     }
 
     /**
@@ -1871,7 +1871,7 @@ public class BigDecimal implements IExternalizable
 
             if (!allzero(mant, lodigit + 1))
             {
-                throw new Error("Decimal part non-zero:" + " " + toString());
+                throw new Error("Decimal part non-zero:" + " " + toCanonicalString());
             }
             if (lodigit < 0)
             {
@@ -1886,7 +1886,7 @@ public class BigDecimal implements IExternalizable
             if ((exp + lodigit) > 9)
             {
                 // early exit
-                throw new Error("Conversion overflow:" + " " + toString());
+                throw new Error("Conversion overflow:" + " " + toCanonicalString());
             }
             useexp = exp;
         }
@@ -1928,7 +1928,7 @@ public class BigDecimal implements IExternalizable
                     }
                 }
 
-                throw new Error("Conversion overflow:" + " " + toString());
+                throw new Error("Conversion overflow:" + " " + toCanonicalString());
             }
         }
 
@@ -2104,7 +2104,7 @@ public class BigDecimal implements IExternalizable
      * @return a string representation of <code>this</code> in scientific notation if
      *         necessary.
      */
-    public function toString():String
+    public function toCanonicalString():String
     {
         const buf:Vector.<String> = Vector.<String>(mant);
         if (ind < 0)
@@ -2241,6 +2241,15 @@ public class BigDecimal implements IExternalizable
     }
 
     /**
+     * @inheritDoc #toString
+     * This method is an alias for {@link #toString}
+     */
+    public function toPlainString():String
+    {
+        return toString();
+    }
+
+    /**
      * Returns a string representation of this <code>BigDecimal</code>. No scientific
      * notation is used. This methods adds zeros where necessary.
      * <p>
@@ -2255,7 +2264,7 @@ public class BigDecimal implements IExternalizable
      *
      * @return a string representation of <code>this</code> without exponent part.
      */
-    public function toPlainString():String
+    public function toString():String
     {
         const len:int = mant.length;
         const buf:Vector.<String> = new Vector.<String>();
@@ -3024,7 +3033,7 @@ public class BigDecimal implements IExternalizable
         {
             if (!allzero(mant, dig))
             {
-                throw new Error("Too many digits: " + toString());
+                throw new Error("Too many digits: " + toCanonicalString());
             }
         }
         if (rhs == null)
@@ -3035,7 +3044,7 @@ public class BigDecimal implements IExternalizable
         {
             if (!allzero(rhs.mant, dig))
             {
-                throw new Error("Too many digits: " + rhs.toString());
+                throw new Error("Too many digits: " + rhs.toCanonicalString());
             }
         }
     }

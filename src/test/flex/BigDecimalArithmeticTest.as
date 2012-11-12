@@ -40,7 +40,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.add(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -60,7 +60,7 @@ public class BigDecimalArithmeticTest
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var mc:MathContext = new MathContext(5, false, MathContext.ROUND_UP);
         var result:BigDecimal = aNumber.add(bNumber, mc);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -79,7 +79,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.add(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -99,7 +99,7 @@ public class BigDecimalArithmeticTest
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var mc:MathContext = new MathContext(5, false, MathContext.ROUND_FLOOR);
         var result:BigDecimal = aNumber.add(bNumber, mc);
-        assertEquals("incorrect value ", c, result.toString());
+        assertEquals("incorrect value ", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -118,7 +118,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.add(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -138,7 +138,7 @@ public class BigDecimalArithmeticTest
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var mc:MathContext = new MathContext(15, false, MathContext.ROUND_CEILING);
         var result:BigDecimal = aNumber.add(bNumber, mc);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -157,7 +157,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.add(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -176,7 +176,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.add(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -195,7 +195,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.subtract(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -215,7 +215,7 @@ public class BigDecimalArithmeticTest
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var mc:MathContext = new MathContext(15, false, MathContext.ROUND_CEILING);
         var result:BigDecimal = aNumber.subtract(bNumber, mc);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -234,7 +234,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.subtract(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -253,7 +253,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.subtract(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -295,7 +295,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.subtract(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -316,7 +316,7 @@ public class BigDecimalArithmeticTest
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var mc:MathContext = new MathContext(70, false, MathContext.ROUND_HALF_DOWN);
         var result:BigDecimal = aNumber.subtract(bNumber, mc);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -335,7 +335,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.multiply(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -355,7 +355,7 @@ public class BigDecimalArithmeticTest
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var mc:MathContext = new MathContext(40, false, MathContext.ROUND_HALF_DOWN);
         var result:BigDecimal = aNumber.multiply(bNumber, mc);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -374,7 +374,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.multiply(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -393,7 +393,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.multiply(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -434,7 +434,7 @@ public class BigDecimalArithmeticTest
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var bNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(b, bScale);
         var result:BigDecimal = aNumber.multiply(bNumber);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -476,7 +476,7 @@ public class BigDecimalArithmeticTest
         var cScale:int = 100;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var result:BigDecimal = aNumber.pow(exp);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -493,7 +493,7 @@ public class BigDecimalArithmeticTest
         var cScale:int = 0;
         var aNumber:BigDecimal = BigDecimal.createFromUnscaledInteger(a, aScale);
         var result:BigDecimal = aNumber.pow(exp);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 
@@ -506,7 +506,7 @@ public class BigDecimalArithmeticTest
         var c:String = "1";
         var cScale:int = 0;
         var result:BigDecimal = BigDecimal.ZERO.pow(0);
-        assertEquals("incorrect value", c, result.toString());
+        assertEquals("incorrect value", c, result.toCanonicalString());
         assertEquals("incorrect scale", cScale, result.scale());
     }
 

@@ -470,7 +470,7 @@ public class BigDecimalConvertTest
 //        var aNumber:BigDecimal = new BigDecimal(new BigInteger(a));
         var aNumber:BigDecimal = new BigDecimal(a);
         var result:String = "-123809648392384754573567356745735635678902957849027687876782870";
-        assertEquals("incorrect value", result, aNumber.toString());
+        assertEquals("incorrect value", result, aNumber.toCanonicalString());
     }
 
     [Test]
@@ -482,7 +482,7 @@ public class BigDecimalConvertTest
         var a:String = "123809648392384754573567356745735.63567890295784902768787678287E-500";
         var aNumber:BigDecimal = new BigDecimal(a);
         var result:String = "1.2380964839238475457356735674573563567890295784902768787678287E-468";
-        assertEquals("incorrect value", result, aNumber.toString());
+        assertEquals("incorrect value", result, aNumber.toCanonicalString());
     }
 
     // todo not the same

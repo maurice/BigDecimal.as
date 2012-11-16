@@ -3,12 +3,12 @@
 		<th colspan="5">Calling constructor. 100000 loops.</th>
 	</thead>
 	<thead>
-		<th>Test</th>
+		<th align="left">Test</th>
 		<th align="right">Original time</th>
 		<th align="right">Original memory</th>
 		<th align="right">Time (change %)</th>
 		<th align="right">Memory (change %)</th>
-	</thhead>
+	</thead>
 	<tr>
 		<td><code>new BigDecimal(1)</code></td>
 		<td align="right">18.8</td>

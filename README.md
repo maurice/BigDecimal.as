@@ -1,7 +1,7 @@
 BigDecimal.as
 =============
 
-*Now with added **enterpriseyness**!!*
+*Now with added _enterpriseyness_!!*
 
 This project is a continuation of the de-facto [ActionScript3 BigDecimal](http://code.google.com/p/bigdecimal/) implementation focusing on
 
@@ -12,9 +12,7 @@ This project is a continuation of the de-facto [ActionScript3 BigDecimal](http:/
 Benchmarks
 ----------
 
-See the `bench` directory for before/after comparisons.
-
-These were created with a separate benchmark app using [Grant Skinner's PerformanceTest v2 Beta](http://gskinner.com/blog/archives/2010/02/performancetest.html), which I will publish later. 
+Initial benchmarks show the current version is 25-50% faster and uses around 30% less memory. See the `bench` directory for details.
 
 Changes made
 ------------

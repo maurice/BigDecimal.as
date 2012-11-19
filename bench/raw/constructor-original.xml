@@ -1,0 +1,214 @@
+<TestCollection playerVersion="MAC 11,5,500,97" isDebugger="false" playerType="PlugIn" os="Mac OS 10.8.2" manufacturer="Google Macintosh" cpuArchitecture="x86">
+  <TestSuite name="constructor" time="6921" tareTime="0" initTime="0" description="Calling constructor. 100000 loops." error="false">
+    <MethodTest name="new BigDecimal(1)" time="18.8" min="18" max="21" deviation="0.160" description="Construct BigDecimal with int parameter 1" memory="76" retainedMemory="-4">
+      <iteration time="21" memory="92" retainedMemory="-20"/>
+      <iteration time="18" memory="72" retainedMemory="0"/>
+      <iteration time="18" memory="72" retainedMemory="0"/>
+      <iteration time="18" memory="72" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(5432)" time="105.5" min="105" max="106" deviation="0.009" description="Construct BigDecimal with int parameter 5432" memory="112" retainedMemory="0">
+      <iteration time="105" memory="116" retainedMemory="4"/>
+      <iteration time="106" memory="112" retainedMemory="0"/>
+      <iteration time="106" memory="112" retainedMemory="0"/>
+      <iteration time="105" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(-90876)" time="127.3" min="127" max="128" deviation="0.008" description="Construct BigDecimal with int parameter -90876" memory="932" retainedMemory="28">
+      <iteration time="127" memory="1004" retainedMemory="100"/>
+      <iteration time="127" memory="908" retainedMemory="4"/>
+      <iteration time="127" memory="908" retainedMemory="4"/>
+      <iteration time="128" memory="908" retainedMemory="4"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(-389)" time="89.5" min="89" max="91" deviation="0.022" description="Construct BigDecimal with int parameter -389" memory="112" retainedMemory="0">
+      <iteration time="89" memory="112" retainedMemory="0"/>
+      <iteration time="91" memory="112" retainedMemory="0"/>
+      <iteration time="89" memory="112" retainedMemory="0"/>
+      <iteration time="89" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(98793000)" time="194.5" min="194" max="195" deviation="0.005" description="Construct BigDecimal with int parameter 98793000" memory="2533" retainedMemory="49">
+      <iteration time="195" memory="2684" retainedMemory="200"/>
+      <iteration time="194" memory="2484" retainedMemory="0"/>
+      <iteration time="195" memory="2484" retainedMemory="0"/>
+      <iteration time="194" memory="2484" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;1&quot;)" time="49.8" min="49" max="50" deviation="0.020" description="Construct BigDecimal with small integer string parameter 1" memory="112" retainedMemory="0">
+      <iteration time="49" memory="112" retainedMemory="0"/>
+      <iteration time="50" memory="112" retainedMemory="0"/>
+      <iteration time="50" memory="112" retainedMemory="0"/>
+      <iteration time="50" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;5432&quot;)" time="64.8" min="64" max="66" deviation="0.031" description="Construct BigDecimal with small integer string parameter 5432" memory="112" retainedMemory="0">
+      <iteration time="64" memory="112" retainedMemory="0"/>
+      <iteration time="64" memory="112" retainedMemory="0"/>
+      <iteration time="66" memory="112" retainedMemory="0"/>
+      <iteration time="65" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;-90876&quot;)" time="75.0" min="74" max="76" deviation="0.027" description="Construct BigDecimal with small integer string parameter -90876" memory="120" retainedMemory="4">
+      <iteration time="75" memory="120" retainedMemory="4"/>
+      <iteration time="75" memory="120" retainedMemory="4"/>
+      <iteration time="76" memory="120" retainedMemory="4"/>
+      <iteration time="74" memory="120" retainedMemory="4"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;-389&quot;)" time="60.0" min="59" max="61" deviation="0.033" description="Construct BigDecimal with small integer string parameter -389" memory="112" retainedMemory="0">
+      <iteration time="60" memory="112" retainedMemory="0"/>
+      <iteration time="59" memory="112" retainedMemory="0"/>
+      <iteration time="60" memory="112" retainedMemory="0"/>
+      <iteration time="61" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;98793000&quot;)" time="97.3" min="97" max="98" deviation="0.010" description="Construct BigDecimal with small integer string parameter 98793000" memory="116" retainedMemory="0">
+      <iteration time="98" memory="116" retainedMemory="0"/>
+      <iteration time="97" memory="116" retainedMemory="0"/>
+      <iteration time="97" memory="116" retainedMemory="0"/>
+      <iteration time="97" memory="116" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;1234028074035801039401809802348029&quot;)" time="267.3" min="266" max="268" deviation="0.007" description="Construct BigDecimal with large integer string parameter 1234028074035801039401809802348029" memory="256" retainedMemory="0">
+      <iteration time="268" memory="256" retainedMemory="0"/>
+      <iteration time="267" memory="256" retainedMemory="0"/>
+      <iteration time="268" memory="256" retainedMemory="0"/>
+      <iteration time="266" memory="256" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;1233399480329482304088888000008403498503958000093458039580&quot;)" time="398.3" min="397" max="399" deviation="0.005" description="Construct BigDecimal with large integer string parameter 1233399480329482304088888000008403498503958000093458039580" memory="366" retainedMemory="0">
+      <iteration time="397" memory="364" retainedMemory="0"/>
+      <iteration time="399" memory="368" retainedMemory="0"/>
+      <iteration time="399" memory="368" retainedMemory="0"/>
+      <iteration time="398" memory="368" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;-777937497577539475938475938459387459394857295793487592384759&quot;)" time="401.3" min="400" max="403" deviation="0.007" description="Construct BigDecimal with large integer string parameter -777937497577539475938475938459387459394857295793487592384759" memory="365" retainedMemory="0">
+      <iteration time="403" memory="368" retainedMemory="0"/>
+      <iteration time="401" memory="368" retainedMemory="4"/>
+      <iteration time="401" memory="364" retainedMemory="0"/>
+      <iteration time="400" memory="364" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;-7575757575757757572920389382834238985630000043000000000&quot;)" time="384.0" min="383" max="385" deviation="0.005" description="Construct BigDecimal with large integer string parameter -7575757575757757572920389382834238985630000043000000000" memory="320" retainedMemory="0">
+      <iteration time="385" memory="188" retainedMemory="0"/>
+      <iteration time="383" memory="368" retainedMemory="0"/>
+      <iteration time="384" memory="364" retainedMemory="0"/>
+      <iteration time="384" memory="364" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;395873498347519700045295710095080100011848716458473&quot;)" time="368.0" min="366" max="370" deviation="0.011" description="Construct BigDecimal with large integer string parameter 395873498347519700045295710095080100011848716458473" memory="368" retainedMemory="0">
+      <iteration time="366" memory="368" retainedMemory="0"/>
+      <iteration time="369" memory="368" retainedMemory="0"/>
+      <iteration time="367" memory="368" retainedMemory="0"/>
+      <iteration time="370" memory="368" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;0.1&quot;)" time="53.3" min="53" max="54" deviation="0.019" description="Construct BigDecimal with small decimal string parameter 0.1" memory="112" retainedMemory="0">
+      <iteration time="53" memory="112" retainedMemory="0"/>
+      <iteration time="53" memory="112" retainedMemory="0"/>
+      <iteration time="53" memory="112" retainedMemory="0"/>
+      <iteration time="54" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;3.333&quot;)" time="66.0" min="66" max="66" deviation="0.000" description="Construct BigDecimal with small decimal string parameter 3.333" memory="112" retainedMemory="0">
+      <iteration time="66" memory="112" retainedMemory="0"/>
+      <iteration time="66" memory="112" retainedMemory="0"/>
+      <iteration time="66" memory="112" retainedMemory="0"/>
+      <iteration time="66" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;-289.34&quot;)" time="75.5" min="75" max="76" deviation="0.013" description="Construct BigDecimal with small decimal string parameter -289.34" memory="120" retainedMemory="4">
+      <iteration time="76" memory="120" retainedMemory="4"/>
+      <iteration time="75" memory="120" retainedMemory="4"/>
+      <iteration time="76" memory="120" retainedMemory="4"/>
+      <iteration time="75" memory="120" retainedMemory="4"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;.0000345&quot;)" time="69.5" min="69" max="70" deviation="0.014" description="Construct BigDecimal with small decimal string parameter .0000345" memory="112" retainedMemory="0">
+      <iteration time="70" memory="112" retainedMemory="0"/>
+      <iteration time="70" memory="112" retainedMemory="0"/>
+      <iteration time="69" memory="112" retainedMemory="0"/>
+      <iteration time="69" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;-0.234&quot;)" time="63.8" min="63" max="64" deviation="0.016" description="Construct BigDecimal with small decimal string parameter -0.234" memory="112" retainedMemory="0">
+      <iteration time="64" memory="112" retainedMemory="0"/>
+      <iteration time="64" memory="112" retainedMemory="0"/>
+      <iteration time="64" memory="112" retainedMemory="0"/>
+      <iteration time="63" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;0.0001234028074035801039401809802348029&quot;)" time="287.8" min="284" max="293" deviation="0.031" description="Construct BigDecimal with large decimal string parameter 0.0001234028074035801039401809802348029" memory="253" retainedMemory="3">
+      <iteration time="293" memory="256" retainedMemory="0"/>
+      <iteration time="288" memory="256" retainedMemory="12"/>
+      <iteration time="284" memory="252" retainedMemory="0"/>
+      <iteration time="286" memory="252" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;1233399480329482304088888000008403498.503958000093458039580&quot;)" time="403.8" min="403" max="405" deviation="0.005" description="Construct BigDecimal with large decimal string parameter 1233399480329482304088888000008403498.503958000093458039580" memory="366" retainedMemory="0">
+      <iteration time="404" memory="364" retainedMemory="0"/>
+      <iteration time="403" memory="368" retainedMemory="0"/>
+      <iteration time="405" memory="368" retainedMemory="0"/>
+      <iteration time="403" memory="368" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;-7779374975775394.75938475938459387459394857295793487592384759&quot;)" time="417.5" min="404" max="452" deviation="0.115" description="Construct BigDecimal with large decimal string parameter -7779374975775394.75938475938459387459394857295793487592384759" memory="366" retainedMemory="0">
+      <iteration time="404" memory="364" retainedMemory="0"/>
+      <iteration time="407" memory="368" retainedMemory="0"/>
+      <iteration time="407" memory="368" retainedMemory="0"/>
+      <iteration time="452" memory="368" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;-7575757575757757572920389382834238985630000043000000000&quot;)" time="399.5" min="384" max="443" deviation="0.148" description="Construct BigDecimal with large decimal string parameter -7575757575757757572920389382834238985630000043000000000" memory="368" retainedMemory="0">
+      <iteration time="443" memory="368" retainedMemory="0"/>
+      <iteration time="385" memory="368" retainedMemory="0"/>
+      <iteration time="384" memory="368" retainedMemory="0"/>
+      <iteration time="386" memory="368" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;45345324523.34532459875982375928374592395892759179583999000&quot;)" time="397.3" min="396" max="399" deviation="0.008" description="Construct BigDecimal with large decimal string parameter 45345324523.34532459875982375928374592395892759179583999000" memory="276" retainedMemory="0">
+      <iteration time="397" memory="368" retainedMemory="0"/>
+      <iteration time="397" memory="368" retainedMemory="0"/>
+      <iteration time="399" memory="188" retainedMemory="0"/>
+      <iteration time="396" memory="180" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;-34.34E5&quot;)" time="72.0" min="71" max="73" deviation="0.028" description="Construct BigDecimal with small decimal with exponent string parameter -34.34E5" memory="112" retainedMemory="0">
+      <iteration time="73" memory="112" retainedMemory="0"/>
+      <iteration time="72" memory="112" retainedMemory="0"/>
+      <iteration time="72" memory="112" retainedMemory="0"/>
+      <iteration time="71" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;123e-23&quot;)" time="67.8" min="67" max="69" deviation="0.030" description="Construct BigDecimal with small decimal with exponent string parameter 123e-23" memory="112" retainedMemory="0">
+      <iteration time="69" memory="112" retainedMemory="0"/>
+      <iteration time="67" memory="112" retainedMemory="0"/>
+      <iteration time="67" memory="112" retainedMemory="0"/>
+      <iteration time="68" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;0.12e470&quot;)" time="69.3" min="69" max="70" deviation="0.014" description="Construct BigDecimal with small decimal with exponent string parameter 0.12e470" memory="112" retainedMemory="0">
+      <iteration time="69" memory="112" retainedMemory="0"/>
+      <iteration time="70" memory="112" retainedMemory="0"/>
+      <iteration time="69" memory="112" retainedMemory="0"/>
+      <iteration time="69" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;-124.E-534&quot;)" time="70.3" min="70" max="71" deviation="0.014" description="Construct BigDecimal with small decimal with exponent string parameter -124.E-534" memory="112" retainedMemory="0">
+      <iteration time="71" memory="112" retainedMemory="0"/>
+      <iteration time="70" memory="112" retainedMemory="0"/>
+      <iteration time="70" memory="112" retainedMemory="0"/>
+      <iteration time="70" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;33.33e+10&quot;)" time="74.0" min="73" max="76" deviation="0.041" description="Construct BigDecimal with small decimal with exponent string parameter 33.33e+10" memory="112" retainedMemory="0">
+      <iteration time="76" memory="112" retainedMemory="0"/>
+      <iteration time="73" memory="112" retainedMemory="0"/>
+      <iteration time="74" memory="112" retainedMemory="0"/>
+      <iteration time="73" memory="112" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;903840239402398034850395039053858723423.953534534548e540&quot;)" time="376.0" min="373" max="380" deviation="0.019" description="Construct BigDecimal with large decimal with exponent string parameter 903840239402398034850395039053858723423.953534534548e540" memory="368" retainedMemory="0">
+      <iteration time="374" memory="368" retainedMemory="0"/>
+      <iteration time="380" memory="368" retainedMemory="0"/>
+      <iteration time="373" memory="368" retainedMemory="0"/>
+      <iteration time="377" memory="368" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;-503950980980908098222222222222423423434.1111e16&quot;)" time="324.0" min="321" max="326" deviation="0.015" description="Construct BigDecimal with large decimal with exponent string parameter -503950980980908098222222222222423423434.1111e16" memory="296" retainedMemory="0">
+      <iteration time="325" memory="296" retainedMemory="0"/>
+      <iteration time="321" memory="296" retainedMemory="0"/>
+      <iteration time="326" memory="296" retainedMemory="0"/>
+      <iteration time="324" memory="296" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;99.999999999999999999999999999999999999999999e3&quot;)" time="332.3" min="331" max="333" deviation="0.006" description="Construct BigDecimal with large decimal with exponent string parameter 99.999999999999999999999999999999999999999999e3" memory="296" retainedMemory="0">
+      <iteration time="332" memory="296" retainedMemory="0"/>
+      <iteration time="333" memory="296" retainedMemory="0"/>
+      <iteration time="333" memory="296" retainedMemory="0"/>
+      <iteration time="331" memory="296" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;1.30080480294809809840193049138401245938745e980&quot;)" time="323.0" min="323" max="323" deviation="0.000" description="Construct BigDecimal with large decimal with exponent string parameter 1.30080480294809809840193049138401245938745e980" memory="258" retainedMemory="0">
+      <iteration time="323" memory="148" retainedMemory="0"/>
+      <iteration time="323" memory="296" retainedMemory="0"/>
+      <iteration time="323" memory="296" retainedMemory="0"/>
+      <iteration time="323" memory="296" retainedMemory="0"/>
+    </MethodTest>
+    <MethodTest name="new BigDecimal(&quot;9999999345352302341112300453045.45345e95394&quot;)" time="289.3" min="288" max="291" deviation="0.010" description="Construct BigDecimal with large decimal with exponent string parameter 9999999345352302341112300453045.45345e95394" memory="255" retainedMemory="0">
+      <iteration time="289" memory="256" retainedMemory="0"/>
+      <iteration time="289" memory="256" retainedMemory="0"/>
+      <iteration time="291" memory="256" retainedMemory="0"/>
+      <iteration time="288" memory="252" retainedMemory="0"/>
+    </MethodTest>
+  </TestSuite>
+</TestCollection>

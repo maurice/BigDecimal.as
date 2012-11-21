@@ -1,5 +1,6 @@
 package
 {
+import flash.system.Capabilities;
 import flash.utils.IDataInput;
 import flash.utils.IDataOutput;
 import flash.utils.IExternalizable;
@@ -344,6 +345,9 @@ public class BigDecimal implements IExternalizable
     private static const bytecar:Vector.<int> = new Vector.<int>((90 + 99) + 1, true); // carry/borrow array
     private static const bytedig:Vector.<int> = diginit(); // next digit array
 
+    // If true, we need to explicitly set lengthened vectors extra digits to 0
+    private static const vectorPadFix:Boolean = needVectorPadFix();
+
     /* ----- Instance properties [all private and immutable] ----- */
     /* properties private */
 
@@ -578,7 +582,6 @@ public class BigDecimal implements IExternalizable
         {
             ind = 0;
         }
-
 
         // parse exponent
         var exponent:Number = 0;
@@ -939,8 +942,9 @@ public class BigDecimal implements IExternalizable
                     if (usellen < reqdig)
                     {
                         // need 0 padding
-                        res.mant = lhs.mant.slice();
-                        res.mant.length = reqdig;
+                        res.mant = padBy(lhs.mant, reqdig - lhs.mant.length);
+//                        res.mant = lhs.mant.slice();
+//                        res.mant.length = reqdig;
                         res.exp = res.exp - ((reqdig - usellen));
                     }
 
@@ -981,8 +985,9 @@ public class BigDecimal implements IExternalizable
                     if (userlen < reqdig)
                     {
                         // need 0 padding
-                        res.mant = rhs.mant.slice();
-                        res.mant.length = reqdig;
+                        res.mant = padBy(rhs.mant, reqdig - rhs.mant.length);
+//                        res.mant = rhs.mant.slice();
+//                        res.mant.length = reqdig;
                         res.exp = res.exp - ((reqdig - userlen));
                     }
                     return res.finish(context);
@@ -2060,8 +2065,9 @@ public class BigDecimal implements IExternalizable
             {
                 padding = scale - ourscale;
             }
-            res.mant = res.mant.slice(); // cannot re-use, make a copy
-            res.mant.length += padding; // and extend
+            res.mant = padBy(res.mant, padding);
+//            res.mant = res.mant.slice(); // cannot re-use, make a copy
+//            res.mant.length += padding; // and extend
             res.exp = -scale; // as requested
         }
         else
@@ -2078,8 +2084,9 @@ public class BigDecimal implements IExternalizable
             // Repair if so by adding a zero and reducing exponent
             if (res.exp != (-scale))
             {
-                res.mant = res.mant.slice(); // cannot re-use, make a copy
-                res.mant.length += 1; // and extend
+                res.mant = padBy(res.mant, 1);
+//                res.mant = res.mant.slice(); // cannot re-use, make a copy
+//                res.mant.length += 1; // and extend
                 res.exp = res.exp - 1;
             }
         }
@@ -2542,8 +2549,9 @@ public class BigDecimal implements IExternalizable
         // Also copy the LHS, which will be our working array
         newlen = (reqdig + reqdig) + 1;
 
-        var var1:Vector.<int> = lhs.mant.slice();
-        var1.length = newlen; // always makes longer, so new safe array
+        var var1:Vector.<int> = padBy(lhs.mant, newlen - lhs.mant.length);
+//        var var1:Vector.<int> = lhs.mant.slice();
+//        var1.length = newlen; // always makes longer, so new safe array
         var1len = newlen; // [remaining digits are 0]
 
         var2 = rhs.mant;
@@ -2801,7 +2809,7 @@ public class BigDecimal implements IExternalizable
             // Repair if so by adding a zero and reducing exponent
             if (res.exp != -scale)
             {
-                res.mant.length += 1;
+                res.mant[res.mant.length] = 0; // extend by 1
                 res.exp = res.exp - 1;
             }
             return res.finish(context);
@@ -3273,6 +3281,36 @@ public class BigDecimal implements IExternalizable
         }
 
         return true;
+    }
+
+    /**
+     * Returns a copy of the given vector padded by pad extra zeroes
+     * @param vec the vector to extend
+     * @param pad the amount to pad by
+     * @return a new vector
+     */
+    private static function padBy(vec:Vector.<int>, pad:uint):Vector.<int>
+    {
+        const r:Vector.<int> = vec.slice();
+        r.length += pad;
+        if (vectorPadFix)
+        {
+            const last:int = r.length - 1;
+            for (; pad-- > 0; )
+            {
+                r[last - pad] = 0;
+            }
+        }
+        return r;
+    }
+
+    /**
+     * Returns true if we need to fix-up lengthened vectors with extra zeroes
+     */
+    private static function needVectorPadFix():Boolean
+    {
+        const version:Array = Capabilities.version.split(' ')[1].split(',');
+        return version[0] == "10" && int(version[1]) < 2;
     }
 
     /* <sgml> Carry out final checks and canonicalization

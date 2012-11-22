@@ -400,7 +400,7 @@ public class BigDecimal implements IExternalizable
     /**
      * Caches toString after first built
      */
-    private var toStringImage:String;
+    private var string:String;
 
     /* ---------------------------------------------------------------- */
     /* Constructors */
@@ -2278,9 +2278,9 @@ public class BigDecimal implements IExternalizable
      */
     public function toString():String
     {
-        if (toStringImage != null)
+        if (string != null)
         {
-            return toStringImage;
+            return string;
         }
 
         const len:int = mant.length;
@@ -2326,8 +2326,8 @@ public class BigDecimal implements IExternalizable
                 buf[pos] = "0";
             }
         }
-        toStringImage = buf.join("");
-        return toStringImage;
+        string = buf.join("");
+        return string;
     }
 
     /**

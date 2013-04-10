@@ -2055,20 +2055,27 @@ public class BigDecimal implements IExternalizable
         if (ourscale <= scale)
         {
             // simply zero-padding/changing form
-            // if ourscale is 0 we may have lots of 0s to add
-            var padding:int = 0;
-            if (ourscale == 0)
-            {
-                padding = res.exp + scale;
-            }
-            else
-            {
-                padding = scale - ourscale;
-            }
-            res.mant = padBy(res.mant, padding);
-//            res.mant = res.mant.slice(); // cannot re-use, make a copy
-//            res.mant.length += padding; // and extend
-            res.exp = -scale; // as requested
+			if (ind == iszero)
+			{
+				//no need to pad; adding zeroes just inflates the mantissa
+			}
+			else
+			{
+				// if ourscale is 0 we may have lots of 0s to add
+				var padding:int = 0;
+				if (ourscale == 0)
+				{
+					padding = res.exp + scale;
+				}
+				else
+				{
+					padding = scale - ourscale;
+				}
+				res.mant = padBy(res.mant, padding);
+//				res.mant = res.mant.slice(); // cannot re-use, make a copy
+//				res.mant.length += padding; // and extend
+				res.exp = -scale; // as requested
+			}
         }
         else
         {

@@ -367,24 +367,24 @@ public class BigDecimalScaleOperationsTest
         }
     }
 
-	[Test]
-	public function testMoveRightSetScaleThenLeft():void
-	{
-		var zeroEquivalent:BigDecimal = BigDecimal.ZERO;
-		zeroEquivalent = zeroEquivalent.movePointLeft(1);
-		zeroEquivalent = zeroEquivalent.setScale(0);
-		zeroEquivalent = zeroEquivalent.movePointRight(1);
-		assertEquals("Too many zeros after scaling", "0", zeroEquivalent.toString());
-	}
+    [Test]
+    public function testMoveRightSetScaleThenLeft():void
+    {
+        var zeroEquivalent:BigDecimal = BigDecimal.ZERO;
+        zeroEquivalent = zeroEquivalent.movePointLeft(1);
+        zeroEquivalent = zeroEquivalent.setScale(0);
+        zeroEquivalent = zeroEquivalent.movePointRight(1);
+        assertEquals("Too many zeros after scaling", "0", zeroEquivalent.toString());
+    }
 
-	[Test]
-	public function testWithZeroSetScaleTo1Then0():void
-	{
-		var zeroEquivalent:BigDecimal = BigDecimal.ZERO;
-		zeroEquivalent = zeroEquivalent.setScale(1, MathContext.ROUND_HALF_UP);
-		zeroEquivalent = zeroEquivalent.setScale(0, MathContext.ROUND_HALF_UP);
-		assertEquals("Too many zeros after scaling up then down", "0", zeroEquivalent.toString());
-	}
+    [Test]
+    public function testWithZeroSetScaleTo1Then0():void
+    {
+        var zeroEquivalent:BigDecimal = BigDecimal.ZERO;
+        zeroEquivalent = zeroEquivalent.setScale(1, MathContext.ROUND_HALF_UP);
+        zeroEquivalent = zeroEquivalent.setScale(0, MathContext.ROUND_HALF_UP);
+        assertEquals("Too many zeros after scaling up then down", "0", zeroEquivalent.toString());
+    }
 
     // todo add precision?
 //    [Test]
